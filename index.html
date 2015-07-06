@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8" />
+<title>Bliss.js — Heavenly JavaScript!</title>
+<link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+
+<h1>Bliss.js</h1>
+
+<p>Heavenly JavaScript</p>
+
+<ul>
+	<li>Only deal with native DOM elements and arrays, no weird wrapper objects</li>
+	<li>Ultra-lightweight — only 1.5KB minified &amp; gzipped!</li>
+	<li>No pollution of native prototypes, only adds a <code>_</code> property on elements &amp; arrays</li>
+	<li>Super easy to extend</li>
+</ul>
+
+<p>You don’t want to use a big, bloated framework but find native DOM APIs are often a bit clumsy? Bliss fixes that, with a tiny footprint and without locking you in.</p>
+
+<div>a</div><div>b</div><div>c</div><div>d</div><div>e</div>
+
+<table>
+	<thead>
+		<tr>
+			<th>jQuery</th>
+			<th>Bliss</th>
+			<th>Native</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><pre><code>
+				$( "button.continue" ).html("Next Step...")
+			</code></pre></td>
+			<td><pre><code>
+				$$( "button.continue" )._.set("innerHTML", "Next Step...")
+			</code></pre></td>
+		</tr>
+	</tbody>
+</table>
+
+<footer>By <a href="http://lea.verou.me">Lea Verou</a> &bull; Blog post</footer>
+
+<script src="bliss.js"></script>
+<script>
+$("h1")._.set({ style: { background: "yellowgreen" }});
+$("footer")._.remove();
+$$("div")._.set({ style: { color: "yellowgreen" }});
+$$("div")._.setAttribute("title", "foobar");
+$$("div")._.setAttribute("title", "foobar2")._.setAttribute("data-foo", "yolo");
+</script>
+
+</body>
+</html>
