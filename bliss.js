@@ -104,6 +104,51 @@ $.extend($, {
 		// TODO clone other types of objects
 
 		return clone;
+	},
+
+	xhr: function(o) {		
+		var xhr = new XMLHttpRequest(),
+			method = o.method || 'GET',
+			data = o.data || '',
+			url = new URL(o.url);
+
+		if (o.method === "GET" && data) {
+			url.search += data;
+		}
+		
+		document.body.setAttribute('data-loading', url);
+
+		o.headers = o.headers || {};
+
+		o.onerror = o.onerror || $.xhr.onerror || null;
+		
+		xhr.open(method, url, !o.sync);
+		
+		if (method !== 'GET' && !o.headers['Content-type'] && !o.headers['Content-Type']) {
+			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		}
+		
+		for (var header in o.headers) {
+			xhr.setRequestHeader(header, o.headers[header]);
+		}
+		
+		xhr.onreadystatechange = function(){
+			if (xhr.readyState === 4) {
+				document.body.removeAttribute('data-loading');
+				
+				if (xhr.status === 0 || xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+					// Success
+					o.callback.call(xhr, xhr);
+				}
+				else if (o.onerror) {
+					o.onerror.call(xhr, xhr);
+				}
+			}
+		};
+		
+		xhr.send(method === 'GET'? null : data);
+		
+		return xhr;
 	}
 });
 
