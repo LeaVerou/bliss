@@ -77,6 +77,7 @@ $.extend($, {
 		var type = $.type(o);
 		var clone;
 
+		// Clone elements, with events
 		// TODO instanceof Node doesn’t account for nodes from other documents
 		if (o.cloneNode && o instanceof Node) {
 			clone = o.cloneNode(true);
@@ -106,25 +107,39 @@ $.extend($, {
 		return clone;
 	},
 
-	xhr: function(o) {		
-		var xhr = new XMLHttpRequest(),
-			method = o.method || 'GET',
-			data = o.data || '',
-			url = new URL(o.url);
+	/*
+	 * Fetch API inspired XHR helper. Returns promise.
+	 */
+	fetch: function(url, o) {
+		// Set defaults & fixup arguments
+		url = new URL(url);
+		o = o || {};
+		o.data = o.data || '';
+		o.method = o.method || 'GET';
+		o.headers = o.headers || {};
+		o.onerror = o.onerror || $.fetch.onerror || null;
 
-		if (o.method === "GET" && data) {
-			url.search += data;
+		var xhr = new XMLHttpRequest();
+
+		if (o.method === "GET" && o.data) {
+			url.search += o.data;
 		}
 		
 		document.body.setAttribute('data-loading', url);
-
-		o.headers = o.headers || {};
-
-		o.onerror = o.onerror || $.xhr.onerror || null;
 		
-		xhr.open(method, url, !o.sync);
+		xhr.open(o.method, url, !o.sync);
+
+		for (var property in o) {
+			if (property in xhr) {
+				var descriptor = Object.getOwnPropertyDescriptor(xhr, property);
+
+				if (descriptor && descriptor.writable) {
+					xhr[property] = o[property];
+				}
+			}
+		}
 		
-		if (method !== 'GET' && !o.headers['Content-type'] && !o.headers['Content-Type']) {
+		if (o.method !== 'GET' && !o.headers['Content-type'] && !o.headers['Content-Type']) {
 			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		}
 		
@@ -132,23 +147,26 @@ $.extend($, {
 			xhr.setRequestHeader(header, o.headers[header]);
 		}
 		
-		xhr.onreadystatechange = function(){
-			if (xhr.readyState === 4) {
+		return new Promise(function(resolve, reject){
+			xhr.onload = function(){
 				document.body.removeAttribute('data-loading');
-				
+					
 				if (xhr.status === 0 || xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
 					// Success
-					o.callback.call(xhr, xhr);
+					resolve(xhr);
 				}
 				else if (o.onerror) {
-					o.onerror.call(xhr, xhr);
+					reject(Error(xhr.statusText));
 				}
-			}
-		};
-		
-		xhr.send(method === 'GET'? null : data);
-		
-		return xhr;
+			
+			};
+			
+			xhr.onerror = function() {
+				reject(Error("Network Error"));
+			};
+
+			xhr.send(o.method === 'GET'? null : o.data);
+		});
 	}
 });
 
