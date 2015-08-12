@@ -130,11 +130,13 @@ $.extend($, {
 		xhr.open(o.method, url, !o.sync);
 
 		for (var property in o) {
-			if (property in xhr) {
-				var descriptor = Object.getOwnPropertyDescriptor(xhr, property);
 
-				if (descriptor && descriptor.writable) {
+			if (property in xhr) {
+				try {
 					xhr[property] = o[property];
+				}
+				catch (e) {
+					self.console && console.error(e);
 				}
 			}
 		}
