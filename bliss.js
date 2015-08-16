@@ -107,6 +107,73 @@ $.extend($, {
 		return clone;
 	},
 
+	// Lazily evaluated properties
+	lazy: function(obj, property, getter) {
+		if (arguments.length === 3) {
+			Object.defineProperty(obj, property, {
+				get: function() {
+					delete this[property];
+
+					return this[property] = getter.call(this);
+				},
+				configurable: true,
+				enumerable: true
+			});
+		}
+		else {
+			for (var prop in property) {
+				$.lazy(obj, prop, property[prop]);
+			}
+		}
+	},
+
+	// Helper for defining OOP-like “classes”
+	Class: function(o) {
+		//Super.apply(this, arguments);
+		var init = o.constructor;
+		delete o.constructor;
+
+		var ret = function() {
+			this.constructor.super.apply(this, arguments);
+			return init.apply(this, arguments);
+		};
+
+		ret.super = o.extends || Object;
+		delete o.extends;		
+
+		ret.prototype = $.extend(Object.create(ret.super.prototype), {
+			constructor: ret
+		});
+
+		$.extend(ret, o.static);
+		delete o.static;
+
+		// Anything that remains is an instance method or ret.prototype.constructor
+		$.extend(ret.prototype, o);
+
+		return ret;
+	},
+
+	// Includes a script, returns a promise
+	include: function(url) {
+		var script = document.createElement("script");
+
+		return new Promise(function(resolve, reject){
+			$.set(script, {
+				async: true,
+				onload: function() { 
+					resolve();
+				},
+				onerror: function() {
+					reject();
+				},
+				src: url,
+				inside: document.head
+			});
+		});
+		
+	},
+
 	/*
 	 * Fetch API inspired XHR helper. Returns promise.
 	 */
