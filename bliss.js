@@ -6,17 +6,20 @@ var $ = self.Bliss = function(expr, con) {
 };
 
 // Copy properties from one object to another. Overwrites allowed.
-$.extend = function (to, from) {
+$.extend = function (to, from, callback) {
 	for (var property in from) {
 		// To copy gettters/setters, preserve flags etc
 		var descriptor = Object.getOwnPropertyDescriptor(from, property);
 
 		if (descriptor && (!descriptor.writable || !descriptor.configurable || !descriptor.enumerable || descriptor.get || descriptor.set)) {
+			delete to[property];
 			Object.defineProperty(to, property, descriptor);
 		}
 		else {
 			to[property] = from[property];
 		}
+
+		callback && callback.call(to, property);
 	}
 	
 	return to;
@@ -60,10 +63,17 @@ $.extend($, {
 		var doc = o.document || document;
 		
 		if ($.type(o) === "string") {
-			return doc.createTextNode(o);
+			if (arguments.length === 1) {
+				return doc.createTextNode(o);
+			}
+			else {
+				o = arguments[1];
+				o.tag = arguments[0];
+			}
 		}
 		
 		var element = doc.createElement(o.tag);
+		delete o.tag;
 		
 		return element._.set(o);
 	},
@@ -112,7 +122,11 @@ $.extend($, {
 		if (arguments.length === 3) {
 			Object.defineProperty(obj, property, {
 				get: function() {
+					// FIXME this does not work for instances if property is defined on the prototype
 					delete this[property];
+
+					try { this[property] = 5;
+					} catch(e) {console.error(e)}
 
 					return this[property] = getter.call(this);
 				},
@@ -127,42 +141,92 @@ $.extend($, {
 		}
 	},
 
+	// Properties that behave like normal properties but also execute code upon getting/setting
+	stored: function(obj, property, descriptor) {
+		if (arguments.length === 3) {
+			Object.defineProperty(obj, property, {
+				get: function() {
+					var value = this["_" + property];
+					var ret = descriptor.get && descriptor.get.call(this, value);
+					return ret !== undefined? ret : value;
+				},
+				set: function(v) {
+					var value = this["_" + property];
+					var ret = descriptor.set && descriptor.set.call(this, v, value);
+					this["_" + property] = ret !== undefined? ret : v;
+				},
+				configurable: descriptor.configurable,
+				enumerable: descriptor.enumerable
+			});
+		}
+		else {
+			for (var prop in property) {
+				$.stored(obj, prop, property[prop]);
+			}
+		}
+	},
+
 	// Helper for defining OOP-like “classes”
 	Class: function(o) {
-		//Super.apply(this, arguments);
-		var init = o.constructor;
+		var init = o.constructor || function(){};
 		delete o.constructor;
 
+		var abstract = o.abstract;
+		delete o.abstract;
+
 		var ret = function() {
-			this.constructor.super.apply(this, arguments);
+			if (abstract && this.constructor === ret) {
+				throw new Error("Abstract classes cannot be directly instantiated.");
+			}
+
+			if (this.constructor.super && this.constructor.super != ret) {
+				// FIXME This should never happen, but for some reason it does if ret.super is null
+				// Debugging revealed that somehow this.constructor !== ret, wtf. Must look more into this
+				this.constructor.super.apply(this, arguments);
+			}
+
 			return init.apply(this, arguments);
 		};
 
-		ret.super = o.extends || Object;
-		delete o.extends;		
+		ret.super = o.extends || null;
+		delete o.extends;
 
-		ret.prototype = $.extend(Object.create(ret.super.prototype), {
+		ret.prototype = $.extend(Object.create(ret.super && ret.super.prototype), {
 			constructor: ret
 		});
 
 		$.extend(ret, o.static);
 		delete o.static;
 
-		// Anything that remains is an instance method or ret.prototype.constructor
+		$.lazy(ret.prototype, o.lazy);
+		delete o.lazy;
+
+		$.stored(ret.prototype, o.stored);
+		delete o.stored;
+
+		// Anything that remains is an instance method/property or ret.prototype.constructor
 		$.extend(ret.prototype, o);
 
+		// For easier calling of super methods
+		// This doesn't save us from having to use .call(this) though
+		ret.prototype.super = ret.super? ret.super.prototype : null;
+		
 		return ret;
 	},
 
 	// Includes a script, returns a promise
-	include: function(url) {
+	include: function() {
+		var url = arguments[arguments.length - 1];
+		var loaded = arguments.length === 2? arguments[0] : false;
+
 		var script = document.createElement("script");
 
-		return new Promise(function(resolve, reject){
+		return loaded? Promise.resolve() : new Promise(function(resolve, reject){
 			$.set(script, {
 				async: true,
-				onload: function() { 
+				onload: function() {
 					resolve();
+					$.remove(script);
 				},
 				onerror: function() {
 					reject();
@@ -178,8 +242,12 @@ $.extend($, {
 	 * Fetch API inspired XHR helper. Returns promise.
 	 */
 	fetch: function(url, o) {
+		if (!url) {
+			throw new TypeError("URL parameter is mandatory and cannot be " + url);
+		}
+
 		// Set defaults & fixup arguments
-		url = new URL(url);
+		url = new URL(url, location);
 		o = o || {};
 		o.data = o.data || '';
 		o.method = o.method || 'GET';
@@ -221,7 +289,7 @@ $.extend($, {
 				document.body.removeAttribute('data-loading');
 					
 				if (xhr.status === 0 || xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
-					// Success
+					// Success!
 					resolve(xhr);
 				}
 				else if (o.onerror) {
@@ -273,22 +341,27 @@ $.Element.prototype = {
 	
 	// Remove element from the DOM, optionally with a fade
 	remove: function(animation, duration) {
-		if (animation && "transition" in this.style) {
-			$.style(this, {
-				transition: (duration || 400) + "ms",
-				transitionProperty: Object.keys(animation).join(", ")
-			});
-			
-			var me = this;
-			this.addEventListener("transitionend", function(){
-				$.remove(me);
-			});
+		return new Promise(function(resolve, reject){
+			if (animation && "transition" in this.style) {
+				$.style(this, {
+					transition: (duration || 400) + "ms",
+					transitionProperty: Object.keys(animation).join(", ")
+				});
+				
+				var me = this;
 
-			$.style(this, animation);
-		}
-		else {
-			this.parentNode && this.parentNode.removeChild(this);
-		}
+				this.addEventListener("transitionend", function(){
+					$.remove(me);
+					resolve();
+				});
+
+				$.style(this, animation);
+			}
+			else {
+				this.parentNode && this.parentNode.removeChild(this);
+				resolve();
+			}
+		}.bind(this));
 	},
 	
 	// Fire a synthesized event on the element
