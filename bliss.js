@@ -365,12 +365,29 @@ $.Element.prototype = {
 	},
 	
 	// Fire a synthesized event on the element
-	fireEvent: function (type, properties) {
+	fire: function (type, properties) {
 		var evt = document.createEvent("HTMLEvents");
 				
 		evt.initEvent(type, true, true );
 
 		this.dispatchEvent($.extend(evt, properties));
+	},
+
+	// Returns a promise that gets resolved after {type} has fired at least once
+	waitFor: function(type) {
+		if (this._.bliss.fired && this._.bliss.fired[type] > 0) {
+			// Already fired
+			return Promise.resolve();
+		}
+		
+		var me = this;
+
+		return new Promise(function(resolve, reject){
+			me.addEventListener(type, function callback(evt) {
+				resolve(evt);
+				me.removeEventListener(type, callback);
+			});
+		});
 	}
 };
 
@@ -578,24 +595,38 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 			var listeners = this._.bliss.listeners = this._.bliss.listeners || {};
 			
 			listeners[type] = listeners[type] || [];
+
+			var fired = this._.bliss.fired = this._.bliss.fired || {};
+			fired[type] = fired[type] || 0;
+			
+			var oldCallback = callback;
+			callback = function() {
+				this._.bliss.fired[type]++;
+
+				return oldCallback.apply(this, arguments)
+			};
+			oldCallback.callback = callback;
 			
 			if (listeners[type].filter(filter.bind(null, callback, capture)).length === 0) {
-				listeners[type].push({callback: callback, capture: capture});
+				listeners[type].push({callback: oldCallback, capture: capture});
 			}
 		}
 
-		return addEventListener.apply(this, arguments);
+		return addEventListener.call(this, type, callback, capture);
 	};
 
 	EventTarget.prototype.removeEventListener = function(type, callback, capture) {
 		if (this._) {
 			var listeners = this._.bliss.listeners = this._.bliss.listeners || {};
 
+			var oldCallback = callback;
+			callback = oldCallback.callback;
+
 			listeners[type] = listeners[type] || [];
 			listeners[type] = listeners[type].filter(filter.bind(null, callback, capture));
 		}
 
-		return removeEventListener.apply(this, arguments);
+		return removeEventListener.call(this, type, callback, capture);
 	};
 }
 
