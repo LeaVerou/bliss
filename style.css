@@ -1,5 +1,75 @@
-body {
-	max-width: 40rem;
-	margin: auto;
-	font: 100%/1.6 Palatino, serif;
+@font-face {
+	font-family: 'Great Vibes';
+	src: url('GreatVibes-Regular.ttf');
 }
+
+:root {
+	--yellow: hsl(61, 86%, 77%);
+	--lightblue: hsl(145, 34%, 89%);
+	--blue: hsl(190, 52%, 50%);
+	--magenta: hsl(350, 80%, 55%);
+	--darkgray: hsl(227, 15%, 24%);
+}
+
+body {
+	margin: auto;
+	font: 100%/1.6 Optima, sans-serif;
+	font-kerning: normal;
+	
+	background-color: white;
+
+	color: hsl(227, 15%, 24%);
+}
+
+h1 {
+	font-family: Great Vibes;
+	color: hsl(350, 80%, 55%);
+}
+
+body > header,
+body > section,
+body > footer {
+	padding: 1em calc(50% - 20rem);
+}
+
+body > header {
+	position: relative;
+	padding-bottom: 1em;
+	font-size: 200%;
+	color: hsl(190, 52%, 50%);
+	
+	background: radial-gradient(circle at bottom, white 15%, transparent 0) 0em 100% / 23em 23em,
+	            radial-gradient(circle at bottom, white 15%, transparent 0) 2em 100% / 11em 11em,
+	            radial-gradient(circle at bottom, white 30%, transparent 0) 0em 100% / 7em 7em,
+	            radial-gradient(circle at 50% 80%, white 40%, transparent 0) -1em 100% / 5em 5em;
+	background-repeat: repeat-x;
+	background-color: hsl(145, 34%, 89%);
+}
+
+	body > header h1 {
+		position: relative;
+		margin: 1em 0 0;
+		display: inline-block;
+		font-size: 300%;
+		color: inherit;
+		line-height: 1;
+	}
+
+	body > header p {
+		margin: -.75em 0 0;
+		text-transform: uppercase;
+		font-size: 50%;
+		line-height: 1;
+		letter-spacing: .08em;
+	}
+
+	body > header svg {
+		display: inline-block;
+		vertical-align: .3em;
+		max-width: 4em;
+		margin-left: -1.7em;
+		background: hsla(190, 52%, 50%, .5);
+		color: hsl(145, 34%, 89%);
+		border-radius: 50%;
+	}
+

@@ -559,7 +559,7 @@ $.add(HTMLElement.prototype, {$: false, element: false});
 
 // Define the _ property on arrays and elements
 
-Object.defineProperty(Element.prototype, "_", {
+Object.defineProperty(Node.prototype, "_", {
 	get: function () {
 		Object.defineProperty(this, "_", {
 			value: new $.Element(this)
@@ -629,10 +629,5 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 		return removeEventListener.call(this, type, callback, capture);
 	};
 }
-
-
-// Export to global scope
-self.$ = $;
-self.$$ = $.$;
 
 })();
