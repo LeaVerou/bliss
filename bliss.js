@@ -340,12 +340,13 @@ $.Element.prototype = {
 	},
 	
 	// Remove element from the DOM, optionally with a fade
-	remove: function(animation, duration) {
+	remove: function(transition, duration) {
+
 		return new Promise(function(resolve, reject){
-			if (animation && "transition" in this.style) {
+			if (transition && "transition" in this.style) {
 				$.style(this, {
-					transition: (duration || 400) + "ms",
-					transitionProperty: Object.keys(animation).join(", ")
+					transitionDuration: (duration || 400) + "ms",
+					transitionProperty: Object.keys(transition).join(", ")
 				});
 				
 				var me = this;
@@ -355,7 +356,7 @@ $.Element.prototype = {
 					resolve();
 				});
 
-				$.style(this, animation);
+				$.style(this, transition);
 			}
 			else {
 				this.parentNode && this.parentNode.removeChild(this);
@@ -402,8 +403,8 @@ $.setSpecial = {
 	},
 	
 	// Set a bunch of attributes
-	attributes: function (val) {
-		for (var attribute in val) {
+	attributes: function (o) {
+		for (var attribute in o) {
 			this.setAttribute(attribute, o[attribute]);
 		}
 	},
@@ -513,16 +514,19 @@ $.add = function (methods, on) {
 	}
 	
 	for (var method in methods) {
+
 		try {
 			var callback = methods[method];
 		}
 		catch (e) {
+
 			continue;
 		}
 		
 		(function(method, callback){
 		
 		if ($.type(callback) == "function") {
+			if (method === "setAttribute") console.log(on);
 			if (on.$) {
 				$[method] = function () {
 					var args = [].slice.apply(arguments);
@@ -555,7 +559,7 @@ $.add = function (methods, on) {
 
 $.add($.Element.prototype);
 $.add($.setSpecial);
-$.add(HTMLElement.prototype, {$: false, element: false});
+//$.add(HTMLElement.prototype, {$: false});
 
 // Define the _ property on arrays and elements
 
@@ -629,5 +633,9 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 		return removeEventListener.call(this, type, callback, capture);
 	};
 }
+
+// Set $ and $$ convenience methods, if not taken
+self.$ = self.$ || Bliss;
+self.$$ = self.$$ || Bliss.$;
 
 })();

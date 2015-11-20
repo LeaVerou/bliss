@@ -1,6 +1,6 @@
 @font-face {
 	font-family: 'Great Vibes';
-	src: url('GreatVibes-Regular.ttf');
+	src: url('greatvibes.woff');
 }
 
 :root {
@@ -15,40 +15,96 @@ body {
 	margin: auto;
 	font: 100%/1.6 Optima, sans-serif;
 	font-kerning: normal;
-	
+	font-synthesis: none;
 	background-color: white;
-
 	color: hsl(227, 15%, 24%);
 }
 
+a {
+	color: hsl(190, 52%, 50%);
+}
+
+	a:not(:hover) {
+		text-decoration: none;
+	}
+
+ul {
+	padding: 0;
+}
+
 h1 {
+	margin: 1em 0 0;
 	font-family: Great Vibes;
+	font-size: 300%;
+	line-height: 1.2;
+	font-weight: normal;
 	color: hsl(350, 80%, 55%);
+}
+
+section section h1,
+section article h1,
+h2 {
+	margin: 2em 0 0;
+	font-family: Optima, sans-serif;
+	font-size: 150%;
+	font-weight: bold;
+}
+
+section section section h1,
+section section article h1,
+section h2 {
+	font-size: 120%;
+	color: hsl(227, 10%, 50%);
 }
 
 body > header,
 body > section,
 body > footer {
-	padding: 1em calc(50% - 20rem);
+	padding: 0 calc(50% - 20rem);
+}
+
+	@media (max-width: 50rem) {
+		body > header,
+		body > section,
+		body > footer {
+			padding: 0 2em;
+		}
+	}
+
+	@media (min-width: 110rem) {
+		body > header,
+		body > section,
+		body > footer {
+			padding: 0 calc(50% - 35rem);
+		}
+	}
+
+@keyframes move {
+	from { background-position: -7.5em 100%, -5em 100%, -10em 100%, -20em 100%; }
 }
 
 body > header {
 	position: relative;
-	padding-bottom: 1em;
+	padding-top: .5em;
 	font-size: 200%;
 	color: hsl(190, 52%, 50%);
 	
-	background: radial-gradient(circle at bottom, white 15%, transparent 0) 0em 100% / 23em 23em,
-	            radial-gradient(circle at bottom, white 15%, transparent 0) 2em 100% / 11em 11em,
-	            radial-gradient(circle at bottom, white 30%, transparent 0) 0em 100% / 7em 7em,
-	            radial-gradient(circle at 50% 80%, white 40%, transparent 0) -1em 100% / 5em 5em;
+	background: radial-gradient(circle at 50% 90%, white 1em, transparent 0) -2.5em 100% / 5em 5em,
+	            radial-gradient(circle at bottom, white 1.5em, hsl(145, 34%, 99%) 2em, transparent 0) 0em 100% / 5em 5em,
+	            radial-gradient(circle at bottom, white 2em, hsl(145, 34%, 99%) 3em, transparent 0) 0 100% / 10em 10em,
+	            radial-gradient(circle at bottom, white 3em, hsl(145, 34%, 98%) 4em, transparent 0) 0em 100% / 20em 20em;
 	background-repeat: repeat-x;
 	background-color: hsl(145, 34%, 89%);
+	animation: 20s move infinite linear;
 }
+
+	body > header:hover {
+		animation-play-state: paused;
+	}
 
 	body > header h1 {
 		position: relative;
-		margin: 1em 0 0;
+		margin: 0;
 		display: inline-block;
 		font-size: 300%;
 		color: inherit;
@@ -68,8 +124,78 @@ body > header {
 		vertical-align: .3em;
 		max-width: 4em;
 		margin-left: -1.7em;
-		background: hsla(190, 52%, 50%, .5);
-		color: hsl(145, 34%, 89%);
-		border-radius: 50%;
+		color: hsla(190, 52%, 50%, .5);
 	}
 
+body > section#intro {}
+
+	body > section#intro p {
+		font-size: 120%;
+		font-style: italic;
+	}
+
+	body > section#intro ul {
+		font-size: 80%;
+	}
+
+		body > section#intro li {
+			position: relative;
+			display: inline-block;
+			width: 49%;
+			width: calc(50% - .3em);
+			margin-bottom: 1em;
+			list-style: none;
+		}
+
+			body > section#intro li::before {
+				content: "✓";
+				position: absolute;
+				right: 100%;
+				top: 0;
+				z-index: -1;
+				color: hsl(145, 50%, 80%);
+				font-size: 400%;
+				line-height: 1;
+			}
+
+			body > section#intro li strong {
+				display: block;
+				font-size: 125%;
+			}
+
+body > footer {
+	padding-top: 1em;
+	padding-bottom: 1em;
+	background: hsl(227, 15%, 24%);
+	color: white;
+}
+
+.tag {
+	display: inline-block;
+	vertical-align: middle;
+	padding: 0 .4em;
+	border-radius: .3em;
+	background: black;
+	color: white;
+	font-weight: bold;
+	font-size: .8rem;
+	line-height: 1.5;
+	text-transform: uppercase;
+}
+
+	.tag.element {
+		background: yellowgreen;
+	}
+
+	.tag.array {
+		background: hsl(350, 80%, 55%);
+	}
+
+	.tag.set {
+		background: hsl(190, 52%, 50%);
+	}
+
+.args dt {
+	font-weight: bold;
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+}
