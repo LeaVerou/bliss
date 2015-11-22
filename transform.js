@@ -15,36 +15,37 @@ actions.forEach(function(action){
 		var selector = template.getAttribute("data-" + action);
 		
 		$$(selector, context).forEach(function(element){
+			if (element.classList.contains("transform-ignore")) {
+				return;
+			}
+
 			var clone = document.importNode(template.content, true);
 
-			if (method == "around") {
+			if (method == "attr" || method == "around") {
 				var content = $$("content", clone);
 
 				if (content.length > 0) {
-					$.before(clone, element);
-					// TODO handle multiple <content> and <content select>
-					$.before(element, content[0]);
-					$.remove(content[0]);
-
-					return;
-				}
-			}
-			else if (method == "attr") {
-				var content = $$("content", clone);
-
-				if (content.length > 0) {
-					console.log(content[0]);
+					// Copy attributes from <content> onto target
 					$$(content[0].attributes).forEach(function(attribute){
 						if (attribute.name != "select") {
 							element.setAttribute(attribute.name, attribute.value);
 						}
 					});
-				}
 
-				return;
+					if (method == "around") {
+						$.before(clone, element);
+						// TODO handle multiple <content> and <content select>
+						$.before(element, content[0]);
+						$.remove(content[0]);
+					}
+
+					return;
+				}
 			}
 			
-			$[method](clone, element);	
+			$[method](clone, element);
+
+			element.normalize();
 		});
 	});
 });

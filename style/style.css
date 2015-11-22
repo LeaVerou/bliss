@@ -58,6 +58,7 @@ section h2 {
 }
 
 body > header,
+body > nav,
 body > section,
 body > footer {
 	padding: 0 calc(50% - 20rem);
@@ -65,6 +66,7 @@ body > footer {
 
 	@media (max-width: 50rem) {
 		body > header,
+		body > nav,
 		body > section,
 		body > footer {
 			padding: 0 2em;
@@ -73,6 +75,7 @@ body > footer {
 
 	@media (min-width: 110rem) {
 		body > header,
+		body > nav,
 		body > section,
 		body > footer {
 			padding: 0 calc(50% - 35rem);
@@ -104,11 +107,13 @@ body > header {
 
 	body > header h1 {
 		position: relative;
-		margin: 0;
 		display: inline-block;
+		padding: .5em .75em 0 0;
+		margin: 0;
 		font-size: 300%;
 		color: inherit;
 		line-height: 1;
+		background: url("logo.svg") top right / 1.2em 1.2em no-repeat;
 	}
 
 	body > header p {
@@ -119,13 +124,6 @@ body > header {
 		letter-spacing: .08em;
 	}
 
-	body > header svg {
-		display: inline-block;
-		vertical-align: .3em;
-		max-width: 4em;
-		margin-left: -1.7em;
-		color: hsla(190, 52%, 50%, .5);
-	}
 
 body > section#intro {}
 
@@ -163,6 +161,29 @@ body > section#intro {}
 				font-size: 125%;
 			}
 
+	body > section#intro nav {
+		margin: 2em 0;
+		text-align: center;
+	}
+
+		body > section#intro nav a {
+			display: inline-block;
+			padding: .1em .5em;
+			border: .15em solid;
+			border-radius: .3em;
+			margin: 0 .1em;
+			font-size: 120%;
+			text-decoration: none;
+			font-weight: 600;
+			color: hsl(350, 80%, 55%);
+		}
+
+		body > section#intro nav a:hover {
+			background: hsl(350, 80%, 55%);
+			border-color: hsl(350, 80%, 55%);
+			color: white;
+		}
+
 body > footer {
 	padding-top: 1em;
 	padding-bottom: 1em;
@@ -181,6 +202,7 @@ body > footer {
 	font-size: .8rem;
 	line-height: 1.5;
 	text-transform: uppercase;
+	cursor: help;
 }
 
 	.tag.element {
@@ -195,7 +217,35 @@ body > footer {
 		background: hsl(190, 52%, 50%);
 	}
 
-.args dt {
-	font-weight: bold;
-	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+.args {}
+
+	.args dt {
+		margin-top: .6em;
+		font-weight: bold;
+		font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	}
+
+	.args dd.type {
+		width: 100%;
+		margin-top: -1.5em;
+		font-style: italic;
+		text-align: right;
+	}
+
+@media (min-width: 70em) and (min-height: 40em) {
+	#toc {
+		position: fixed;
+		bottom: 0;
+		padding: 1em;
+	}
+}
+
+		#toc > ol {
+			list-style-type: none;
+			padding-left: 0;
+		}
+
+		#toc ol ol {
+			padding-left: 1.6em;
+		}	
 }

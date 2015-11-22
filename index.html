@@ -4,28 +4,14 @@
 
 <meta charset="utf-8" />
 <title>Bliss.js — Heavenly JavaScript!</title>
-<link rel="stylesheet" href="prism.css" />
-<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="style/prism.css" />
+<link rel="stylesheet" href="style/style.css" />
 
 </head>
 <body class="language-javascript">
 
 <header>
-	<h1>
-		Bliss
-	</h1>
-	
-	<svg viewBox="0 0 100 100">
-		<defs>
-			<mask id="face" fill="black">
-				<circle fill="white" r="50%" cx="50%" cy="50%" fill="white" />
-				<circle r="9" cx="17" cy="56"></circle>
-				<circle r="9" cx="82" cy="56"></circle>
-				<path fill="none" stroke="black" stroke-width="9" d="M 25,72 a 35,35 0 0,0 50,0"/>
-			</mask>
-		</defs>
-		<circle fill="currentColor" r="50%" cx="50%" cy="50%" mask="url(#face)" />
-	</svg>
+	<h1>Bliss</h1>
 	<p>Heavenly JavaScript</p>
 </header>
 
@@ -39,161 +25,19 @@
 		<li><strong>No pollution of native prototypes</strong> Only adds one <code>_</code> property</li>
 		<li><strong>Extensible</strong> Adding new blissful methods is easy as pie!</li>
 	</ul>
+
+	<nav>
+		<a href="bliss.js">Download</a>
+		<a href="docs.html">Read the docs</a>
+	</nav>
 </section>
-
-
-<section id="basics">
-	<h1>Basics</h1>
-
-	<p>Bliss includes several static methods (on the <code>Bliss</code> or <code>$</code> object). For example, to copy all properties of an object onto another object, you would call <a href="$.extend"><code>$.extend()</code></a>:</p>
-
-	<pre><code>var yolo = $.extend({foo: 1}, {bar: 2}); // or Bliss.extend(…)
-// yolo is {foo: 1, bar: 2}</code></pre>
-
-	<p>Some of Bliss’ methods take an element or an array of elements as their first argument. For example, to set both the <code>width</code> and <code>padding</code> of an element to 0, you could use the <a href="#$.style"><code>$.style()</code></a> method:</p>
-
-	<pre><code>$.style(element, {width: 0, padding: 0});</code></pre>
-
-	<p>These types of methods are also available on elements and arrays, for convenience. However, since adding convenience methods to elements and arrays directly is a JS Mortal Sin™, Bliss <a href="http://lea.verou.me/2015/04/idea-extending-native-dom-prototypes-without-collisions">adds a <code>_</code> property on elements &amp; arrays</a>, on which it hangs all its methods. The previous example would be written as:</p>
-
-	<pre><code>element._.style({
-	"width": 0, 
-	"padding": 0
-});</code></pre>
-
-	<p>The <code>._.</code> sequence of characters that appears all too often when coding with Bliss is where Bliss gets its logo from.</p>
-
-	<p>Methods that are available on elements like this will have an <a class="tag element">Element</a> tag in these docs.</p>
-
-	<p>If you wanted to set the width and padding of multiple elements to 0, you could use an array:</p>
-
-	<pre><code>myArray._.style({
-	"width": 0, 
-	"padding": 0
-});</code></pre>
-
-	<p>Methods that are available on arrays like this will have an <a class="tag array">Array</a> tag in these docs.</p>
-
-	<p>For example, assume that in addition to these CSS changes you also wanted to add a <code>hidden</code> attribute to this element. Bliss methods that don’t return a value return the element or array they are called on, so you could call more element methods on them, including native ones:</p>
-
-	<pre><code>element._.style({
-	"width": 0, 
-	"padding": 0
-}).setAttribute("hidden", "");</code></pre>
-
-	<p>Now assume you also wanted to set a second attribute: The "class" attribute to "foo". The native <code>setAttribute()</code> method is not chainable, it returns <code>undefined</code>. However, all native element methods are also available on the almighty <code>_</code> property, and there they are also chainable:</p>
-
-	<pre><code>element._.style({
-	"width": 0, 
-	"padding": 0
-})._.setAttribute("hidden", "").setAttribute("class", "foo");</code></pre>
-
-	<p>This works, but it’s a bit unwieldy. Thankfully, Bliss offers an <code>$.attributes()</code> method for setting multiple attributes at once:</p>
-
-	<pre><code>element._.style({
-	"width": 0, 
-	"padding": 0
-})._.attributes({
-	"hidden": "", 
-	"class": "foo"
-});</code></pre>		
-
-	<p>This is better and more readable, but still a bit awkward. Turns out there is a special <a href="#$.set"><code>$.set()</code></a> method to do both at once:</p>
-
-	<pre><code>element._.set({
-	attributes: {
-		"hidden": "",
-		"class": "foo"
-	},
-	style: {
-		"width": 0,
-		"padding": 0
-	}
-});</code></pre>
-
-	<p>Because <code>$.attributes()</code> and <code>$.style()</code> are also available for <code>$.set()</code> parameters, they will have the special <a class="tag set">$.set()</a> tag in these docs.</p>
-
-	<p>Note that you don’t actually need <code>attributes: {…}</code> in <code>$.set()</code> at all: if there are any unrecognized properties in the parameter object, Bliss will first check if there is a property with that name on the element and if not, set an attribute. So you could rewrite the example above as:</p>
-
-	<pre><code>element._.set({
-	"hidden": "",
-	"class": "foo" // or "className": "foo" to use the property
-	style: {
-		"width": 0,
-		"padding": 0
-	}
-});</code></pre>
-</section>
-
-<section id="methods">
-	<h1>Methods</h1>
-
-	<article>
-		<h1>extend</h1>
-
-		<p class="description">Copy properties of an object onto another.</p>
-
-		<pre><code>$.extend(target, source)</code></pre>
-
-		<dl class="args">
-			<dt class="object">target</dt>
-			<dd>The object that will receive the new properties.</dd>
-
-			<dt class="object">source</dt>
-			<dd>An object containing the additional properties to merge in.</dd>
-		</dl>
-		
-		<pre class="examples"><code>var o1 = {foo: 1, bar:2}
-o2 = $.extend(o1, {foo: 3, baz: 4});
-// o2 is {foo: 3, bar: 2, baz: 4}</code></pre>
-		
-		<ul class="notes">
-			<li>Overwrites are allowed.</li>
-			<li>It modifies <code>target</code>, it doesn’t create a new object.</li>
-			<li>If <code>source</code> contains accessors <a href="http://lea.verou.me/2015/08/copying-properties-the-robust-way">it copies the accessors not the result of running the getter</a>. This is unlike similar functions in other libraries or the native <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign"><code>Object.assign()</code></a> in ES6.</li>
-		</ul>
-
-		<a href="http://api.jquery.com/jQuery.extend" class="jq">jQuery.extend()</a>
-	</article>
-
-	<article>
-		<h1 class="element array set">style</h1>
-		
-		<p class="description">Set multiple CSS properties on an element.</p>
-
-		<pre><code>$.style(element, properties)</code></pre>
-
-		<dl class="args">
-			<dt>subject</dt>
-			<dd>Type: Element or Array</dd>
-			<dd>The element(s) to apply the CSS properties to.</dd>
-
-			<dt class="object">properties</dt>
-			<dd>The CSS properties to apply, in camelCase format</dd>
-		</dl>
-
-		<a href="http://api.jquery.com/css/" class="jq">jQuery.fn.css()</a>
-	</article>
-
-	<template data-start="article > h1">$.</template>
-	<template data-end="article > h1">()</template>
-	<template data-end="article > h1.element"> <span class="tag element">Element</span> </template>
-	<template data-end="article > h1.array"> <span class="tag array">Array</span> </template>
-	<template data-end="article > h1.set"> <span class="tag set">$.set()</span> </template>
-	<template data-before=".examples"><h2>Examples</h2></template>
-	<template data-before=".args"><h2>Arguments</h2></template>
-	<template data-after=".args > dt.object"><dd>Type: Object</dd></template>
-	<template data-before=".notes"><h2>Notes and caveats</h2></template>
-	<template data-attr=".jq"><content target="_blank"></content></template>
-	<template data-around=".jq"><p><strong>Similar jQuery method: </strong> <content></content></p></template>
-</section>
-
 
 <footer>By <a href="http://lea.verou.me">Lea Verou</a> &bull; Blog post</footer>
 
 <script src="bliss.js"></script>
 <script src="transform.js"></script>
-<script src="prism.js"></script>
+<script src="index.js"></script>
+<script src="style/prism.js"></script>
 
 </body>
 </html>

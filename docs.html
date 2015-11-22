@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8" />
+<title>Bliss.js — Heavenly JavaScript!</title>
+<link rel="stylesheet" href="style/prism.css" />
+<link rel="stylesheet" href="style/style.css" />
+
+</head>
+<body class="language-javascript">
+
+<header>
+	<h1>Bliss</h1>
+	<p>Heavenly JavaScript</p>
+</header>
+
+<nav id="toc">
+	<h1>Contents</h1>
+	<ol></ol>
+</nav>
+
+<section id="basics">
+	<h1>Basics</h1>
+
+	<p>Bliss includes several static methods (on the <code>Bliss</code> or <code>$</code> object). For example, to copy all properties of an object onto another object, you would call <a href="$.extend"><code>$.extend()</code></a>:</p>
+
+	<pre><code>var yolo = $.extend({foo: 1}, {bar: 2}); // or Bliss.extend(…)
+// yolo is {foo: 1, bar: 2}</code></pre>
+
+	<p>Some of Bliss’ methods take an element or an array of elements as their first argument. For example, to set both the <code>width</code> and <code>padding</code> of an element to 0, you could use the <a href="#$.style"><code>$.style()</code></a> method:</p>
+
+	<pre><code>$.style(element, {width: 0, padding: 0});</code></pre>
+
+	<p>These types of methods are also available on elements and arrays, for convenience. However, since adding convenience methods to elements and arrays directly would be a JS Mortal Sin™, Bliss only <a href="http://lea.verou.me/2015/04/idea-extending-native-dom-prototypes-without-collisions">adds a <code>_</code> property on elements &amp; arrays</a>, on which it hangs all its methods. The previous example would be written as:</p>
+
+	<pre><code>element._.style({
+	"width": 0, 
+	"padding": 0
+});</code></pre>
+
+	<p>The <code>._.</code> sequence of characters that appears all too often when coding with Bliss is where Bliss gets its logo from.</p>
+
+	<p>Methods that are available on elements like this will have an <a class="tag element">Element</a> tag in these docs.</p>
+
+	<p>If you wanted to set the width and padding of multiple elements to 0, you could use an array:</p>
+
+	<pre><code>myArray._.style({
+	"width": 0, 
+	"padding": 0
+});</code></pre>
+
+	<p>Methods that are available on arrays like this will have an <a class="tag array">Array</a> tag in these docs.</p>
+
+	<p>For example, assume that in addition to these CSS changes you also wanted to add a <code>hidden</code> attribute to this element. Bliss methods that don’t return a value return the element or array they are called on, so you could call more element methods on them, including native ones:</p>
+
+	<pre><code>element._.style({
+	"width": 0, 
+	"padding": 0
+}).setAttribute("hidden", "");</code></pre>
+
+	<p>Now assume you also wanted to set a second attribute: The "class" attribute to "foo". The native <code>setAttribute()</code> method is not chainable, it returns <code>undefined</code>. However, all native element methods are also available on the almighty <code>_</code> property, and there they are also chainable:</p>
+
+	<pre><code>element._.style({
+	"width": 0, 
+	"padding": 0
+})._.setAttribute("hidden", "").setAttribute("class", "foo");</code></pre>
+
+	<p>This works, but it’s a bit unwieldy. Thankfully, Bliss offers an <code>$.attributes()</code> method for setting multiple attributes at once:</p>
+
+	<pre><code>element._.style({
+	"width": 0, 
+	"padding": 0
+})._.attributes({
+	"hidden": "", 
+	"class": "foo"
+});</code></pre>		
+
+	<p>This is better and more readable, but still a bit awkward. Turns out there is a special <a href="#$.set"><code>$.set()</code></a> method to do both at once:</p>
+
+	<pre><code>element._.set({
+	attributes: {
+		"hidden": "",
+		"class": "foo"
+	},
+	style: {
+		"width": 0,
+		"padding": 0
+	}
+});</code></pre>
+
+	<p>Because <code>$.attributes()</code> and <code>$.style()</code> are also available for <code>$.set()</code> parameters, they will have the special <a class="tag set">$.set()</a> tag in these docs.</p>
+
+	<p>Note that you don’t actually need <code>attributes: {…}</code> in <code>$.set()</code> at all: if there are any unrecognized properties in the parameter object, Bliss will first check if there is a property with that name on the element and if not, set an attribute. So you could rewrite the example above as:</p>
+
+	<pre><code>element._.set({
+	"hidden": "",
+	"class": "foo" // or "className": "foo" to use the property
+	style: {
+		"width": 0,
+		"padding": 0
+	}
+});</code></pre>
+</section>
+
+<section id="methods">
+	<h1>Methods</h1>
+
+	<p><strong>Note:</strong> The <code>$</code> is just an alias to <code>Bliss</code>. If another library that uses <code>$</code> is included before Bliss, then Bliss will not use <code>$</code>. You can always alias <code>$</code> to <code>Bliss</code> manually, by putting this before any of your code (but after including Bliss):</p>
+
+	<pre><code>self.$ = Bliss;</code></pre>
+
+	<p>Similarly, <code>$$()</code> is an alias to Bliss’ <code>$.$()</code> or <code>Bliss.$()</code> function. If it’s already defined by the time Bliss is called, Bliss will not use it. You can do so manually with this line:</p>
+
+	<pre><code>self.$$ = Bliss.$;</code></pre>
+
+	<p>When writing Bliss plugins, if you want to use <code>$()</code> and <code>$$()</code> it’s good practice to make local variables with them, in case they’re not available:</p>
+
+	<pre><code>(function($, $$){
+	// Plugin code here
+})(Bliss, Bliss.$)</code></pre>
+
+	<article>
+		<h1 class="transform-ignore">$()</h1>
+
+		<p class="description">Select an element by selector. Mainly a shortcut for <code>element.querySelector()</code>.</p>
+
+		<pre><code>$(selector [, context])</code></pre>
+
+		<dl class="args">
+			<dt class="string">selector</dt>
+			<dd>The CSS selector to use.</dd>
+
+			<dt class="optional element">context</dt>
+			<dd>Returned element needs to be a descendant of this element.</dd>
+		</dl>
+
+		<pre class="examples"><code>// return the first element with a class of .foo
+// that is inside the first element with a class of .bar
+var ret = $(".foo", $(".bar"));</code></pre>
+
+<pre><code>// Return the first element with a class of .foo
+// that is inside any element with a class of .bar
+var ret = $(".bar .foo");</code></pre>
+
+<pre><code>// Get the first element with a class of .foo
+// and set its title attribute to "yolo"
+// If there is no such element, this will throw an exception!
+$(".foo").setAttribute("title", "yolo");</code></pre>
+
+		<ul class="notes">
+			<li>If the element is not found, it will return <code>null</code>. This could cause an exception if methods are called on the result.</li>
+		</ul>
+
+		<a href="http://api.jquery.com/jQuery/#jQuery1" class="jq">$()</a>
+	</article>
+
+	<article>
+		<h1 class="transform-ignore">$$()</h1>
+
+		<p class="description">Get all elements that match a given selector as an array. Similar to <code>element.querySelectorAll()</code> but returns an Array instead of a NodeList, so it has all of the convenience methods we’ve come to love on arrays.</p>
+
+		<pre><code>$$(selector [, context])</code></pre>
+
+		<dl class="args">
+			<dt class="string">selector</dt>
+			<dd>The CSS selector to use.</dd>
+
+			<dt class="optional element">context</dt>
+			<dd>Returned elements need to be a descendants of this element.</dd>
+		</dl>
+		
+		<pre class="examples"><code>// Add an id to all &lt;h1> headings that don’t already have one
+$$("h1:not([id])").forEach(function(h1){
+	h1.id = h1.textContent.replace(/\W/g, "");
+});</code></pre>
+		<pre><code>// Get an array with all ids on the page
+var ids = $$("[id]").map(function(element){
+	return element.id;
+});</code></pre>
+	</article>
+
+	<article>
+		<h1>extend</h1>
+
+		<p class="description">Copy properties of an object onto another.</p>
+
+		<pre><code>$.extend(target, source)</code></pre>
+
+		<dl class="args">
+			<dt class="object">target</dt>
+			<dd>The object that will receive the new properties.</dd>
+
+			<dt class="object">source</dt>
+			<dd>An object containing the additional properties to merge in.</dd>
+		</dl>
+		
+		<pre class="examples"><code>var o1 = {foo: 1, bar:2}
+o2 = $.extend(o1, {foo: 3, baz: 4});
+// o2 is {foo: 3, bar: 2, baz: 4}</code></pre>
+		
+		<ul class="notes">
+			<li>Overwrites are allowed.</li>
+			<li>It modifies <code>target</code>, it doesn’t create a new object.</li>
+			<li>If <code>source</code> contains accessors <a href="http://lea.verou.me/2015/08/copying-properties-the-robust-way">it copies the accessors not the result of running the getter</a>. This is unlike similar functions in other libraries or the native <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign"><code>Object.assign()</code></a> in ES6.</li>
+		</ul>
+
+		<a href="http://api.jquery.com/jQuery.extend" class="jq">jQuery.extend()</a>
+	</article>
+
+	<article>
+		<h1 class="element array">fire</h1>
+		
+		<p class="description">Fire a synthesized event.</p>
+
+		<pre><code>$.style(subject, type [, properties])</code></pre>
+		<pre><code>subject._.style(type [, properties])</code></pre>
+
+		<dl class="args">
+			<dt>subject</dt>
+			<dd class="type">Type: Element or Array</dd>
+			<dd>The element(s) to apply the CSS properties to.</dd>
+			
+			<dt class="string">type</dt>
+			<dd>The event type</dd>
+
+			<dt class="object">properties</dt>
+			<dd>If provided, these properties will be added to the event object.</dd>
+		</dl>
+
+		<pre class="examples"><code>// Fire a custom event on a map widget
+myMap._.fire("locationchange", {
+	location: [42.361667, -71.092751]
+});</code></pre>
+		
+		<pre><code>// Fire a fake input event
+myInput._.fire("input");</code></pre>
+
+		<ul class="notes">
+			<li>If you are writing a library meant to be run on websites you don’t control, it is recommended that you namespace your events by adding the library name before them, like <code>"mylibrary.locationchange"</code> or <code>"mylibrary:locationchange"</code>, to avoid collisions.</li>
+		</ul>
+
+		<a href="http://api.jquery.com/trigger" class="jq">jQuery.fn.trigger()</a>
+	</article>
+
+	<article>
+		<h1 class="element array set">style</h1>
+		
+		<p class="description">Set multiple CSS properties on an element.</p>
+
+		<pre><code>$.style(subject, properties)</code></pre>
+		<pre><code>subject._.style(properties)</code></pre>
+
+		<dl class="args">
+			<dt>subject</dt>
+			<dd class="type">Type: Element or Array</dd>
+			<dd>The element(s) to apply the CSS properties to.</dd>
+
+			<dt class="object">properties</dt>
+			<dd>The CSS properties to apply, in camelCase format</dd>
+		</dl>
+
+		<ul class="notes">
+			<li>If only setting one property on one element, you don’t need this. Just use the native <code>element.style.propertyName = value;</code> syntax.</li>
+		</ul>
+
+		<a href="http://api.jquery.com/css" class="jq">jQuery.fn.css()</a>
+	</article>
+
+	<article>
+		<h1 class="element array set">events</h1>
+		
+		<p class="description">Set multiple event listeners on an element.</p>
+
+		<pre><code>$.events(subject, handlers)</code></pre>
+		<pre><code>subject._.events(handlers)</code></pre>
+
+		<dl class="args">
+			<dt>subject</dt>
+			<dd class="type">Type: Element or Array</dd>
+			<dd>The element(s) to apply the CSS properties to.</dd>
+
+			<dt class="object">handlers</dt>
+			<dd>An object whose keys are the events and the values the listeners. You can include multiple events by space-separating them.</dd>
+		</dl>
+
+		<pre class="examples"><code>element._.events()</code></pre>
+
+		<ul class="notes">
+			<li>If only setting one event listener, just use the native <code>element.addEventListener(type, handler, useCapture)</code> syntax. If setting one event listener on multiple elements, you can use <code>array._.addEventListener</code>, like so:
+			<pre><code>$$("input")._.addEventListener("input", function(){ /* ... */);</code></pre>
+			</li>
+		</ul>
+
+		<a href="http://api.jquery.com/bind" class="jq">jQuery.fn.bind()</a>
+	</article>
+
+	<template data-start="article > h1">$.</template>
+	<template data-end="article > h1">()</template>
+	
+	<!-- Add tags -->
+	<template data-end="article > h1.element"> <span class="tag element" title="Available on element._">Element</span> </template>
+	<template data-end="article > h1.array"> <span class="tag array" title="Available on array._">Array</span> </template>
+	<template data-end="article > h1.set"> <span class="tag set" title="Available inside $.set()">$.set()</span> </template>
+	
+	<!-- Add headings -->
+	<template data-before=".examples"><h2>Examples</h2></template>
+	<template data-before=".args"><h2>Arguments</h2></template>
+	<template data-before=".notes"><h2>Notes and caveats</h2></template>
+	
+	<!-- Add argument types -->
+	<template data-after=".args > dt.object"><dd class="type">Type: Object</dd></template>
+	<template data-after=".args > dt.string"><dd class="type">Type: String</dd></template>
+	
+	<!-- Add jQuery-like reference -->
+	<template data-around=".jq">
+		<p><strong>Similar jQuery method: </strong> <content target="_blank"></content></p>
+	</template>
+</section>
+
+
+<footer>By <a href="http://lea.verou.me">Lea Verou</a> &bull; Blog post</footer>
+
+<script src="bliss.js"></script>
+<script src="transform.js"></script>
+<script src="index.js"></script>
+<script src="style/prism.js"></script>
+
+</body>
+</html>
