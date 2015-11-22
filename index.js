@@ -1,5 +1,5 @@
 // Add ids to all functions
-$$("#methods article > h1").forEach(function(h1) {
+$$("#docs article > h1").forEach(function(h1) {
 	var article = h1.parentNode;
 
 	if (article && !article.id) {
