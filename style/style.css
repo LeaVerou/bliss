@@ -274,3 +274,11 @@ body > footer {
 		#toc ol ol a {
 			color: hsl(227, 15%, 24%);
 		}
+
+.implementation + pre {
+	display: none;
+}
+
+.implementation + pre.visible {
+	display: block;
+}

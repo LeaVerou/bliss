@@ -26,6 +26,8 @@ $.extend = function (to, from, callback) {
 }
 
 $.extend($, {
+	sources: {},
+
 	$: function(expr, con) {
 		return expr instanceof Node || expr instanceof Window? [expr] :
 		       [].slice.call(typeof expr == "string"? (con || document).querySelectorAll(expr) : expr || []);
@@ -517,15 +519,15 @@ $.add = function (methods, on) {
 			var callback = methods[method];
 		}
 		catch (e) {
-
 			continue;
 		}
 		
 		(function(method, callback){
 		
 		if ($.type(callback) == "function") {
-			if (method === "setAttribute") console.log(on);
 			if (on.$) {
+				$.sources[method] = callback;
+
 				$[method] = function () {
 					var args = [].slice.apply(arguments);
 					var element = args.shift();
@@ -557,7 +559,7 @@ $.add = function (methods, on) {
 
 $.add($.Element.prototype);
 $.add($.setSpecial);
-//$.add(HTMLElement.prototype, {$: false});
+$.add(HTMLElement.prototype, {$: false});
 
 // Define the _ property on arrays and elements
 

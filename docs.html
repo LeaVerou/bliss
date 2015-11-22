@@ -186,6 +186,17 @@ var ids = $$("[id]").map(function(element){
 		<h1>create</h1>
 
 		<p class="description">Create an element.</p>
+
+		<pre>var element = $.create(tagName, options);</pre>
+		<pre>var element = $.create(options);</pre>
+
+		<dl class="args">
+			<dt class="string">tagName</dt>
+			<dd>The tag name of the element to create.</dd>
+
+			<dt class="object">options</dt>
+			<dd>An object with several options for the new element (properties, attributes, events etc). For details, see <code>$.set()</code></dd>
+		</dl>
 	</article>
 
 	<article>

@@ -1,10 +1,37 @@
-// Add ids to all functions
+// Add ids and implementation to all functions
 $$("#docs article > h1").forEach(function(h1) {
 	var article = h1.parentNode;
+	var fn = h1.firstChild.textContent.trim().replace(/^\$\.|\(\)$/g, "");
 
 	if (article && !article.id) {
-		article.id = "function-" + h1.firstChild.textContent.trim().replace(/^\$\.|\(\)$/g, "");
+		article.id = "function-" + fn;
 	}
+
+	article._.contents({
+		tag: "button",
+		textContent: "Show implementation",
+		className: "implementation",
+		onclick: function(){
+			var pre = this.nextElementSibling;
+
+			if (!pre || !pre.matches("pre")) {
+				pre = document.createElement("pre")._.after(this);
+
+				var source = ($.sources[fn] || $[fn]) + "";
+				source = source.replace(/^\t/gm, "");
+
+				var code = $.create("code", {
+					textContent: source,
+					inside: pre
+				});
+
+				Prism.highlightElement(pre);
+			}
+
+			this.textContent = (pre.classList.contains("visible")? "Show" : "Hide") + " implementation";
+			pre.classList.toggle("visible");
+		}
+	});
 });
 
 // Add ids to all other sections
@@ -63,7 +90,7 @@ if (/\/docs\.html$/.test(location.pathname)) {
 		}
 
 		a.texContent += "()";
-	})
+	});
 }
 
 // TODO Find references to Bliss functions and make them links to the docs
