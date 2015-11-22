@@ -52,11 +52,11 @@ if (/\/docs\.html$/.test(location.pathname)) {
 		if (!a.href) {
 			var content = a.textContent;
 			var url = "http://api.jquery.com/";
-			console.log(content);
+			
 			var fn = content.match(/jQuery(?:\.fn)?\.([a-z]+)/i)[1];
 
 			if (content.indexOf('jQuery.fn') === -1) {
-				url += "jQuery"
+				url += "jQuery."
 			}
 
 			a.href = url + fn;

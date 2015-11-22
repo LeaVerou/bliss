@@ -42,7 +42,7 @@ $.extend($, {
 		var ret = (Object.prototype.toString.call(obj).match(/^\[object\s+(.*?)\]$/)[1] || "").toLowerCase();
 	
 		if(ret == 'number' && isNaN(obj)) {
-			return 'NaN';
+			return 'nan';
 		}
 	
 		return ret;
@@ -252,7 +252,6 @@ $.extend($, {
 		o.data = o.data || '';
 		o.method = o.method || 'GET';
 		o.headers = o.headers || {};
-		o.onerror = o.onerror || $.fetch.onerror || null;
 
 		var xhr = new XMLHttpRequest();
 
@@ -265,7 +264,6 @@ $.extend($, {
 		xhr.open(o.method, url, !o.sync);
 
 		for (var property in o) {
-
 			if (property in xhr) {
 				try {
 					xhr[property] = o[property];
@@ -292,7 +290,7 @@ $.extend($, {
 					// Success!
 					resolve(xhr);
 				}
-				else if (o.onerror) {
+				else {
 					reject(Error(xhr.statusText));
 				}
 			

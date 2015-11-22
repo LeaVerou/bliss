@@ -238,7 +238,7 @@ body > footer {
 		text-align: right;
 	}
 
-@media (min-width: 70em) and (min-height: 40em) {
+@media (min-width: 60em) and (min-height: 30em) {
 	#toc {
 		position: fixed;
 		bottom: 0;
@@ -246,6 +246,14 @@ body > footer {
 		box-sizing: border-box;
 		max-width: 100vh;
 		font-size: 80%;
+	}
+}
+
+@media (max-width: 60em), (max-height: 30em) {
+	#toc > ol {
+		-webkit-column-count: 2;
+		-moz-column-count: 2;
+		column-count: 2;
 	}
 }
 

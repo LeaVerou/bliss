@@ -329,7 +329,7 @@ var ids = $$("[id]").map(function(element){
 
 		<a class="jq">jQuery.fn.bind</a>
 	</article>
-	
+
 	<article>
 		<h1>waitFor</h1>
 	</article>
@@ -415,10 +415,31 @@ o2 = $.extend(o1, {foo: 3, baz: 4});
 
 	<article>
 		<h1>stored</h1>
+
+		<p class="description">Properties that behave like normal properties but also execute code upon getting/setting.</p>
 	</article>
 
 	<article>
 		<h1>type</h1>
+
+		<p class="description">Determine the internal JavaScript [[Class]] of an object.</p>
+
+		<pre><code>var type = $.type(object)</code></pre>
+
+		<dl class="args">
+			<dt class="object">object</dt>
+			<dd>The object whose [[Class]] we want to get.</dd>
+
+			<dt class="string">type</dt>
+			<dd>The internal [[Class]] of the object, lowercased.</dd>
+		</dl>
+
+		<pre><code>// Check if the second argument of a function is a regexp
+if ($.type(arguments[1]) == "regexp") {
+	// ...
+}</code></pre>
+
+		<a class="jq">jQuery.type</a>
 	</article>
 </section>
 
@@ -429,12 +450,72 @@ o2 = $.extend(o1, {foo: 3, baz: 4});
 		<h1>fetch</h1>
 
 		<p class="description">Helper for AJAX calls, inspired by the new <a href="https://fetch.spec.whatwg.org" target="_blank">Fetch API</a>.</p>
+
+		<pre><code>$.fetch(url, options)</code></pre>
+
+		<dl class="args">
+			<dt class="string">url</dt>
+			<dd>The URL to which the request is sent.</dd>
+
+			<dt class="object">options</dt>
+			<dd>A object with options, including:
+				<dl class="options">
+					<dt class="string">method</dt>
+					<dd>The HTTP method, such as <code>"GET"</code> or <code>"POST"</code>.</dd>
+
+					<dt class="string">data</dt>
+					<dd>Any data to send, as a string</dd>
+
+					<dt class="object">headers</dt>
+					<dd>Object with any extra headers to set.</dd>
+
+					<dt>*</dt>
+					<dd>Any remaining properties will be set on the <code>XMLHttpObject</code> directly.</dd>
+				</dl>
+			</dd>
+
+			<dt class="promise">promise</dt>
+			<dd>A promise that is resolved when the resource is successfully fetched and rejected if there is any error.</dd>
+		</dl>
+
+		<pre><code>$.fetch("/api/create", {
+	method: "POST",
+	responseType: "json"
+}).then(function(){
+	alert("success!");
+}).catch(function(error){
+	console.error(error);
+});</code></pre>
+	
+		<a class="jq">jQuery.ajax</a>
 	</article>
 
 	<article>
 		<h1>include</h1>
 
 		<p class="description">Include a script file conditionally and run code after it has loaded.</p>
+
+		<pre><code>var promise = $.include([condition,] url)</code></pre>
+
+		<dl class="args">
+			<dt class="string">condition</dt>
+			<dd>Optional condition. If true, it means the script is already loaded and nothing will happen.</dd>
+
+			<dt class="string">url</dt>
+			<dd>URL of the script to load.</dd>
+
+			<dt class="promise">promise</dt>
+			<dd>A promise that gets resolved when the script has loaded.</dd>
+		</dl>
+
+		<pre><code>// Load dropbox.js from a CDN if it’s not already loaded and run some code that uses it
+var url = "https://cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js";
+$.include(self.Dropbox, url).then(function(){
+	var client = new Dropbox.Client({ key: key });
+	// ...
+});</code></pre>
+
+		<a class="jq">jQuery.getScript</a>
 	</article>
 </section>
 
@@ -448,12 +529,12 @@ o2 = $.extend(o1, {foo: 3, baz: 4});
 
 <!-- Add headings -->
 <template data-before=".args + pre"><h2>Examples</h2></template>
-<template data-before=".args"><h2>Arguments</h2></template>
+<template data-before=".args"><h2>Arguments & Return value</h2></template>
 <template data-before=".notes"><h2>Notes and caveats</h2></template>
 
 <!-- Add argument types -->
-<template data-after=".args > dt.object"><dd class="type">Type: Object</dd></template>
-<template data-after=".args > dt.string"><dd class="type">Type: String</dd></template>
+<template data-after=".args dt.object"><dd class="type">Type: Object</dd></template>
+<template data-after=".args dt.string"><dd class="type">Type: String</dd></template>
 
 <!-- Add jQuery-like reference -->
 <template data-around=".jq">
