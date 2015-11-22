@@ -152,7 +152,7 @@ $(".foo").setAttribute("title", "yolo");</code></pre>
 			<li>If the element is not found, it will return <code>null</code>. This could cause an exception if methods are called on the result.</li>
 		</ul>
 
-		<a href="http://api.jquery.com/jQuery/#jQuery1" class="jq">$()</a>
+		<a href="http://api.jquery.com/jQuery/#jQuery1" class="jq">$</a>
 	</article>
 
 	<article>
@@ -181,6 +181,24 @@ var ids = $$("[id]").map(function(element){
 	</article>
 
 	<article>
+		<h1>Class</h1>
+
+		<p class="description">Helper for defining OOP-like classes.</p>
+	</article>
+
+	<article>
+		<h1>create</h1>
+
+		<p class="description">Create an element.</p>
+	</article>
+
+	<article>
+		<h1>clone</h1>
+
+		<p class="description">Clone an element, with events.</p>
+	</article>
+
+	<article>
 		<h1>extend</h1>
 
 		<p class="description">Copy properties of an object onto another.</p>
@@ -205,7 +223,37 @@ o2 = $.extend(o1, {foo: 3, baz: 4});
 			<li>If <code>source</code> contains accessors <a href="http://lea.verou.me/2015/08/copying-properties-the-robust-way">it copies the accessors not the result of running the getter</a>. This is unlike similar functions in other libraries or the native <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign"><code>Object.assign()</code></a> in ES6.</li>
 		</ul>
 
-		<a href="http://api.jquery.com/jQuery.extend" class="jq">jQuery.extend()</a>
+		<a class="jq">jQuery.extend</a>
+	</article>
+	
+	<article>
+		<h1>fetch</h1>
+
+		<p class="description">Helper for AJAX calls, inspired by the new <a href="https://fetch.spec.whatwg.org" target="_blank">Fetch API</a>.</p>
+	</article>
+
+	<article>
+		<h1>include</h1>
+
+		<p class="description">Include a script file conditionally and run code after it has loaded.</p>
+	</article>
+
+	<article>
+		<h1>lazy</h1>
+
+		<p class="description">Define lazily evaluated properties on an object.</p>
+	</article>
+
+	<article>
+		<h1>stored</h1>
+	</article>
+
+	<article>
+		<h1>type</h1>
+	</article>
+
+	<article>
+		<h1>waitFor</h1>
 	</article>
 
 	<article>
@@ -240,31 +288,61 @@ myInput._.fire("input");</code></pre>
 			<li>If you are writing a library meant to be run on websites you don’t control, it is recommended that you namespace your events by adding the library name before them, like <code>"mylibrary.locationchange"</code> or <code>"mylibrary:locationchange"</code>, to avoid collisions.</li>
 		</ul>
 
-		<a href="http://api.jquery.com/trigger" class="jq">jQuery.fn.trigger()</a>
+		<a class="jq">jQuery.fn.trigger</a>
 	</article>
 
 	<article>
-		<h1 class="element array set">style</h1>
-		
-		<p class="description">Set multiple CSS properties on an element.</p>
+		<h1>remove</h1>
 
-		<pre><code>$.style(subject, properties)</code></pre>
-		<pre><code>subject._.style(properties)</code></pre>
+		<p class="description">Remove an element from the DOM, optionally with a transition.</p>
+	</article>
+
+	<article>
+		<h1>set</h1>
+
+		<p class="description">Set multiple traits of an element (properties, attributes, events, contents etc).</p>
+	</article>
+
+	<article>
+		<h1 class="element array set">after</h1>
+	</article>
+
+	<article>
+		<h1 class="element array set">around</h1>
+	</article>
+
+	<article>
+		<h1 class="element array set">attributes</h1>
+	</article>
+
+	<article>
+		<h1 class="element array set">before</h1>
+	</article>
+
+	<article>
+		<h1 class="element array set">contents</h1>
+		
+		<p class="description">Append element(s) and text nodes to an element</p>
+
+		<pre><code>$.contents(subject, contents)</code></pre>
+		<pre><code>subject._.contents(contents)</code></pre>
 
 		<dl class="args">
 			<dt>subject</dt>
 			<dd class="type">Type: Element or Array</dd>
 			<dd>The element(s) to apply the CSS properties to.</dd>
 
-			<dt class="object">properties</dt>
-			<dd>The CSS properties to apply, in camelCase format</dd>
+			<dt class="object">contents</dt>
+			<dd></dd>
 		</dl>
 
-		<ul class="notes">
-			<li>If only setting one property on one element, you don’t need this. Just use the native <code>element.style.propertyName = value;</code> syntax.</li>
-		</ul>
+		<pre><code>element._.content()</code></pre>
 
-		<a href="http://api.jquery.com/css" class="jq">jQuery.fn.css()</a>
+		<a class="jq">jQuery.fn.html</a>
+	</article>
+
+	<article>
+		<h1 class="element array set">delegate</h1>
 	</article>
 
 	<article>
@@ -284,7 +362,9 @@ myInput._.fire("input");</code></pre>
 			<dd>An object whose keys are the events and the values the listeners. You can include multiple events by space-separating them.</dd>
 		</dl>
 
-		<pre class="examples"><code>element._.events()</code></pre>
+		<pre><code>$$('input[type="range"]')._.events({
+	"oninput onchange": function(evt) { this.title = this.value}
+})</code></pre>
 
 		<ul class="notes">
 			<li>If only setting one event listener, just use the native <code>element.addEventListener(type, handler, useCapture)</code> syntax. If setting one event listener on multiple elements, you can use <code>array._.addEventListener</code>, like so:
@@ -292,7 +372,49 @@ myInput._.fire("input");</code></pre>
 			</li>
 		</ul>
 
-		<a href="http://api.jquery.com/bind" class="jq">jQuery.fn.bind()</a>
+		<a class="jq">jQuery.fn.bind</a>
+	</article>
+
+	<article>
+		<h1 class="element array set">inside</h1>
+	</article>
+
+	<article>
+		<h1 class="element array set">properties</h1>
+	</article>
+
+	<article>
+		<h1 class="element array set">start</h1>
+	</article>
+
+	<article>
+		<h1 class="element array set">style</h1>
+		
+		<p class="description">Set multiple CSS properties on an element.</p>
+
+		<pre><code>$.style(subject, properties)</code></pre>
+		<pre><code>subject._.style(properties)</code></pre>
+
+		<dl class="args">
+			<dt>subject</dt>
+			<dd class="type">Type: Element or Array</dd>
+			<dd>The element(s) to apply the CSS properties to.</dd>
+
+			<dt class="object">properties</dt>
+			<dd>The CSS properties to apply, in camelCase format</dd>
+		</dl>
+
+		<pre class="examples"><code>document.body._.style({
+	color: "white",
+	backgroundColor: "red",
+	cssFloat: "left"
+});</code></pre>
+
+		<ul class="notes">
+			<li>If only setting one property on one element, you don’t need this. Just use the native <code>element.style.propertyName = value;</code> syntax.</li>
+		</ul>
+
+		<a class="jq">jQuery.fn.css</a>
 	</article>
 
 	<template data-start="article > h1">$.</template>
@@ -304,7 +426,7 @@ myInput._.fire("input");</code></pre>
 	<template data-end="article > h1.set"> <span class="tag set" title="Available inside $.set()">$.set()</span> </template>
 	
 	<!-- Add headings -->
-	<template data-before=".examples"><h2>Examples</h2></template>
+	<template data-before=".args + pre"><h2>Examples</h2></template>
 	<template data-before=".args"><h2>Arguments</h2></template>
 	<template data-before=".notes"><h2>Notes and caveats</h2></template>
 	

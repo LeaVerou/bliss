@@ -484,7 +484,7 @@ $.setSpecial = {
 		element.parentNode.insertBefore(this, element.nextSibling);
 	},
 	
-	// Insert the element before another element in the DOM
+	// Insert the element before another element's contents
 	start: function (element) {
 		element.insertBefore(this, element.firstChild);
 	},

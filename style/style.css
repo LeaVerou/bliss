@@ -184,9 +184,15 @@ body > section#intro {}
 			color: white;
 		}
 
+#methods article:target {
+	background: linear-gradient(transparent, white 50%) 0 0 / 100%  8em,
+	            repeating-linear-gradient(135deg, hsl(350, 80%, 96%) 0, hsl(350, 80%, 96%) .5em, white 0, white 1em) 0 0 / 100% 8em repeat-x;
+}
+
 body > footer {
 	padding-top: 1em;
 	padding-bottom: 1em;
+	margin-top: 1em;
 	background: hsl(227, 15%, 24%);
 	color: white;
 }

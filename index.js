@@ -16,34 +16,54 @@ $$("section h1").forEach(function(h1) {
 	}
 });
 
-// Table of Contents
-var tocList = $("#toc ol");
+if (/\/docs\.html$/.test(location.pathname)) {
+	// Table of Contents
+	var tocList = $("#toc ol");
 
-$$("body > section > h1").forEach(function(h1) {
-	var section = h1.parentNode;
+	$$("body > section > h1").forEach(function(h1) {
+		var section = h1.parentNode;
 
-	function toLi(h1) {
-		return $.create("li", {
-			contents: {
-				"tag": "a",
-				"href": "#" + h1.parentNode.id,
-				"textContent": h1.firstChild.textContent
+		function toLi(h1) {
+			return $.create("li", {
+				contents: {
+					"tag": "a",
+					"href": "#" + h1.parentNode.id,
+					"textContent": h1.firstChild.textContent
+				}
+			});
+		}
+
+		var li = toLi(h1);
+
+		var subheadings = $$("body > section section h1, body > section article h1", section);
+
+		if (subheadings.length) {
+			$.create("ol", {
+				contents: subheadings.map(toLi),
+				inside: li
+			});
+		}
+
+		tocList.appendChild(li);
+	});
+
+	
+	$$("a.jq").forEach(function(a){
+		if (!a.href) {
+			var content = a.textContent;
+			var url = "http://api.jquery.com/";
+			console.log(content);
+			var fn = content.match(/jQuery(?:\.fn)?\.([a-z]+)/i)[1];
+
+			if (content.indexOf('jQuery.fn') === -1) {
+				url += "jQuery"
 			}
-		});
-	}
 
-	var li = toLi(h1);
+			a.href = url + fn;
+		}
 
-	var subheadings = $$("body > section section h1, body > section article h1", section);
+		a.texContent += "()";
+	})
+}
 
-	if (subheadings.length) {
-		$.create("ol", {
-			contents: subheadings.map(toLi),
-			inside: li
-		});
-	}
-
-	tocList.appendChild(li);
-});
-
-// Find references to Bliss functions and make them links
+// TODO Find references to Bliss functions and make them links to the docs
