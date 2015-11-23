@@ -1,5 +1,7 @@
-"use strict";
 (function() {
+"use strict";
+
+var shy = !!(self.Bliss && Bliss.shy);
 
 var $ = self.Bliss = function(expr, con) {
 	return typeof expr === "string"? (con || document).querySelector(expr) : expr || null;
@@ -77,46 +79,7 @@ $.extend($, {
 		var element = doc.createElement(o.tag);
 		delete o.tag;
 		
-		return element._.set(o);
-	},
-
-	// Clones any object, including DOM elements
-	clone: function (o) {
-		if (o === null || o === undefined) {
-			return o;
-		}
-
-		var type = $.type(o);
-		var clone;
-
-		// Clone elements, with events
-		// TODO instanceof Node doesn’t account for nodes from other documents
-		if (o.cloneNode && o instanceof Node) {
-			clone = o.cloneNode(true);
-
-			var copyEvents = function(from, to) {
-
-				var listeners = from._.bliss.listeners;
-				
-				for (var type in listeners) {
-					listeners[type].forEach(function(l){
-						to.addEventListener(type, l.callback, l.capture);
-					});
-				}
-			};
-
-			var cloneDescendants = $.$("*", clone);
-
-			$.$("*", o).forEach(function(element, i, arr) {
-				copyEvents(element, cloneDescendants[i]);
-			});
-
-			copyEvents(o, clone);
-		}
-
-		// TODO clone other types of objects
-
-		return clone;
+		return $.set(element, o);
 	},
 
 	// Lazily evaluated properties
@@ -341,7 +304,6 @@ $.Element.prototype = {
 	
 	// Remove element from the DOM, optionally with a fade
 	remove: function(transition, duration) {
-
 		return new Promise(function(resolve, reject){
 			if (transition && "transition" in this.style) {
 				$.style(this, {
@@ -363,6 +325,18 @@ $.Element.prototype = {
 				resolve();
 			}
 		}.bind(this));
+	},
+
+	// Clone elements, with events
+	clone: function () {
+		var clone = this.cloneNode(true);
+		var descendants = $.$("*", clone).concat(clone);
+
+		$.$("*", this).concat(this).forEach(function(element, i, arr) {
+			$.events(descendants[i], element);
+		});
+
+		return clone;
 	},
 	
 	// Fire a synthesized event on the element
@@ -416,10 +390,30 @@ $.setSpecial = {
 	
 	// Bind one or more events to the element
 	events: function (val) {
-		for (var events in val) {
-			events.split(/\s+/).forEach(function (event) {
-				this.addEventListener(event, val[events]);
-			}, this);
+		if (val instanceof EventTarget) {
+			var me = this;
+
+			// Copy listeners
+			var listeners = val._.bliss.listeners;
+			for (var type in listeners) {
+				listeners[type].forEach(function(l){
+					me.addEventListener(type, l.callback, l.capture);
+				});
+			}
+
+			// Copy inline events
+			for (var onevent in val) {
+				if (onevent.indexOf("on") === 0) {
+					this[onevent] = val[onevent];
+				}
+			}
+		}
+		else {
+			for (var events in val) {
+				events.split(/\s+/).forEach(function (event) {
+					this.addEventListener(event, val[events]);
+				}, this);
+			}
 		}
 	},
 
@@ -562,80 +556,81 @@ $.add($.setSpecial);
 $.add(HTMLElement.prototype, {$: false});
 
 // Define the _ property on arrays and elements
-
-Object.defineProperty(Node.prototype, "_", {
-	get: function () {
-		Object.defineProperty(this, "_", {
-			value: new $.Element(this)
-		});
-		
-		return this._;
-	},
-	configurable: true
-});
-
-Object.defineProperty(Array.prototype, "_", {
-	get: function () {
-		Object.defineProperty(this, "_", {
-			value: new $.Array(this)
-		});
-		
-		return this._;
-	},
-	configurable: true
-});
-
-// Hijack addEventListener and removeEventListener to store callbacks
-
-if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
-	var addEventListener = EventTarget.prototype.addEventListener,
-	    removeEventListener = EventTarget.prototype.removeEventListener,
-	    filter = function(callback, capture, l){
-	    	return !(l.callback === callback && l.capture == capture);
-	    };
-
-	EventTarget.prototype.addEventListener = function(type, callback, capture) {
-		if (this._) {
-			var listeners = this._.bliss.listeners = this._.bliss.listeners || {};
+if (!shy) {
+	Object.defineProperty(Node.prototype, "_", {
+		get: function () {
+			Object.defineProperty(this, "_", {
+				value: new $.Element(this)
+			});
 			
-			listeners[type] = listeners[type] || [];
+			return this._;
+		},
+		configurable: true
+	});
 
-			var fired = this._.bliss.fired = this._.bliss.fired || {};
-			fired[type] = fired[type] || 0;
+	Object.defineProperty(Array.prototype, "_", {
+		get: function () {
+			Object.defineProperty(this, "_", {
+				value: new $.Array(this)
+			});
 			
-			var oldCallback = callback;
-			callback = function() {
-				this._.bliss.fired[type]++;
+			return this._;
+		},
+		configurable: true
+	});
 
-				return oldCallback.apply(this, arguments)
-			};
-			oldCallback.callback = callback;
-			
-			if (listeners[type].filter(filter.bind(null, callback, capture)).length === 0) {
-				listeners[type].push({callback: oldCallback, capture: capture});
+	// Hijack addEventListener and removeEventListener to store callbacks
+
+	if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
+		var addEventListener = EventTarget.prototype.addEventListener,
+		    removeEventListener = EventTarget.prototype.removeEventListener,
+		    filter = function(callback, capture, l){
+		    	return !(l.callback === callback && l.capture == capture);
+		    };
+
+		EventTarget.prototype.addEventListener = function(type, callback, capture) {
+			if (this._) {
+				var listeners = this._.bliss.listeners = this._.bliss.listeners || {};
+				
+				listeners[type] = listeners[type] || [];
+
+				var fired = this._.bliss.fired = this._.bliss.fired || {};
+				fired[type] = fired[type] || 0;
+				
+				var oldCallback = callback;
+				callback = function() {
+					this._.bliss.fired[type]++;
+
+					return oldCallback.apply(this, arguments)
+				};
+				oldCallback.callback = callback;
+				
+				if (listeners[type].filter(filter.bind(null, callback, capture)).length === 0) {
+					listeners[type].push({callback: oldCallback, capture: capture});
+				}
 			}
-		}
 
-		return addEventListener.call(this, type, callback, capture);
-	};
+			return addEventListener.call(this, type, callback, capture);
+		};
 
-	EventTarget.prototype.removeEventListener = function(type, callback, capture) {
-		if (this._) {
-			var listeners = this._.bliss.listeners = this._.bliss.listeners || {};
+		EventTarget.prototype.removeEventListener = function(type, callback, capture) {
+			if (this._) {
+				var listeners = this._.bliss.listeners = this._.bliss.listeners || {};
 
-			var oldCallback = callback;
-			callback = oldCallback.callback;
+				var oldCallback = callback;
+				callback = oldCallback.callback;
 
-			listeners[type] = listeners[type] || [];
-			listeners[type] = listeners[type].filter(filter.bind(null, callback, capture));
-		}
+				listeners[type] = listeners[type] || [];
+				listeners[type] = listeners[type].filter(filter.bind(null, callback, capture));
+			}
 
-		return removeEventListener.call(this, type, callback, capture);
-	};
+			return removeEventListener.call(this, type, callback, capture);
+		};
+	}
+
+	// Set $ and $$ convenience methods, if not taken
+	self.$ = self.$ || Bliss;
+	self.$$ = self.$$ || Bliss.$;
 }
-
-// Set $ and $$ convenience methods, if not taken
-self.$ = self.$ || Bliss;
-self.$$ = self.$$ || Bliss.$;
 
 })();

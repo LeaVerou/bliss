@@ -1,11 +1,19 @@
 // Add ids and implementation to all functions
 $$("#docs article > h1").forEach(function(h1) {
 	var article = h1.parentNode;
-	var fn = h1.firstChild.textContent.trim().replace(/^\$\.|\(\)$/g, "");
+
+	h1.firstChild.textContent = h1.firstChild.textContent.trim();
+	
+	var fn = h1.firstChild.textContent.replace(/^\$\.|\(\)$/g, "");
 
 	if (article && !article.id) {
-		article.id = "function-" + fn;
+		article.id = "fn-" + fn;
 	}
+
+	$.create("a", {
+		href: "#" + article.id,
+		around: h1.firstChild
+	});
 
 	article._.contents({
 		tag: "button",

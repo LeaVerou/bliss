@@ -49,8 +49,9 @@ pre[class*="language-"] {
 /* Inline code */
 :not(pre) > code[class*="language-"] {
 	padding: .1em;
-	border-radius: .3em;
+	border-radius: .2em;
 	white-space: normal;
+	box-shadow: 0 0 0 .1em hsl(145, 34%, 95%);
 }
 
 .token.comment,

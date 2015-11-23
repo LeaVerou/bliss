@@ -185,8 +185,8 @@ body > section#intro {}
 		}
 
 #docs article:target {
-	background: linear-gradient(transparent, white 50%) 0 0 / 100%  8em,
-	            repeating-linear-gradient(135deg, hsl(350, 80%, 96%) 0, hsl(350, 80%, 96%) .5em, white 0, white 1em) 0 0 / 100% 8em repeat-x;
+	background: linear-gradient(hsla(0,0%,100%,.6), white 60%) 0 0 / 100%  8em,
+	            repeating-linear-gradient(135deg, hsl(61, 86%, 77%) 0, hsl(61, 86%, 77%) .5em, white 0, white 1em) 0 0 / 100% 8em repeat-x;
 }
 
 body > footer {
@@ -196,6 +196,8 @@ body > footer {
 	background: hsl(227, 15%, 24%);
 	color: white;
 }
+
+/* Documentation */
 
 .tag {
 	display: inline-block;
@@ -244,12 +246,13 @@ body > footer {
 		bottom: 0;
 		padding: 1em;
 		box-sizing: border-box;
-		max-width: 100vh;
+		max-height: 100vh;
 		font-size: 80%;
+		overflow: auto;
 	}
 }
 
-@media (max-width: 60em), (max-height: 30em) {
+@media (max-width: 60em), (max-height: 45em) {
 	#toc > ol {
 		-webkit-column-count: 2;
 		-moz-column-count: 2;
@@ -281,4 +284,9 @@ body > footer {
 
 .implementation + pre.visible {
 	display: block;
+}
+
+#docs article h1 a {
+	margin-right: .5em;
+	color: inherit;
 }

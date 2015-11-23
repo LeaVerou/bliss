@@ -180,53 +180,162 @@ var ids = $$("[id]").map(function(element){
 });</code></pre>
 	</article>
 
-	
-
 	<article>
 		<h1>create</h1>
 
-		<p class="description">Create an element.</p>
+		<p class="description">Create an element or text node.</p>
 
-		<pre>var element = $.create(tagName, options);</pre>
-		<pre>var element = $.create(options);</pre>
+		<pre><code>var element = $.create([tag,] options);</code></pre>
 
 		<dl class="args">
-			<dt class="string">tagName</dt>
+			<dt class="string">tag</dt>
 			<dd>The tag name of the element to create.</dd>
 
 			<dt class="object">options</dt>
-			<dd>An object with several options for the new element (properties, attributes, events etc). For details, see <code>$.set()</code></dd>
+			<dd>An object with several options for the new element (properties, attributes, events etc). For details about what options this object accepts, see <code>$.set()</code>. If <code>tagName</code> is omitted, you need to provide it in the <code>options</code> object.</dd>
+
+			<dt class="element">element</dt>
+			<dd>The newly created element.</dd>
 		</dl>
+
+		<pre class="def"><code>var textNode = $.create(text);</code></pre>
+
+		<dl class="args">
+			<dt class="string">text</dt>
+			<dd>The text for the text node.</dd>
+
+			<dt>textNode</dt>
+			<dd class="type">Type: Text Node</dd>
+			<dd>The text node</dd>
+		</dl>
+
+		<pre><code>$.create("ul", {
+	className: "nav",
+	contents: [
+		{tag: "li",
+		 contents: {tag: "a",
+		 	href: "index.html",
+		 	textContent: "Home"
+		 }
+		},
+		{tag: "li",
+		 contents: {tag: "a",
+			href: "contact.html",
+			textContent: "Contact",
+			target: "_blank"
+		}}
+	]
+});</code></pre>
+
+		<ul class="notes">
+			<li>If you’re only creating an element without setting any options on it, just use the native <code>document.createElement(tag)</code></li>
+			<li><code>$.create(tag, options)</code> is equivalent to:
+			<pre><code>document.createElement(tag)._.set(options)</code></pre></li>
+			<li>The text node syntax is mainly useful for inside <code>$.contents()</code>. Otherwise, just use the native <code>document.createTextNode(text)</code>.</li>
+		</ul>
 	</article>
 
 	<article>
-		<h1>clone</h1>
+		<h1 class="element">clone</h1>
 
-		<p class="description">Clone an element, with events.</p>
+		<p class="description">Clone an element including its descendants, with events.</p>
+
+		<pre><code>var clone = $.clone(subject)</code></pre>
+		<pre><code>var clone = subject._.clone()</code></pre>
+
+		<dl class="args">
+			<dt class="element">subject</dt>
+			<dd>The element to be cloned.</dd>
+
+			<dt class="element">clone</dt>
+			<dd>The cloned element.</dd>
+		</dl>
+
+		<pre><code>var button = $("button");
+button.addEventListener("click", function() { console.log("Click from listener!"); });
+button.onclick = function() { console.log("Click from inline event!");
+var button2 = button._.clone();
+// If clicked, button2 will print both messages</code></pre>
+
+		<ul class="notes">
+			<li>If you don’t care about copying events, just use the native <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode"><code>element.cloneNode()</code></a></li>
+		</ul>
+
+		<a class="jq">jQuery.fn.clone</a>
 	</article>
-
-	
-
-	
 
 	<article>
 		<h1>remove</h1>
 
 		<p class="description">Remove an element from the DOM, optionally with a transition.</p>
+		
+		<pre><code>var promise = $.remove(subject [, transition [, transitionDuration]])</code></pre>
+		<pre><code>var promise = subject._.remove([, transition [, transitionDuration]])</code></pre>
+
+		<dl class="args">
+			<dt class="element">subject</dt>
+			<dd>The element to remove.</dd>
+
+			<dt class="object">transition</dt>
+			<dd>Object with a list of properties and values to animate to.</dd>
+
+			<dt class="promise">promise</dt>
+			<dd>Promise that gets resolved when the element is removed from the DOM.</dd>
+		</dl>
+
+		<pre><code>// Fade an element out over 800ms, remove it, then log a message
+element._.remove({opacity: "0"}, 800).then(function(){
+	console.log("Gone!");
+});</code></pre>
+
+		<a class="jq">jQuery.fn.detach</a>
 	</article>
 
 	<article>
 		<h1>set</h1>
 
 		<p class="description">Set multiple traits of an element (properties, attributes, events, contents etc).</p>
+
+		<pre><code>$.set(subject, options);</code></pre>
+		<pre><code>subject._.set(options);</code></pre>
 	</article>
 
 	<article>
 		<h1 class="element array set">after</h1>
+
+		<p class="description">Insert an element after another.</p>
+
+		<pre><code>$.after(subject, element)</code></pre>
+		<pre><code>subject._.after(element)</code></pre>
+		<pre><code>subject._.set({after: element})</code></pre>
 	</article>
 
 	<article>
 		<h1 class="element array set">around</h1>
+
+		<p class="description">Wrap an element with another.</p>
+
+		<pre><code>$.around(subject, element)</code></pre>
+		<pre><code>subject._.around(element)</code></pre>
+		<pre><code>subject._.set({around: element})</code></pre>
+
+		<dl class="args">
+			<dt class="element">subject</dt>
+			<dd>The element to wrap with.</dd>
+
+			<dt class="element">element</dt>
+			<dd>The element to be wrapped.</dd>
+		</dl>
+
+		<pre><code>// Wrap headings with a link to their section
+$$("section[id] > h1, article[id] > h1").forEach(function(h1){
+	$.create("a", {
+		href: "#" + h1.parentNode.id,
+		around: h1
+	});
+});</code></pre>
+		
+		<a class="jq">jQuery.fn.wrap</a>
 	</article>
 
 	<article>
@@ -235,6 +344,12 @@ var ids = $$("[id]").map(function(element){
 
 	<article>
 		<h1 class="element array set">before</h1>
+
+		<p class="description">Insert the element before another.</p>
+
+		<pre><code>$.before(subject, element)</code></pre>
+		<pre><code>subject._.before(element)</code></pre>
+		<pre><code>subject._.set({before: element})</code></pre>
 	</article>
 
 	<article>
@@ -242,27 +357,35 @@ var ids = $$("[id]").map(function(element){
 		
 		<p class="description">Append element(s) and text nodes to an element</p>
 
-		<pre><code>$.contents(subject, contents)</code></pre>
-		<pre><code>subject._.contents(contents)</code></pre>
+		<pre><code>$.contents(subject, elements)</code></pre>
+		<pre><code>subject._.contents(elements)</code></pre>
+		<pre><code>subject._.set({contents: elements})</code></pre>
 
 		<dl class="args">
 			<dt>subject</dt>
 			<dd class="type">Type: Element or Array</dd>
 			<dd>The element(s) to apply the CSS properties to.</dd>
 
-			<dt class="object">contents</dt>
-			<dd></dd>
+			<dt>elements</dt>
+			<dd class="type">Type: Object or Array or String</dd>
+			<dd>If it’s an object or string, it will be passed through <code>$.create()</code>, to be converted into an element or text node respectively. If it’s an array, the same will happen to its elements. Note that this lets you recursively create entire subtrees, since these objects can also have a <code>contents</code> property of their own, as seen in the example below.</dd>
 		</dl>
 
-		<pre><code>element._.content()</code></pre>
+		<pre><code>element._.contents()</code></pre>
 
 		<a class="jq">jQuery.fn.html</a>
 	</article>
 
-	
-
 	<article>
 		<h1 class="element array set">inside</h1>
+
+		<p class="description">Insert the element inside another, after its existing contents.</p>
+
+		<pre><code>$.inside(subject, element)</code></pre>
+		<pre><code>subject._.inside(element)</code></pre>
+		<pre><code>subject._.set({inside: element})</code></pre>
+
+		<ul class="notes">Mainly useful inside <code>$.set()</code>, otherwise just use the native <code>element.appendChild(subject)</code>.</ul>
 	</article>
 
 	<article>
@@ -271,6 +394,12 @@ var ids = $$("[id]").map(function(element){
 
 	<article>
 		<h1 class="element array set">start</h1>
+
+		<p class="description">Insert an element inside another, before its existing contents.</p>
+
+		<pre><code>$.start(subject, element)</code></pre>
+		<pre><code>subject._.start(element)</code></pre>
+		<pre><code>subject._.set({start: element})</code></pre>
 	</article>
 
 	<article>
@@ -324,8 +453,9 @@ var ids = $$("[id]").map(function(element){
 			<dd class="type">Type: Element or Array</dd>
 			<dd>The element(s) to apply the CSS properties to.</dd>
 
-			<dt class="object">handlers</dt>
-			<dd>An object whose keys are the events and the values the listeners. You can include multiple events by space-separating them.</dd>
+			<dt>handlers</dt>
+			<dt class="type">Type: Object or Element</dt>
+			<dd>If object: An object whose keys are the events and the values the listeners. You can include multiple events by space-separating them. If it’s an element, all its event listeners are copied from it to <code>subject</code>.</dd>
 		</dl>
 
 		<pre><code>$$('input[type="range"]')._.events({
@@ -539,13 +669,17 @@ $.include(self.Dropbox, url).then(function(){
 <template data-end="article > h1.set"> <span class="tag set" title="Available inside $.set()">$.set()</span> </template>
 
 <!-- Add headings -->
-<template data-before=".args + pre"><h2>Examples</h2></template>
+<template data-before=".args + pre:not(.def)"><h2>Example(s)</h2></template>
 <template data-before=".args"><h2>Arguments & Return value</h2></template>
 <template data-before=".notes"><h2>Notes and caveats</h2></template>
 
 <!-- Add argument types -->
 <template data-after=".args dt.object"><dd class="type">Type: Object</dd></template>
 <template data-after=".args dt.string"><dd class="type">Type: String</dd></template>
+<template data-after=".args dt.element"><dd class="type">Type: Element</dd></template>
+<template data-after=".args dt.promise"><dd class="type">Type: Promise</dd></template>
+
+<template data-attr="a[href^='http://'], a[href^='https://']"><content target="_blank"></content></template>
 
 <!-- Add jQuery-like reference -->
 <template data-around=".jq">
