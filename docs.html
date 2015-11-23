@@ -132,7 +132,7 @@
 			<dd>The CSS selector to use.</dd>
 
 			<dt class="optional element">context</dt>
-			<dd>Returned element needs to be a descendant of this element.</dd>
+			<dd>Returned element needs to be a descendant of this element. <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/%3Ascope"><code>:scope</code></a> inside <code>selector</code> refers to this element (for supporting browsers).</dd>
 		</dl>
 
 		<pre class="examples"><code>// return the first element with a class of .foo
@@ -160,14 +160,28 @@ $(".foo").setAttribute("title", "yolo");</code></pre>
 
 		<p class="description">Get all elements that match a given selector as an array. Similar to <code>element.querySelectorAll()</code> but returns an Array instead of a NodeList, so it has all of the convenience methods we’ve come to love on arrays.</p>
 
-		<pre><code>$$(selector [, context])</code></pre>
+		<pre><code>var array = $$(selector [, context])</code></pre>
 
 		<dl class="args">
 			<dt class="string">selector</dt>
 			<dd>The CSS selector to use.</dd>
 
 			<dt class="optional element">context</dt>
-			<dd>Returned elements need to be a descendants of this element.</dd>
+			<dd>Returned elements need to be a descendants of this element. <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/%3Ascope"><code>:scope</code></a> inside <code>selector</code> refers to this element (for supporting browsers).</dd>
+
+			<dt class="array">array</dt>
+			<dd>The matched elements as an array.</dd>
+		</dl>
+
+		<pre class="def"><code>var array = $$(collection)</code></pre>
+
+		<dl class="args">
+			<dt>collection</dt>
+			<dd class="type">Type: Array-like</dd>
+			<dd>Any array-like object, such as a NodeList, a function’s <code>arguments</code> object or an elements <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/attributes"><code>element.attributes</code></a> collection.</dd>
+
+			<dt class="array">array</dt>
+			<dd>The collection converted to an array.</dd>
 		</dl>
 		
 		<pre class="examples"><code>// Add an id to all &lt;h1> headings that don’t already have one
@@ -177,6 +191,12 @@ $$("h1:not([id])").forEach(function(h1){
 		<pre><code>// Get an array with all ids on the page
 var ids = $$("[id]").map(function(element){
 	return element.id;
+});</code></pre>
+		<pre><code>// Get all of an element’s attributes starting with data-bliss-
+$$(element.attributes).filter(function(attribute){
+	return attribute.name.indexOf("data-bliss-") === 0;
+}).map(function(attribute){
+	return attribute.name;
 });</code></pre>
 	</article>
 
@@ -265,7 +285,7 @@ var button2 = button._.clone();
 	</article>
 
 	<article>
-		<h1>remove</h1>
+		<h1 class="element array">remove</h1>
 
 		<p class="description">Remove an element from the DOM, optionally with a transition.</p>
 		
@@ -273,7 +293,7 @@ var button2 = button._.clone();
 		<pre><code>var promise = subject._.remove([, transition [, transitionDuration]])</code></pre>
 
 		<dl class="args">
-			<dt class="element">subject</dt>
+			<dt class="element-or-array">subject</dt>
 			<dd>The element to remove.</dd>
 
 			<dt class="object">transition</dt>
@@ -311,7 +331,7 @@ element._.remove({opacity: "0"}, 800).then(function(){
 	</article>
 
 	<article>
-		<h1 class="element array set">around</h1>
+		<h1 class="element set">around</h1>
 
 		<p class="description">Wrap an element with another.</p>
 
@@ -340,6 +360,24 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 
 	<article>
 		<h1 class="element array set">attributes</h1>
+
+		<p class="description">Set multiple attributes on one or more elements.</p>
+
+		<pre><code>$.attributes(subject, attrs)</code></pre>
+		<pre><code>subject._.attributes(attrs)</code></pre>
+		<pre><code>subject._.set({attributes: attrs})</code></pre>
+
+		<dl class="args">
+			<dt class="element-or-array">subject</dt>
+			<dd>The element(s) to set the attributes on.</dd>
+
+			<dt class="object">attrs</dt>
+			<dd>An object with the attributes and values to set.</dd>
+		</dl>
+
+		<ul class="notes">
+			<li>If only setting one attribute on one element, consider using the native <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/setAttribute"><code>element.setAttribute(name, value)</code></a>. If setting one attribute on multiple elements, you can use <code>myArray._.setAttribute(name, value)</code>.</li>
+		</ul>
 	</article>
 
 	<article>
@@ -362,8 +400,7 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 		<pre><code>subject._.set({contents: elements})</code></pre>
 
 		<dl class="args">
-			<dt>subject</dt>
-			<dd class="type">Type: Element or Array</dd>
+			<dt class="element-or-array">subject</dt>
 			<dd>The element(s) to apply the CSS properties to.</dd>
 
 			<dt>elements</dt>
@@ -411,8 +448,7 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 		<pre><code>subject._.style(properties)</code></pre>
 
 		<dl class="args">
-			<dt>subject</dt>
-			<dd class="type">Type: Element or Array</dd>
+			<dt class="element-or-array">subject</dt>
 			<dd>The element(s) to apply the CSS properties to.</dd>
 
 			<dt class="object">properties</dt>
@@ -449,9 +485,8 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 		<pre><code>subject._.events(handlers)</code></pre>
 
 		<dl class="args">
-			<dt>subject</dt>
-			<dd class="type">Type: Element or Array</dd>
-			<dd>The element(s) to apply the CSS properties to.</dd>
+			<dt class="element-or-array">subject</dt>
+			<dd>The element(s) to set the event listeners on.</dd>
 
 			<dt>handlers</dt>
 			<dt class="type">Type: Object or Element</dt>
@@ -484,9 +519,8 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 		<pre><code>subject._.style(type [, properties])</code></pre>
 
 		<dl class="args">
-			<dt>subject</dt>
-			<dd class="type">Type: Element or Array</dd>
-			<dd>The element(s) to apply the CSS properties to.</dd>
+			<dt class="element-or-array">subject</dt>
+			<dd>The element(s) to fire the synthesized event on.</dd>
 			
 			<dt class="string">type</dt>
 			<dd>The event type</dd>
@@ -677,6 +711,7 @@ $.include(self.Dropbox, url).then(function(){
 <template data-after=".args dt.object"><dd class="type">Type: Object</dd></template>
 <template data-after=".args dt.string"><dd class="type">Type: String</dd></template>
 <template data-after=".args dt.element"><dd class="type">Type: Element</dd></template>
+<template data-after=".args dt.element-array"><dd class="type">Type: Element or Array</dd></template>
 <template data-after=".args dt.promise"><dd class="type">Type: Promise</dd></template>
 
 <template data-attr="a[href^='http://'], a[href^='https://']"><content target="_blank"></content></template>
