@@ -101,4 +101,9 @@ if (/\/docs\.html$/.test(location.pathname)) {
 	});
 }
 
+$$("#download input[type=radio]")._.events({click: function(){
+	var elements = this.form.elements;
+	$("#download a[download]").href = "bliss" + elements.type.value + elements.compression.value + ".js";
+}});
+
 // TODO Find references to Bliss functions and make them links to the docs

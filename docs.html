@@ -6,6 +6,7 @@
 <title>Bliss.js — Heavenly JavaScript!</title>
 <link rel="stylesheet" href="style/prism.css" />
 <link rel="stylesheet" href="style/style.css" />
+<link rel="stylesheet" href="style/docs.css" />
 
 </head>
 <body class="language-javascript" id="docs">
@@ -21,7 +22,7 @@
 </nav>
 
 <section id="basics">
-	<h1>Basics</h1>
+	<h1>Overview</h1>
 
 	<p>Bliss includes several static methods (on the <code>Bliss</code> or <code>$</code> object). For example, to copy all properties of an object onto another object, you would call <a href="$.extend"><code>$.extend()</code></a>:</p>
 
@@ -95,7 +96,7 @@
 
 	<pre><code>element._.set({
 	"hidden": "",
-	"class": "foo" // or "className": "foo" to use the property
+	"class": "foo", // or "className": "foo" to use the property
 	style: {
 		"width": 0,
 		"padding": 0
@@ -256,6 +257,15 @@ $$(element.attributes).filter(function(attribute){
 	</article>
 
 	<article>
+		<h1>set</h1>
+
+		<p class="description">Set multiple traits of an element (properties, attributes, events, contents etc).</p>
+
+		<pre><code>$.set(subject, options);</code></pre>
+		<pre><code>subject._.set(options);</code></pre>
+	</article>
+
+	<article class="full">
 		<h1 class="element">clone</h1>
 
 		<p class="description">Clone an element including its descendants, with events.</p>
@@ -273,7 +283,7 @@ $$(element.attributes).filter(function(attribute){
 
 		<pre><code>var button = $("button");
 button.addEventListener("click", function() { console.log("Click from listener!"); });
-button.onclick = function() { console.log("Click from inline event!");
+button.onclick = function() { console.log("Click from inline event!"); };
 var button2 = button._.clone();
 // If clicked, button2 will print both messages</code></pre>
 
@@ -299,6 +309,9 @@ var button2 = button._.clone();
 			<dt class="object">transition</dt>
 			<dd>Object with a list of properties and values to animate to.</dd>
 
+			<dt class="number">transitionDuration</dt>
+			<dd>The duration of the transition. Defaults to <code>400ms</code>.</dd>
+
 			<dt class="promise">promise</dt>
 			<dd>Promise that gets resolved when the element is removed from the DOM.</dd>
 		</dl>
@@ -312,15 +325,6 @@ element._.remove({opacity: "0"}, 800).then(function(){
 	</article>
 
 	<article>
-		<h1>set</h1>
-
-		<p class="description">Set multiple traits of an element (properties, attributes, events, contents etc).</p>
-
-		<pre><code>$.set(subject, options);</code></pre>
-		<pre><code>subject._.set(options);</code></pre>
-	</article>
-
-	<article>
 		<h1 class="element array set">after</h1>
 
 		<p class="description">Insert an element after another.</p>
@@ -328,6 +332,8 @@ element._.remove({opacity: "0"}, 800).then(function(){
 		<pre><code>$.after(subject, element)</code></pre>
 		<pre><code>subject._.after(element)</code></pre>
 		<pre><code>subject._.set({after: element})</code></pre>
+
+		<a class="jq">jQuery.fn.after</a>
 	</article>
 
 	<article>
@@ -423,10 +429,38 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 		<pre><code>subject._.set({inside: element})</code></pre>
 
 		<ul class="notes">Mainly useful inside <code>$.set()</code>, otherwise just use the native <code>element.appendChild(subject)</code>.</ul>
+
+		<a class="jq">jQuery.fn.append</a>
 	</article>
 
 	<article>
 		<h1 class="element array set">properties</h1>
+
+		<p class="description">Set a number of properties on an element.</p>
+
+		<pre><code>$.properties(subject, props)</code></pre>
+		<pre><code>subject._.properties(props)</code></pre>
+		<pre><code>subject._.set({properties: props})</code></pre>
+
+		<dl class="args">
+			<dt class="element-or-array">subject</dt>
+			<dd>The element(s) to set the properties on.</dd>
+
+			<dt class="object">props</dt>
+			<dd>The properties to set on the element.</dd>
+		</dl>
+
+		<pre><code>document.createElement("button")._.properties({
+	className: "continue",
+	textContent: "Next Step",
+	onclick: function() { MyApp.next() }
+});</code></pre>
+
+		<ul class="notes">
+			<li>If only setting one property on one element, just use <code>element[property] = value;</code>. If setting multiple properties on one element, you can use <code>$.extend(subject, props)</code> instead.</li>
+		</ul>
+
+		<a class="jq">jQuery.fn.prop</a>
 	</article>
 
 	<article>
@@ -437,15 +471,18 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 		<pre><code>$.start(subject, element)</code></pre>
 		<pre><code>subject._.start(element)</code></pre>
 		<pre><code>subject._.set({start: element})</code></pre>
+
+		<a class="jq">jQuery.fn.prepend</a>
 	</article>
 
 	<article>
 		<h1 class="element array set">style</h1>
 		
-		<p class="description">Set multiple CSS properties on an element.</p>
+		<p class="description">Set multiple CSS properties on one or more elements.</p>
 
 		<pre><code>$.style(subject, properties)</code></pre>
 		<pre><code>subject._.style(properties)</code></pre>
+		<pre><code>subject._.set({style: properties})</code></pre>
 
 		<dl class="args">
 			<dt class="element-or-array">subject</dt>
@@ -467,6 +504,38 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 
 		<a class="jq">jQuery.fn.css</a>
 	</article>
+
+	<article>
+		<h1 class="element">transition</h1>
+		
+		<p class="description">Set multiple CSS properties with a transition and execute code after the transition is finished.</p>
+
+		<pre><code>var promise = $.transition(subject, properties [, duration])</code></pre>
+		<pre><code>var promise = subject._.transition(properties [, duration])</code></pre>
+
+		<dl class="args">
+			<dt class="element-or-array">subject</dt>
+			<dd>The element(s) to apply the transitions to.</dd>
+
+			<dt class="object">properties</dt>
+			<dd>The CSS properties to apply, in camelCase format</dd>
+
+			<dt class="number">duration</dt>
+			<dd>The duration, in milliseconds. Defaults to 400.</dd>
+
+			<dt class="promise">promise</dt>
+			<dd>Promise that gets resolved after the transition is done, or immediately <a href="http://caniuse.com/#feat=css-transitions">if CSS transitions are not supported</a>.</dd>
+		</dl>
+
+		<pre class="examples"><code>// Fade out an element then remove it from the DOM
+$.transition(element, {opacity: 0}).then($.remove);</code></pre>
+
+		<ul class="notes">
+			<li>Uses CSS transitions, not custom interpolation code.</li>
+		</ul>
+
+		<a class="jq">jQuery.fn.animate</a>
+	</article>
 </section>
 
 <section>
@@ -474,6 +543,16 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 
 	<article>
 		<h1 class="element array set">delegate</h1>
+
+		<p class="description">Helper for event delegation.</p>
+
+		<pre><code>$.delegate(subject, type, selector, callback)</code></pre>
+
+		<pre class="def"><code>$.delegate(subject, type, selectorsCallbacks)</code></pre>
+
+		<pre class="def"><code>$.delegate(subject, typesSelectorsCallbacks)</code></pre>
+
+		<a class="jq">jQuery.fn.delegate</a>
 	</article>
 
 	<article>
@@ -489,8 +568,8 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 			<dd>The element(s) to set the event listeners on.</dd>
 
 			<dt>handlers</dt>
-			<dt class="type">Type: Object or Element</dt>
-			<dd>If object: An object whose keys are the events and the values the listeners. You can include multiple events by space-separating them. If it’s an element, all its event listeners are copied from it to <code>subject</code>.</dd>
+			<dd class="type">Type: Object or Element</dd>
+			<dd>If object: An object whose keys are the events and the values the listeners. You can include multiple event types by space-separating them. If it’s an element, all its event listeners are copied from it to <code>subject</code>.</dd>
 		</dl>
 
 		<pre><code>$$('input[type="range"]')._.events({
@@ -507,7 +586,32 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 	</article>
 
 	<article>
-		<h1>waitFor</h1>
+		<h1 class="element">waitFor</h1>
+
+		<p class="description">Execute some code once, upon an event or immediately if the event has already fired.</p>
+
+		<pre><code>var promise = $.waitFor(subject, event)</code></pre>
+		<pre><code>var promise = subject._.waitFor(event)</code></pre>
+
+		<dl class="args">
+			<dt class="element">subject</dt>
+			<dd>The element on which we want to monitor the event.</dd>
+
+			<dt class="string">event</dt>
+			<dd>The event to wait for.</dd>
+
+			<dt class="promise">promise</dt>
+			<dd>A promise that gets resolved immediately if the event has already fired or when it fires if not.</dd>
+		</dl>
+
+		<pre><code>document._.waitFor("DOMContentLoaded").then(function(){
+	// Execute some code that requires the DOM to be ready
+});</code></pre>
+
+		<ul class="notes">
+			<li><strong>Important:</strong> If there is no event listener attached to that event (even before <code>$.waitFor()</code> was called), then Bliss will not know that the event has fired. Therefore, the usefulness of this method is rather limited.</li>
+			<li>On Bliss Shy, this is equivalent to attaching an event listener and then removing it after it fires.</li>
+		</ul>
 	</article>
 
 	<article>
@@ -515,8 +619,8 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 		
 		<p class="description">Fire a synthesized event.</p>
 
-		<pre><code>$.style(subject, type [, properties])</code></pre>
-		<pre><code>subject._.style(type [, properties])</code></pre>
+		<pre><code>$.fire(subject, type [, properties])</code></pre>
+		<pre><code>subject._.fire(type [, properties])</code></pre>
 
 		<dl class="args">
 			<dt class="element-or-array">subject</dt>
@@ -551,7 +655,37 @@ myInput._.fire("input");</code></pre>
 	<article>
 		<h1>Class</h1>
 
-		<p class="description">Helper for defining OOP-like classes.</p>
+		<p class="description">Helper for defining OOP-like “classes”, for those who have been irreparably damaged by Java-like languages.</p>
+
+		<pre><code>var myClass = $.Class(options);</code></pre>
+
+		<dl class="args">
+			<dt class="object">options</dt>
+			<dd>An object with the following options:
+				<dl class="options">
+					<dt class="function">constructor</dt>
+					<dd>The constructor.</dd>
+
+					<dt class="function">extends</dt>
+					<dd>The “class” it inherits from.</dd>
+
+					<dt class="boolean">abstract</dt>
+					<dd>If <code>true</code>, “classes” can inherit from it, but it will throw an error if called with the <code>new</code> operator directly. Sorry Java folks, I know this is not what you hoped for.</dd>
+
+					<dt class="object">lazy</dt>
+					<dd>Lazily evaluated properties. See <code>$.lazy()</code>.</dd>
+
+					<dt class="object">stored</dt>
+					<dd>See <code>$.stored()</code>.</dd>
+
+					<dt class="object">static</dt>
+					<dd>Any static methods, as a shortcut to <code>$.extend(myClass, static)</code></dd>
+
+					<dt>*</dt>
+					<dd>Any remaining properties will be added on <code>myClass.prototype</code> as instance methods.</dd>
+				</dl>
+			</dd>
+		</dl>
 	</article>
 
 	<article>
@@ -559,7 +693,7 @@ myInput._.fire("input");</code></pre>
 
 		<p class="description">Copy properties of an object onto another.</p>
 
-		<pre><code>$.extend(target, source)</code></pre>
+		<pre><code>$.extend(target, source [, whitelist])</code></pre>
 
 		<dl class="args">
 			<dt class="object">target</dt>
@@ -567,14 +701,23 @@ myInput._.fire("input");</code></pre>
 
 			<dt class="object">source</dt>
 			<dd>An object containing the additional properties to merge in.</dd>
+
+			<dt>whitelist</dt>
+			<dd class="type">Type: Array or String or Function or RegExp</dd>
+			<dd>If array, a whitelist of property names. If function, it is called on each property and only the properties it returns a truthy value on will be copied. If it’s a reguar expression, only matching property names will be copied. If it’s the string <code>"own"</code>, inherited properties will not be copied. Other strings are reserved for future use.</dd>
 		</dl>
 		
-		<pre class="examples"><code>var o1 = {foo: 1, bar:2}
+		<pre><code>var o1 = {foo: 1, bar:2}
 o2 = $.extend(o1, {foo: 3, baz: 4});
 // o2 is {foo: 3, bar: 2, baz: 4}</code></pre>
+		<pre><code>// Get typography-related computed style on &lt;body>
+var type = $.extend({},
+                    getComputedStyle(document.body),
+                    /^font|^lineHeight$/);</code></pre>
 		
 		<ul class="notes">
 			<li>Overwrites are allowed.</li>
+			<li>Inherited properties are included (i.e. <code>Object.hasOwnProperty()</code> is not used), unless <code>whitelist</code> is <code>"own"</code>.</li>
 			<li>It modifies <code>target</code>, it doesn’t create a new object.</li>
 			<li>If <code>source</code> contains accessors <a href="http://lea.verou.me/2015/08/copying-properties-the-robust-way">it copies the accessors not the result of running the getter</a>. This is unlike similar functions in other libraries or the native <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign"><code>Object.assign()</code></a> in ES6.</li>
 		</ul>
@@ -586,12 +729,58 @@ o2 = $.extend(o1, {foo: 3, baz: 4});
 		<h1>lazy</h1>
 
 		<p class="description">Define lazily evaluated properties on an object.</p>
+
+		<pre><code>$.lazy(object, property, getter)</code></pre>
+
+		<dl class="args">
+			<dt class="object">object</dt>
+			<dd>The object to define the property on.</dd>
+
+			<dt class="string">property</dt>
+			<dd>The name of the property to define.</dd>
+
+			<dt class="function">getter</dt>
+			<dd>A function that returns the value of the property. After the first time the property is used, it will be replaced with the return value of this function.</dd>
+		</dl>
+
+		<pre class="def"><code>$.lazy(object, properties)</code></pre>
+
+		<dl class="args">
+			<dt class="object">object</dt>
+			<dd>The object to define the properties on.</dd>
+
+			<dt class="object">properties</dt>
+			<dd>An object where the keys are the property names and the values are the getters.</dd>
+		</dl>
 	</article>
 
 	<article>
 		<h1>stored</h1>
 
-		<p class="description">Properties that behave like normal properties but also execute code upon getting/setting.</p>
+		<p class="description">Define properties that behave like normal properties but also execute code upon getting/setting.</p>
+
+		<pre><code>$.stored(object, property, descriptor)</code></pre>
+
+		<dl class="args">
+			<dt class="object">object</dt>
+			<dd>The object to define the property on.</dd>
+
+			<dt class="string">property</dt>
+			<dd>The name of the property to define.</dd>
+
+			<dt class="object">descriptor</dt>
+			<dd>An <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty#Description">accessor descriptor</a> of the property.</dd>
+		</dl>
+
+		<pre class="def"><code>$.stored(object, properties)</code></pre>
+
+		<dl class="args">
+			<dt class="object">object</dt>
+			<dd>The object to define the properties on.</dd>
+
+			<dt class="object">properties</dt>
+			<dd>An object where the keys are the property names and the values are the descriptors.</dd>
+		</dl>
 	</article>
 
 	<article>
@@ -626,14 +815,14 @@ if ($.type(arguments[1]) == "regexp") {
 
 		<p class="description">Helper for AJAX calls, inspired by the new <a href="https://fetch.spec.whatwg.org" target="_blank">Fetch API</a>.</p>
 
-		<pre><code>$.fetch(url, options)</code></pre>
+		<pre><code>var promise = $.fetch(url, options)</code></pre>
 
 		<dl class="args">
 			<dt class="string">url</dt>
 			<dd>The URL to which the request is sent.</dd>
 
 			<dt class="object">options</dt>
-			<dd>A object with options, including:
+			<dd>An object with options, including:
 				<dl class="options">
 					<dt class="string">method</dt>
 					<dd>The HTTP method, such as <code>"GET"</code> or <code>"POST"</code>.</dd>
@@ -694,6 +883,7 @@ $.include(self.Dropbox, url).then(function(){
 	</article>
 </section>
 
+<!-- HTML transformations! Like the idea? Check out transform.js and let me know if I should release it :) -->
 <template data-start="article > h1">$.</template>
 <template data-end="article > h1">()</template>
 
@@ -711,8 +901,10 @@ $.include(self.Dropbox, url).then(function(){
 <template data-after=".args dt.object"><dd class="type">Type: Object</dd></template>
 <template data-after=".args dt.string"><dd class="type">Type: String</dd></template>
 <template data-after=".args dt.element"><dd class="type">Type: Element</dd></template>
-<template data-after=".args dt.element-array"><dd class="type">Type: Element or Array</dd></template>
+<template data-after=".args dt.element-or-array"><dd class="type">Type: Element or Array</dd></template>
 <template data-after=".args dt.promise"><dd class="type">Type: Promise</dd></template>
+<template data-after=".args dt.function"><dd class="type">Type: Function</dd></template>
+<template data-after=".args dt.number"><dd class="type">Type: Number</dd></template>
 
 <template data-attr="a[href^='http://'], a[href^='https://']"><content target="_blank"></content></template>
 

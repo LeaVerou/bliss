@@ -10,8 +10,19 @@ var $ = self.Bliss = function(expr, con) {
 $.shy = shy;
 
 // Copy properties from one object to another. Overwrites allowed.
-$.extend = function (to, from, callback) {
+$.extend = function (to, from, whitelist) {
 	for (var property in from) {
+		if (whitelist) {
+			var type = $.type(whitelist);
+
+			if (whitelist === "own" && !from.hasOwnProperty(property) ||
+				type === "array" && whitelist.indexOf(property) === -1 ||
+				type === "regexp" && !whitelist.test(property) ||
+				type === "function" && !whitelist.call(from, property)) {
+				continue;
+			}
+		}
+
 		// To copy gettters/setters, preserve flags etc
 		var descriptor = Object.getOwnPropertyDescriptor(from, property);
 
@@ -22,8 +33,6 @@ $.extend = function (to, from, callback) {
 		else {
 			to[property] = from[property];
 		}
-
-		callback && callback.call(to, property);
 	}
 	
 	return to;
@@ -86,7 +95,7 @@ $.extend($, {
 
 	// Lazily evaluated properties
 	lazy: function(obj, property, getter) {
-		if (arguments.length === 3) {
+		if (arguments.length >= 3) {
 			Object.defineProperty(obj, property, {
 				get: function() {
 					// FIXME this does not work for instances if property is defined on the prototype
@@ -101,7 +110,7 @@ $.extend($, {
 				enumerable: true
 			});
 		}
-		else {
+		else if (arguments.length === 2) {
 			for (var prop in property) {
 				$.lazy(obj, prop, property[prop]);
 			}
@@ -110,7 +119,7 @@ $.extend($, {
 
 	// Properties that behave like normal properties but also execute code upon getting/setting
 	stored: function(obj, property, descriptor) {
-		if (arguments.length === 3) {
+		if (arguments.length >= 3) {
 			Object.defineProperty(obj, property, {
 				get: function() {
 					var value = this["_" + property];
@@ -126,7 +135,7 @@ $.extend($, {
 				enumerable: descriptor.enumerable
 			});
 		}
-		else {
+		else if (arguments.length === 2) {
 			for (var prop in property) {
 				$.stored(obj, prop, property[prop]);
 			}
@@ -284,11 +293,6 @@ $.Element = function (element) {
 
 $.Element.prototype = {
 	set: function (properties) {
-		if (arguments.length == 2) {
-			properties = {};
-			properties[arguments[0]] = arguments[1];
-		}
-		
 		for (var property in properties) {
 			if (property in $.setSpecial) {
 				$.setSpecial[property].call(this, properties[property]);
@@ -303,42 +307,44 @@ $.Element.prototype = {
 		
 		return this;
 	},
-	
-	// Remove element from the DOM, optionally with a fade
-	remove: function(transition, duration) {
+
+	// Run a CSS transition, return promise
+	transition: function(props, duration) {
+		duration = +duration || 400;
+
 		return new Promise(function(resolve, reject){
-			if (transition && "transition" in this.style) {
-				$.style(this, {
-					transitionDuration: (duration || 400) + "ms",
-					transitionProperty: Object.keys(transition).join(", ")
-				});
-				
+			if ("transition" in this.style) {
 				var me = this;
 
-				this.addEventListener("transitionend", function(){
-					$.remove(me);
-					resolve();
+				// Get existing style
+				var previous = $.extend({}, this.style, /^transition(Duration|Property)$/);
+
+				$.style(this, {
+					transitionDuration: (duration || 400) + "ms",
+					transitionProperty: Object.keys(props).join(", ")
 				});
 
-				$.style(this, transition);
+				this.addEventListener("transitionend", function done(){
+					clearTimeout(i);
+					$.style(me, previous);
+					me.removeEventListener(done);
+					resolve(me);
+				});
+
+				// Failsafe, in case transitionend doesn’t fire
+				var i = setTimeout(resolve, duration+50);
+
+				$.style(this, props);
 			}
 			else {
-				this.parentNode && this.parentNode.removeChild(this);
-				resolve();
+				resolve(this);
 			}
 		}.bind(this));
 	},
-
-	// Clone elements, with events
-	clone: function () {
-		var clone = this.cloneNode(true);
-		var descendants = $.$("*", clone).concat(clone);
-
-		$.$("*", this).concat(this).forEach(function(element, i, arr) {
-			$.events(descendants[i], element);
-		});
-
-		return clone;
+	
+	// Remove element from the DOM
+	remove: function() {
+		this.parentNode && this.parentNode.removeChild(this);
 	},
 	
 	// Fire a synthesized event on the element
@@ -567,82 +573,96 @@ if (!Bliss || Bliss.shy) {
 	return;
 }
 
-// Define the _ property on arrays and elements
-if (!shy) {
-	Object.defineProperty(Node.prototype, "_", {
-		get: function () {
-			Object.defineProperty(this, "_", {
-				value: new $.Element(this)
-			});
-			
-			return this._;
-		},
-		configurable: true
-	});
+// Methods requiring Bliss Full
+$.extend($.Element.prototype, {
+	// Clone elements, with events
+	clone: function () {
+		var clone = this.cloneNode(true);
+		var descendants = $.$("*", clone).concat(clone);
 
-	Object.defineProperty(Array.prototype, "_", {
-		get: function () {
-			Object.defineProperty(this, "_", {
-				value: new $.Array(this)
-			});
-			
-			return this._;
-		},
-		configurable: true
-	});
+		$.$("*", this).concat(this).forEach(function(element, i, arr) {
+			$.events(descendants[i], element);
+		});
 
-	// Hijack addEventListener and removeEventListener to store callbacks
-
-	if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
-		var addEventListener = EventTarget.prototype.addEventListener,
-		    removeEventListener = EventTarget.prototype.removeEventListener,
-		    filter = function(callback, capture, l){
-		    	return !(l.callback === callback && l.capture == capture);
-		    };
-
-		EventTarget.prototype.addEventListener = function(type, callback, capture) {
-			if (this._) {
-				var listeners = this._.bliss.listeners = this._.bliss.listeners || {};
-				
-				listeners[type] = listeners[type] || [];
-
-				var fired = this._.bliss.fired = this._.bliss.fired || {};
-				fired[type] = fired[type] || 0;
-				
-				var oldCallback = callback;
-				callback = function() {
-					this._.bliss.fired[type]++;
-
-					return oldCallback.apply(this, arguments)
-				};
-				oldCallback.callback = callback;
-				
-				if (listeners[type].filter(filter.bind(null, callback, capture)).length === 0) {
-					listeners[type].push({callback: oldCallback, capture: capture});
-				}
-			}
-
-			return addEventListener.call(this, type, callback, capture);
-		};
-
-		EventTarget.prototype.removeEventListener = function(type, callback, capture) {
-			if (this._) {
-				var listeners = this._.bliss.listeners = this._.bliss.listeners || {};
-
-				var oldCallback = callback;
-				callback = oldCallback.callback;
-
-				listeners[type] = listeners[type] || [];
-				listeners[type] = listeners[type].filter(filter.bind(null, callback, capture));
-			}
-
-			return removeEventListener.call(this, type, callback, capture);
-		};
+		return clone;
 	}
+});
 
-	// Set $ and $$ convenience methods, if not taken
-	self.$ = self.$ || $;
-	self.$$ = self.$$ || $.$;
+// Define the _ property on arrays and elements
+
+Object.defineProperty(Node.prototype, "_", {
+	get: function () {
+		Object.defineProperty(this, "_", {
+			value: new $.Element(this)
+		});
+		
+		return this._;
+	},
+	configurable: true
+});
+
+Object.defineProperty(Array.prototype, "_", {
+	get: function () {
+		Object.defineProperty(this, "_", {
+			value: new $.Array(this)
+		});
+		
+		return this._;
+	},
+	configurable: true
+});
+
+// Hijack addEventListener and removeEventListener to store callbacks
+
+if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
+	var addEventListener = EventTarget.prototype.addEventListener,
+	    removeEventListener = EventTarget.prototype.removeEventListener,
+	    filter = function(callback, capture, l){
+	    	return !(l.callback === callback && l.capture == capture);
+	    };
+
+	EventTarget.prototype.addEventListener = function(type, callback, capture) {
+		if (this._) {
+			var listeners = this._.bliss.listeners = this._.bliss.listeners || {};
+			
+			listeners[type] = listeners[type] || [];
+
+			var fired = this._.bliss.fired = this._.bliss.fired || {};
+			fired[type] = fired[type] || 0;
+			
+			var oldCallback = callback;
+			callback = function() {
+				this._.bliss.fired[type]++;
+
+				return oldCallback.apply(this, arguments)
+			};
+			oldCallback.callback = callback;
+			
+			if (listeners[type].filter(filter.bind(null, callback, capture)).length === 0) {
+				listeners[type].push({callback: oldCallback, capture: capture});
+			}
+		}
+
+		return addEventListener.call(this, type, callback, capture);
+	};
+
+	EventTarget.prototype.removeEventListener = function(type, callback, capture) {
+		if (this._) {
+			var listeners = this._.bliss.listeners = this._.bliss.listeners || {};
+
+			var oldCallback = callback;
+			callback = oldCallback.callback;
+
+			listeners[type] = listeners[type] || [];
+			listeners[type] = listeners[type].filter(filter.bind(null, callback, capture));
+		}
+
+		return removeEventListener.call(this, type, callback, capture);
+	};
 }
+
+// Set $ and $$ convenience methods, if not taken
+self.$ = self.$ || $;
+self.$$ = self.$$ || $.$;
 
 })(Bliss);

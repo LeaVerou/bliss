@@ -9,6 +9,8 @@
 	--blue: hsl(190, 52%, 50%);
 	--magenta: hsl(350, 80%, 55%);
 	--darkgray: hsl(227, 15%, 24%);
+
+	--body-font: Optima, sans-serif;
 }
 
 body {
@@ -64,7 +66,7 @@ body > footer {
 	padding: 0 calc(50% - 20rem);
 }
 
-	@media (max-width: 50rem) {
+	@media (max-width: 50em) {
 		body > header,
 		body > nav,
 		body > section,
@@ -73,7 +75,7 @@ body > footer {
 		}
 	}
 
-	@media (min-width: 110rem) {
+	@media (min-width: 110em) {
 		body > header,
 		body > nav,
 		body > section,
@@ -105,18 +107,19 @@ body > header {
 		animation-play-state: paused;
 	}
 
-	body > header h1 {
+	body > header h1,
+	.logo {
 		position: relative;
 		display: inline-block;
 		padding: .5em .75em 0 0;
 		margin: 0;
-		font-size: 300%;
-		color: inherit;
-		line-height: 1;
-		background: url("logo.svg") top right / 1.2em 1.2em no-repeat;
+		font: 300%/1 Great Vibes, cursive;
+		color: hsl(190, 52%, 50%);
+		background: url("logo.svg") 1.5em 0 / 1.2em 1.2em no-repeat;
 	}
 
-	body > header p {
+	body > header p,
+	.logo span {
 		margin: -.75em 0 0;
 		text-transform: uppercase;
 		font-size: 50%;
@@ -138,11 +141,17 @@ body > section#intro {}
 
 		body > section#intro li {
 			position: relative;
-			display: inline-block;
-			width: 49%;
-			width: calc(50% - .3em);
-			margin-bottom: 1em;
+			margin: 0 0 1em 2.5em;
 			list-style: none;
+		}
+
+		@media (min-width: 50em) {
+			body > section#intro li {
+				display: inline-block;
+				width: 49%;
+				width: calc(50% - .3em);
+				margin: 0 0 1em;
+			}
 		}
 
 			body > section#intro li::before {
@@ -166,7 +175,8 @@ body > section#intro {}
 		text-align: center;
 	}
 
-		body > section#intro nav a {
+		body > section#intro nav a,
+		.button {
 			display: inline-block;
 			padding: .1em .5em;
 			border: .15em solid;
@@ -178,7 +188,8 @@ body > section#intro {}
 			color: hsl(350, 80%, 55%);
 		}
 
-		body > section#intro nav a:hover {
+		body > section#intro nav a:hover,
+		.button:hover {
 			background: hsl(350, 80%, 55%);
 			border-color: hsl(350, 80%, 55%);
 			color: white;
@@ -197,96 +208,72 @@ body > footer {
 	color: white;
 }
 
-/* Documentation */
-
-.tag {
-	display: inline-block;
-	vertical-align: middle;
-	padding: 0 .4em;
-	border-radius: .3em;
-	background: black;
-	color: white;
-	font-weight: bold;
-	font-size: .8rem;
-	line-height: 1.5;
-	text-transform: uppercase;
-	cursor: help;
-}
-
-	.tag.element {
-		background: yellowgreen;
-	}
-
-	.tag.array {
-		background: hsl(350, 80%, 55%);
-	}
-
-	.tag.set {
-		background: hsl(190, 52%, 50%);
-	}
-
-.args {}
-
-	.args dt {
-		margin-top: .6em;
-		font-weight: bold;
-		font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-	}
-
-	.args dd.type {
-		width: 100%;
-		margin-top: -1.5em;
-		font-style: italic;
-		text-align: right;
-	}
-
-@media (min-width: 60em) and (min-height: 30em) {
-	#toc {
-		position: fixed;
-		bottom: 0;
-		padding: 1em;
-		box-sizing: border-box;
-		max-height: 100vh;
-		font-size: 80%;
-		overflow: auto;
-	}
-}
-
-@media (max-width: 60em), (max-height: 45em) {
-	#toc > ol {
-		-webkit-column-count: 2;
-		-moz-column-count: 2;
-		column-count: 2;
-	}
-}
-
-	#toc ol {
-		list-style-type: none;
-	}
-
-	#toc > ol {
-		padding-left: 0;
-		font-weight: bold;
-	}
-
-	#toc ol ol {
-		font-weight: normal;
-		padding-left: 1em;
-	}
-
-		#toc ol ol a {
-			color: hsl(227, 15%, 24%);
-		}
-
-.implementation + pre {
+/* Index page */
+#download:not(:target) {
 	display: none;
 }
 
-.implementation + pre.visible {
-	display: block;
-}
+	#download p {
+		margin: .3em 0;
+		font-weight: bold;
+	}
 
-#docs article h1 a {
-	margin-right: .5em;
-	color: inherit;
-}
+	.bliss-compression {
+		margin: 1em 0;
+	}
+
+	.bliss-type label {
+		display: block;
+		padding: 1em;
+		border-radius: .6em;
+		margin: 0 .5% .5em;
+		box-sizing: border-box;
+		font-size: 80%;
+		cursor: pointer;
+		border: .2em solid hsl(145, 34%, 89%);
+	}
+
+	@media (min-width: 50em) {
+		.bliss-type label {
+			display: inline-block;
+			vertical-align: top;
+			width: 48%;
+		}
+	}
+
+	.bliss-type label:hover {
+		background: hsl(145, 34%, 96%);
+	}
+
+	.bliss-type input {
+		position: absolute;
+		clip: rect(0,0,0,0);
+	}
+
+	.bliss-type :checked + label {
+		background: hsl(145, 34%, 89%);
+	}
+
+	#download .bliss-type code {
+		background: none;
+		box-shadow: none;
+	}
+
+	.bliss-type .logo {
+		display: block;
+		width: fit-content;
+		margin: 0 auto .2em;
+		font-size: 500%;
+	}
+
+		[for="type-shy"] .logo {
+			background-image: url("logo-shy.svg");
+			color: hsl(350, 80%, 55%);
+		}
+
+		.bliss-type .logo span {
+			display: block;
+			text-align: right;
+			font-family: Optima, sans-serif;
+			font-size: 25%;
+		}

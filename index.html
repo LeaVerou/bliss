@@ -27,9 +27,37 @@
 	</ul>
 
 	<nav>
-		<a href="bliss.js" download>Download</a>
+		<a href="#download">Download</a>
 		<a href="docs.html">Read the docs</a>
 	</nav>
+</section>
+
+<section id="download">
+	<h1>Download</h1>
+
+	<form>
+		<div class="bliss-type">
+			<p>Choose your download:</p>
+			<input name="type" value="" type="radio" checked  id="type-full" />
+			<label for="type-full">
+				<strong class="logo">Bliss <span>Full</span></strong>
+				Adds <code>$()</code> and <code>$$()</code> global methods and a <code>_</code> property on elements and arrays, for convenience. Also wraps <code>addEventListener</code> and <code>removeEventListener</code> to track events.
+				Perfect for when you control the environment.
+			</label>
+			<input name="type" value=".shy" type="radio" id="type-shy" />
+			<label for="type-shy">
+				<strong class="logo">Bliss <span>Shy</span></strong>
+				Does not touch the host environment in any way, except to add one global <code>Bliss</code> variable.
+				Perfect for inclusion in a third-party library, or any other case where you don’t control the environment. ~1KB smaller.
+			</label>
+		</div>
+		<div class="bliss-compression">
+			<strong>Compression level:</strong>
+			<label><input type="radio" name="compression" value=".min" checked> Minified</label>
+			<label><input type="radio" name="compression" value=""> Development</label>
+		</div>
+	</form>
+	<a href="bliss.js" download class="button">Download</a>
 </section>
 
 <footer>By <a href="http://lea.verou.me">Lea Verou</a> &bull; Blog post</footer>

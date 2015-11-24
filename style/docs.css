@@ -1,0 +1,93 @@
+/* Documentation-specific CSS */
+
+.tag {
+	display: inline-block;
+	vertical-align: middle;
+	padding: 0 .4em;
+	border-radius: .3em;
+	background: black;
+	color: white;
+	font-weight: bold;
+	font-size: .8rem;
+	line-height: 1.5;
+	text-transform: uppercase;
+	cursor: help;
+}
+
+	.tag.element {
+		background: yellowgreen;
+	}
+
+	.tag.array {
+		background: hsl(350, 80%, 55%);
+	}
+
+	.tag.set {
+		background: hsl(190, 52%, 50%);
+	}
+
+.args {}
+
+	.args dt {
+		margin-top: .6em;
+		font-weight: bold;
+		font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	}
+
+	.args dd.type {
+		width: 100%;
+		margin-top: -1.5em;
+		font-style: italic;
+		text-align: right;
+	}
+
+@media (min-width: 60em) and (min-height: 30em) {
+	#toc {
+		position: fixed;
+		bottom: 0;
+		padding: 1em;
+		box-sizing: border-box;
+		max-height: 100vh;
+		font-size: 80%;
+		overflow: auto;
+	}
+}
+
+@media (max-width: 60em), (max-height: 45em) {
+	#toc > ol {
+		-webkit-column-count: 2;
+		-moz-column-count: 2;
+		column-count: 2;
+	}
+}
+
+	#toc ol {
+		list-style-type: none;
+	}
+
+	#toc > ol {
+		padding-left: 0;
+		font-weight: bold;
+	}
+
+	#toc ol ol {
+		font-weight: normal;
+		padding-left: 1em;
+	}
+
+		#toc ol ol a {
+			color: hsl(227, 15%, 24%);
+		}
+
+.implementation + pre {
+	display: none;
+}
+
+.implementation + pre.visible {
+	display: block;
+}
+
+#docs article h1 a {
+	margin-right: .5em;
+	color: inherit;
+}
