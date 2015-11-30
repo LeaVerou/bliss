@@ -5,6 +5,8 @@ if (!Bliss || Bliss.shy) {
 	return;
 }
 
+var _ = Bliss.property;
+
 // Methods requiring Bliss Full
 $.extend($.Element.prototype, {
 	// Clone elements, with events
@@ -17,29 +19,43 @@ $.extend($.Element.prototype, {
 		});
 
 		return clone;
+	},
+
+	// Returns a promise that gets resolved after {type} has fired at least once
+	waitFor: function(type) {
+		if (this[$.property] && this[$.property].bliss.fired && this[$.property].bliss.fired[type] > 0) {
+			// Already fired
+			return Promise.resolve();
+		}
+		
+		return new Promise(function(resolve, reject){
+			$.once(type, function (evt) {
+				resolve(evt);
+			});
+		});
 	}
 });
 
 // Define the _ property on arrays and elements
 
-Object.defineProperty(Node.prototype, "_", {
+Object.defineProperty(Node.prototype, _, {
 	get: function () {
-		Object.defineProperty(this, "_", {
+		Object.defineProperty(this, _, {
 			value: new $.Element(this)
 		});
 		
-		return this._;
+		return this[_];
 	},
 	configurable: true
 });
 
-Object.defineProperty(Array.prototype, "_", {
+Object.defineProperty(Array.prototype, _, {
 	get: function () {
-		Object.defineProperty(this, "_", {
+		Object.defineProperty(this, _, {
 			value: new $.Array(this)
 		});
 		
-		return this._;
+		return this[_];
 	},
 	configurable: true
 });
@@ -54,17 +70,17 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	    };
 
 	EventTarget.prototype.addEventListener = function(type, callback, capture) {
-		if (this._) {
-			var listeners = this._.bliss.listeners = this._.bliss.listeners || {};
+		if (this[_]) {
+			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 			
 			listeners[type] = listeners[type] || [];
 
-			var fired = this._.bliss.fired = this._.bliss.fired || {};
+			var fired = this[_].bliss.fired = this[_].bliss.fired || {};
 			fired[type] = fired[type] || 0;
 			
 			var oldCallback = callback;
 			callback = function() {
-				this._.bliss.fired[type]++;
+				this[_].bliss.fired[type]++;
 
 				return oldCallback.apply(this, arguments)
 			};
@@ -79,8 +95,8 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	};
 
 	EventTarget.prototype.removeEventListener = function(type, callback, capture) {
-		if (this._) {
-			var listeners = this._.bliss.listeners = this._.bliss.listeners || {};
+		if (this[_]) {
+			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 
 			var oldCallback = callback;
 			callback = oldCallback.callback;

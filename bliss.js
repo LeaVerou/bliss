@@ -1,16 +1,8 @@
 (function() {
 "use strict";
 
-var shy = !!(self.Bliss && Bliss.shy);
-
-var $ = self.Bliss = function(expr, con) {
-	return typeof expr === "string"? (con || document).querySelector(expr) : expr || null;
-};
-
-$.shy = shy;
-
 // Copy properties from one object to another. Overwrites allowed.
-$.extend = function (to, from, whitelist) {
+function extend(to, from, whitelist) {
 	for (var property in from) {
 		if (whitelist) {
 			var type = $.type(whitelist);
@@ -36,14 +28,22 @@ $.extend = function (to, from, whitelist) {
 	}
 	
 	return to;
-}
+};
 
-$.extend($, {
+var $ = self.Bliss = extend(function(expr, context) {
+	return $.type(expr) === "string"? (context || document).querySelector(expr) : expr || null;
+}, self.Bliss);
+
+extend($, {
+	extend: extend,
+
+	property: $.property || "_",
+
 	sources: {},
 
-	$: function(expr, con) {
+	$: function(expr, context) {
 		return expr instanceof Node || expr instanceof Window? [expr] :
-		       [].slice.call(typeof expr == "string"? (con || document).querySelectorAll(expr) : expr || []);
+		       [].slice.call(typeof expr == "string"? (context || document).querySelectorAll(expr) : expr || []);
 	},
 	
 	/**
@@ -66,7 +66,7 @@ $.extend($, {
 	/*
 	 * Return first non-undefined value. Mainly used internally.
 	 */
-	firstDefined: function () {
+	defined: function () {
 		for (var i=0; i<arguments.length; i++) {
 			if (arguments[i] !== undefined) {
 				return arguments[i];
@@ -74,23 +74,34 @@ $.extend($, {
 		}
 	},
 	
-	create: function (o) {
-		var doc = o.document || document;
-		
-		if ($.type(o) === "string") {
-			if (arguments.length === 1) {
-				return doc.createTextNode(o);
+	create: function (tag, o) {
+		if (arguments.length === 1) {
+			if ($.type(tag) === "string") {
+				return document.createTextNode(o);
 			}
-			else {
-				o = arguments[1];
-				o.tag = arguments[0];
-			}
+			
+			o = tag;
+			tag = o.tag;			
 		}
 		
-		var element = doc.createElement(o.tag);
-		delete o.tag;
-		
-		return $.set(element, o);
+		// TODO Do we need an o.document option for different documents?
+		// One can always use $.set(otherDocument.createElement(), o), but what about $.contents()?
+		return $.set(document.createElement(tag), o);
+	},
+
+	ready: function(context) {
+		context = context || document;
+
+		return new Promise(function(resolve, reject){
+			if (context.readyState !== "loading") {
+				resolve();
+			}
+			else {
+				context.addEventListener("DOMContentLoaded", function(){
+					resolve();
+				});
+			}
+		});
 	},
 
 	// Lazily evaluated properties
@@ -118,7 +129,7 @@ $.extend($, {
 	},
 
 	// Properties that behave like normal properties but also execute code upon getting/setting
-	stored: function(obj, property, descriptor) {
+	live: function(obj, property, descriptor) {
 		if (arguments.length >= 3) {
 			Object.defineProperty(obj, property, {
 				get: function() {
@@ -229,6 +240,8 @@ $.extend($, {
 		o.method = o.method || 'GET';
 		o.headers = o.headers || {};
 
+		// TODO use the Fetch API if available
+
 		var xhr = new XMLHttpRequest();
 
 		if (o.method === "GET" && o.data) {
@@ -281,8 +294,10 @@ $.extend($, {
 	}
 });
 
-$.Element = function (element) {
-	this.element = element;
+var _ = $.property;
+
+$.Element = function (subject) {
+	this.subject = subject;
 
 	// Author-defined element-related data
 	this.data = {};
@@ -304,8 +319,6 @@ $.Element.prototype = {
 				this.setAttribute(property, properties[property]);
 			}
 		}
-		
-		return this;
 	},
 
 	// Run a CSS transition, return promise
@@ -354,23 +367,11 @@ $.Element.prototype = {
 		evt.initEvent(type, true, true );
 
 		this.dispatchEvent($.extend(evt, properties));
-	},
 
-	// Returns a promise that gets resolved after {type} has fired at least once
-	waitFor: function(type) {
-		if (this._ && this._.bliss.fired && this._.bliss.fired[type] > 0) {
-			// Already fired
-			return Promise.resolve();
+		if (this[_]) {
+			var fired = this[_].bliss.fired = this[_].bliss.fired || {};
+			fired[type] = ++fired[type] || 1;
 		}
-		
-		var me = this;
-
-		return new Promise(function(resolve, reject){
-			me.addEventListener(type, function callback(evt) {
-				resolve(evt);
-				me.removeEventListener(type, callback);
-			});
-		});
 	}
 };
 
@@ -402,8 +403,9 @@ $.setSpecial = {
 			var me = this;
 
 			// Copy listeners
-			if (val._ && val._.bliss) {
-				var listeners = val._.bliss.listeners;
+			if (val[_] && val[_].bliss) {
+				var listeners = val[_].bliss.listeners;
+
 				for (var type in listeners) {
 					listeners[type].forEach(function(l){
 						me.addEventListener(type, l.callback, l.capture);
@@ -424,6 +426,17 @@ $.setSpecial = {
 					this.addEventListener(event, val[events]);
 				}, this);
 			}
+		}
+	},
+
+	once: function(val) {
+		for (var events in val) {
+			events.split(/\s+/).forEach(function (event) {
+				this.addEventListener(event, function callback() {
+					me.removeEventListener(event, callback);
+					return val[events].apply(this, arguments);
+				});
+			}, this);
 		}
 	},
 
@@ -458,19 +471,17 @@ $.setSpecial = {
 	
 	// Set the contents as a string, an element, an object to create an element or an array of these
 	contents: function (val) {
-		if(!val && val !== 0) {
-			return;
+		if (val || val === 0) {
+			(Array.isArray(val)? val : [val]).forEach(function (child) {
+				if (/^(string|number|object)$/.test($.type(child))) {
+					child = $.create(child);
+				}
+				
+				if (child instanceof Node) {
+					this.appendChild(child);
+				}
+			}, this);
 		}
-		
-		(Array.isArray(val)? val : [val]).forEach(function (child) {
-			if (["string", "number", "object"].indexOf($.type(child)) > -1) {
-				child = $.create(child);
-			}
-			
-			if (child instanceof Node) {
-				(/^template$/i.test(this.nodeName)? this.content || this : this).appendChild(child);
-			}
-		}, this);
 	},
 	
 	// Append the element inside another element
@@ -503,8 +514,8 @@ $.setSpecial = {
 	}
 };
 
-$.Array = function (array) {
-	this.array = array;
+$.Array = function (subject) {
+	this.subject = subject;
 };
 
 // Extends Bliss with more methods
@@ -527,32 +538,34 @@ $.add = function (methods, on) {
 		}
 		
 		(function(method, callback){
+
 		
 		if ($.type(callback) == "function") {
+			if (on.element) {
+				var onElement = $.Element.prototype[method] = function () {
+					return this.subject && $.defined(callback.apply(this.subject, arguments), this.subject);
+				};
+			}
+
+			if (on.array) {
+				var onArray = $.Array.prototype[method] = function() {
+					var args = arguments;
+					
+					return this.subject.map(function(element) {
+						return $.defined(callback.apply(element, args), element);
+					});
+				};
+			}
+
 			if (on.$) {
 				$.sources[method] = callback;
 
 				$[method] = function () {
 					var args = [].slice.apply(arguments);
-					var element = args.shift();
-					
-					return element && $.firstDefined(callback.apply(element, args), element);
-				}
-			}
-			
-			if (on.element) {
-				$.Element.prototype[method] = function () {
-					return $.firstDefined(callback.apply(this.element, arguments), this.element);
-				}
-			}
-			
-			if (on.array) {
-				$.Array.prototype[method] = function() {
-					var args = arguments;
-					
-					return this.array.map(function(element) {
-						return $.firstDefined(callback.apply(element, args), element);
-					});
+					var subject = args.shift();
+					var callback = on.array && Array.isArray(subject)? onArray : onElement;
+
+					return callback.apply({subject: subject}, args);
 				}
 			}
 		}
@@ -573,6 +586,8 @@ if (!Bliss || Bliss.shy) {
 	return;
 }
 
+var _ = Bliss.property;
+
 // Methods requiring Bliss Full
 $.extend($.Element.prototype, {
 	// Clone elements, with events
@@ -585,29 +600,43 @@ $.extend($.Element.prototype, {
 		});
 
 		return clone;
+	},
+
+	// Returns a promise that gets resolved after {type} has fired at least once
+	waitFor: function(type) {
+		if (this[$.property] && this[$.property].bliss.fired && this[$.property].bliss.fired[type] > 0) {
+			// Already fired
+			return Promise.resolve();
+		}
+		
+		return new Promise(function(resolve, reject){
+			$.once(type, function (evt) {
+				resolve(evt);
+			});
+		});
 	}
 });
 
 // Define the _ property on arrays and elements
 
-Object.defineProperty(Node.prototype, "_", {
+Object.defineProperty(Node.prototype, _, {
 	get: function () {
-		Object.defineProperty(this, "_", {
+		Object.defineProperty(this, _, {
 			value: new $.Element(this)
 		});
 		
-		return this._;
+		return this[_];
 	},
 	configurable: true
 });
 
-Object.defineProperty(Array.prototype, "_", {
+Object.defineProperty(Array.prototype, _, {
 	get: function () {
-		Object.defineProperty(this, "_", {
+		Object.defineProperty(this, _, {
 			value: new $.Array(this)
 		});
 		
-		return this._;
+		return this[_];
 	},
 	configurable: true
 });
@@ -622,17 +651,17 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	    };
 
 	EventTarget.prototype.addEventListener = function(type, callback, capture) {
-		if (this._) {
-			var listeners = this._.bliss.listeners = this._.bliss.listeners || {};
+		if (this[_]) {
+			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 			
 			listeners[type] = listeners[type] || [];
 
-			var fired = this._.bliss.fired = this._.bliss.fired || {};
+			var fired = this[_].bliss.fired = this[_].bliss.fired || {};
 			fired[type] = fired[type] || 0;
 			
 			var oldCallback = callback;
 			callback = function() {
-				this._.bliss.fired[type]++;
+				this[_].bliss.fired[type]++;
 
 				return oldCallback.apply(this, arguments)
 			};
@@ -647,8 +676,8 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	};
 
 	EventTarget.prototype.removeEventListener = function(type, callback, capture) {
-		if (this._) {
-			var listeners = this._.bliss.listeners = this._.bliss.listeners || {};
+		if (this[_]) {
+			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 
 			var oldCallback = callback;
 			callback = oldCallback.callback;
