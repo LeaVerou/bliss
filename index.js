@@ -82,6 +82,25 @@ if (/\/docs\.html$/.test(location.pathname)) {
 		tocList.appendChild(li);
 	});
 
+	$$("article[id^='fn-'] h1.set").forEach(function(h1){
+		var id = h1.parentNode.id;
+
+		$.set(document.createDocumentFragment(), {
+			contents: [
+				{tag: "dt",
+					contents: {tag: "a",
+						href: "#" + id,
+						textContent: id.replace(/^fn-/, "")
+					}
+				},
+				{tag: "dd",
+					textContent: h1.nextElementSibling.textContent
+				}
+			],
+			start: $("#fn-set .args dl")
+		});
+	});
+
 	
 	$$("a.jq").forEach(function(a){
 		if (!a.href) {

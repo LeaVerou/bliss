@@ -126,14 +126,17 @@
 
 		<p class="description">Select an element by selector. Mainly a shortcut for <code>element.querySelector()</code>.</p>
 
-		<pre><code>$(selector [, context])</code></pre>
+		<pre><code>var element = $(selector [, context])</code></pre>
 
 		<dl class="args">
 			<dt class="string">selector</dt>
 			<dd>The CSS selector to use.</dd>
 
-			<dt class="optional element">context</dt>
+			<dt class="element">context</dt>
 			<dd>Returned element needs to be a descendant of this element. <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/%3Ascope"><code>:scope</code></a> inside <code>selector</code> refers to this element (for supporting browsers).</dd>
+
+			<dt class="element">element</dt>
+			<dd>The matched element or <code>null</code> if none found.</dd>
 		</dl>
 
 		<pre class="examples"><code>// return the first element with a class of .foo
@@ -233,6 +236,7 @@ $$(element.attributes).filter(function(attribute){
 		<pre><code>$.create("ul", {
 	className: "nav",
 	contents: [
+		"Navigation: ",
 		{tag: "li",
 		 contents: {tag: "a",
 		 	href: "index.html",
@@ -251,22 +255,117 @@ $$(element.attributes).filter(function(attribute){
 		<ul class="notes">
 			<li>If you’re only creating an element without setting any options on it, just use the native <code>document.createElement(tag)</code></li>
 			<li><code>$.create(tag, options)</code> is equivalent to:
-			<pre><code>document.createElement(tag)._.set(options)</code></pre></li>
+			<pre><code>$.set(document.createElement(tag), options)</code></pre> This is also recommended if you need a different <code>document</code>.</li>
 			<li>The text node syntax is mainly useful for inside <code>$.contents()</code>. Otherwise, just use the native <code>document.createTextNode(text)</code>.</li>
 		</ul>
 	</article>
 
 	<article>
-		<h1>set</h1>
+		<h1 class="element array">set</h1>
 
-		<p class="description">Set multiple traits of an element (properties, attributes, events, contents etc).</p>
+		<p class="description">Set multiple traits of an element (properties, attributes, events, contents etc). One of the most useful functions in Bliss.</p>
 
 		<pre><code>$.set(subject, options);</code></pre>
 		<pre><code>subject._.set(options);</code></pre>
+
+		<dl class="args">
+			<dt class="element-or-array">subject</dt>
+			<dd>The element to apply the options on.</dd>
+			<dt class="object">options</dt>
+			<dd>An object with various options, including:
+				<dl>
+					<dt>*</dt>
+					<dd>Any remaining properties will be added as properties or attributes on the element (Bliss first checks if there is a property with that name, and if not, it sets it as an attribute.</dd>
+				</dl>
+			</dd>
+		</dl>
+
+		<pre><code>$.set(document.createElement("nav"), {
+	style: {
+		color: "red"
+	},
+	events: {
+		click: function(evt) {
+			console.log("YOLO");
+		}
+	}
+	contents: ["Navigation: ", {tag: "ul",
+		className: "buttons",
+		delegate: {
+			click: {
+				li: function() {
+					console.log("A list item was clicked")
+				}
+			}
+		},
+		contents: [{tag: "li",
+				contents: {tag: "a"
+					href: "index.html",
+					textContent: "Home"
+				}
+			}, {tag: "li",
+				contents: {tag: "a"
+					href: "docs.html",
+					textContent: "Docs"
+				}
+			}
+		]
+	}],
+	inside: $("body > header")
+});</code></pre>
+
+		<ul class="notes">
+			<li><strong>Tip:</strong> Add more handled properties of your own by adding a function to <code>$.setSpecial</code>.</li>
+			<li><strong>Warning:</strong> If setting SVG attributes, use the explicit <code>attributes</code> property, not just properties directly on <code>options</code>. Otherwise, they will be added as properties, and the API for SVG DOM properties is the stuff of nightmares.</li>
+		</ul>
+	</article>
+
+	<article>
+		<h1 class="element array set">contents</h1>
+		
+		<p class="description">Append element(s) and text nodes to an element</p>
+
+		<pre><code>subject = $.contents(subject, elements)</code></pre>
+		<pre><code>subject = subject._.contents(elements)</code></pre>
+		<pre><code>subject = subject._.set({contents: elements})</code></pre>
+
+		<dl class="args">
+			<dt class="element-or-array">subject</dt>
+			<dd>The element(s) to apply the CSS properties to.</dd>
+
+			<dt>elements</dt>
+			<dd class="type">Type: Object or Array or String</dd>
+			<dd>If it’s an object or string, it will be passed through <code>$.create()</code>, to be converted into an element or text node respectively. If it’s an array, the same will happen to its elements. Note that this lets you recursively create entire subtrees, since these objects can also have a <code>contents</code> property of their own, as seen in the example below.</dd>
+		</dl>
+
+		<pre><code>nav._.contents(["Navigation: ", {tag: "ul",
+	className: "buttons",
+	delegate: {
+		click: {
+			li: function() {
+				console.log("A list item was clicked")
+			}
+		}
+	},
+	contents: [{tag: "li",
+			contents: {tag: "a"
+				href: "index.html",
+				textContent: "Home"
+			}
+		}, {tag: "li",
+			contents: {tag: "a"
+				href: "docs.html",
+				textContent: "Docs"
+			}
+		}
+	]
+}])</code></pre>
+
+		<a class="jq">jQuery.fn.html</a>
 	</article>
 
 	<article class="full">
-		<h1 class="element">clone</h1>
+		<h1 class="element full">clone</h1>
 
 		<p class="description">Clone an element including its descendants, with events.</p>
 
@@ -297,29 +396,22 @@ var button2 = button._.clone();
 	<article>
 		<h1 class="element array">remove</h1>
 
-		<p class="description">Remove an element from the DOM, optionally with a transition.</p>
+		<p class="description">Remove an element from the DOM.</p>
 		
-		<pre><code>var promise = $.remove(subject [, transition [, transitionDuration]])</code></pre>
-		<pre><code>var promise = subject._.remove([, transition [, transitionDuration]])</code></pre>
+		<pre><code>subject = $.remove(subject)</code></pre>
+		<pre><code>subject = subject._.remove()</code></pre>
 
 		<dl class="args">
 			<dt class="element-or-array">subject</dt>
 			<dd>The element to remove.</dd>
-
-			<dt class="object">transition</dt>
-			<dd>Object with a list of properties and values to animate to.</dd>
-
-			<dt class="number">transitionDuration</dt>
-			<dd>The duration of the transition. Defaults to <code>400ms</code>.</dd>
-
-			<dt class="promise">promise</dt>
-			<dd>Promise that gets resolved when the element is removed from the DOM.</dd>
 		</dl>
 
-		<pre><code>// Fade an element out over 800ms, remove it, then log a message
-element._.remove({opacity: "0"}, 800).then(function(){
-	console.log("Gone!");
-});</code></pre>
+		<pre><code>// Remove all divs
+$$("div").remove();</code></pre>
+
+		<ul class="notes">
+			<li>Does not remove event listeners.</li>
+		</ul>
 
 		<a class="jq">jQuery.fn.detach</a>
 	</article>
@@ -329,9 +421,19 @@ element._.remove({opacity: "0"}, 800).then(function(){
 
 		<p class="description">Insert an element after another.</p>
 
-		<pre><code>$.after(subject, element)</code></pre>
-		<pre><code>subject._.after(element)</code></pre>
-		<pre><code>subject._.set({after: element})</code></pre>
+		<pre><code>subject = $.after(subject, element)</code></pre>
+		<pre><code>subject = subject._.after(element)</code></pre>
+		<pre><code>subject = subject._.set({after: element})</code></pre>
+
+		<dl class="args">
+			<dt class="element">subject</dt>
+			<dd>The element to be inserted.</dd>
+
+			<dt class="element">element</dt>
+			<dd>The element to insert after.</dd>
+		</dl>
+
+		<p class="needs example"></p>
 
 		<a class="jq">jQuery.fn.after</a>
 	</article>
@@ -339,7 +441,7 @@ element._.remove({opacity: "0"}, 800).then(function(){
 	<article>
 		<h1 class="element set">around</h1>
 
-		<p class="description">Wrap an element with another.</p>
+		<p class="description">Wrap an element around another.</p>
 
 		<pre><code>$.around(subject, element)</code></pre>
 		<pre><code>subject._.around(element)</code></pre>
@@ -381,6 +483,8 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 			<dd>An object with the attributes and values to set.</dd>
 		</dl>
 
+		<p class="needs example"></p>
+
 		<ul class="notes">
 			<li>If only setting one attribute on one element, consider using the native <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/setAttribute"><code>element.setAttribute(name, value)</code></a>. If setting one attribute on multiple elements, you can use <code>myArray._.setAttribute(name, value)</code>.</li>
 		</ul>
@@ -391,38 +495,27 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 
 		<p class="description">Insert the element before another.</p>
 
-		<pre><code>$.before(subject, element)</code></pre>
-		<pre><code>subject._.before(element)</code></pre>
-		<pre><code>subject._.set({before: element})</code></pre>
-	</article>
-
-	<article>
-		<h1 class="element array set">contents</h1>
-		
-		<p class="description">Append element(s) and text nodes to an element</p>
-
-		<pre><code>$.contents(subject, elements)</code></pre>
-		<pre><code>subject._.contents(elements)</code></pre>
-		<pre><code>subject._.set({contents: elements})</code></pre>
+		<pre><code>subject = $.before(subject, element)</code></pre>
+		<pre><code>subject = subject._.before(element)</code></pre>
+		<pre><code>subject = subject._.set({before: element})</code></pre>
 
 		<dl class="args">
-			<dt class="element-or-array">subject</dt>
-			<dd>The element(s) to apply the CSS properties to.</dd>
+			<dt class="element">subject</dt>
+			<dd>The element to be inserted.</dd>
 
-			<dt>elements</dt>
-			<dd class="type">Type: Object or Array or String</dd>
-			<dd>If it’s an object or string, it will be passed through <code>$.create()</code>, to be converted into an element or text node respectively. If it’s an array, the same will happen to its elements. Note that this lets you recursively create entire subtrees, since these objects can also have a <code>contents</code> property of their own, as seen in the example below.</dd>
+			<dt class="element">element</dt>
+			<dd>The element to insert before.</dd>
 		</dl>
 
-		<pre><code>element._.contents()</code></pre>
+		<p class="needs examples"></p>
 
-		<a class="jq">jQuery.fn.html</a>
+		<a class="jq">jQuery.fn.before</a>
 	</article>
 
 	<article>
 		<h1 class="element array set">inside</h1>
 
-		<p class="description">Insert the element inside another, after its existing contents.</p>
+		<p class="description">Insert the element inside another, after any existing contents.</p>
 
 		<pre><code>$.inside(subject, element)</code></pre>
 		<pre><code>subject._.inside(element)</code></pre>
@@ -586,35 +679,6 @@ $.transition(element, {opacity: 0}).then($.remove);</code></pre>
 	</article>
 
 	<article>
-		<h1 class="element">waitFor</h1>
-
-		<p class="description">Execute some code once, upon an event or immediately if the event has already fired.</p>
-
-		<pre><code>var promise = $.waitFor(subject, event)</code></pre>
-		<pre><code>var promise = subject._.waitFor(event)</code></pre>
-
-		<dl class="args">
-			<dt class="element">subject</dt>
-			<dd>The element on which we want to monitor the event.</dd>
-
-			<dt class="string">event</dt>
-			<dd>The event to wait for.</dd>
-
-			<dt class="promise">promise</dt>
-			<dd>A promise that gets resolved immediately if the event has already fired or when it fires if not.</dd>
-		</dl>
-
-		<pre><code>document._.waitFor("DOMContentLoaded").then(function(){
-	// Execute some code that requires the DOM to be ready
-});</code></pre>
-
-		<ul class="notes">
-			<li><strong>Important:</strong> If there is no event listener attached to that event (even before <code>$.waitFor()</code> was called), then Bliss will not know that the event has fired. Therefore, the usefulness of this method is rather limited.</li>
-			<li>On Bliss Shy, this is equivalent to attaching an event listener and then removing it after it fires.</li>
-		</ul>
-	</article>
-
-	<article>
 		<h1 class="element array">fire</h1>
 		
 		<p class="description">Fire a synthesized event.</p>
@@ -647,6 +711,60 @@ myInput._.fire("input");</code></pre>
 
 		<a class="jq">jQuery.fn.trigger</a>
 	</article>
+
+
+	<article>
+		<h1>ready</h1>
+		
+		<p class="description">Execute code after the DOM is ready.</p>
+
+		<pre><code>var promise = $.ready([context])</code></pre>
+
+		<dl class="args">
+			<dt>context</dt>
+			<dd class="type">Type: Document</dd>
+			<dd>The document whose …readiness we’re interested in.</dd>
+			
+			<dt class="promise">promise</dt>
+			<dd>A promise that gets resolved immediately if the DOM is already ready, or on <code>DOMContentLoaded</code> if not.</dd>
+		</dl>
+
+		<pre class="examples"><code>// Add a red border to all divs on a page
+$.ready().then(function(){
+	$$("div")._.style("border", "1px solid red");
+});</code></pre>
+
+		<a class="jq">jQuery.fn.ready</a>
+	</article>
+
+	<article>
+		<h1 class="element full">waitFor</h1>
+
+		<p class="description">Execute some code once, upon an event or immediately if the event has already fired.</p>
+
+		<pre><code>var promise = $.waitFor(subject, event)</code></pre>
+		<pre><code>var promise = subject._.waitFor(event)</code></pre>
+
+		<dl class="args">
+			<dt class="element">subject</dt>
+			<dd>The element on which we want to monitor the event.</dd>
+
+			<dt class="string">event</dt>
+			<dd>The event to wait for.</dd>
+
+			<dt class="promise">promise</dt>
+			<dd>A promise that gets resolved immediately if the event has already fired or when it fires if not.</dd>
+		</dl>
+
+		<pre><code>document._.waitFor("DOMContentLoaded").then(function(){
+	// Execute some code that requires the DOM to be ready
+});</code></pre>
+
+		<ul class="notes">
+			<li><strong>Important:</strong> If there is no event listener attached to that event (even before <code>$.waitFor()</code> was called), then Bliss will not know that the event has fired. Therefore, the usefulness of this method is rather limited.</li>
+			<li>On Bliss Shy, this is equivalent to attaching an event listener and then removing it after it fires.</li>
+		</ul>
+	</article>
 </section>
 
 <section>
@@ -675,8 +793,8 @@ myInput._.fire("input");</code></pre>
 					<dt class="object">lazy</dt>
 					<dd>Lazily evaluated properties. See <code>$.lazy()</code>.</dd>
 
-					<dt class="object">stored</dt>
-					<dd>See <code>$.stored()</code>.</dd>
+					<dt class="object">live</dt>
+					<dd>See <code>$.live()</code>.</dd>
 
 					<dt class="object">static</dt>
 					<dd>Any static methods, as a shortcut to <code>$.extend(myClass, static)</code></dd>
@@ -755,11 +873,11 @@ var type = $.extend({},
 	</article>
 
 	<article>
-		<h1>stored</h1>
+		<h1>live</h1>
 
 		<p class="description">Define properties that behave like normal properties but also execute code upon getting/setting.</p>
 
-		<pre><code>$.stored(object, property, descriptor)</code></pre>
+		<pre><code>$.live(object, property, descriptor)</code></pre>
 
 		<dl class="args">
 			<dt class="object">object</dt>
@@ -772,7 +890,7 @@ var type = $.extend({},
 			<dd>An <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty#Description">accessor descriptor</a> of the property.</dd>
 		</dl>
 
-		<pre class="def"><code>$.stored(object, properties)</code></pre>
+		<pre class="def"><code>$.live(object, properties)</code></pre>
 
 		<dl class="args">
 			<dt class="object">object</dt>
@@ -891,6 +1009,7 @@ $.include(self.Dropbox, url).then(function(){
 <template data-end="article > h1.element"> <span class="tag element" title="Available on element._">Element</span> </template>
 <template data-end="article > h1.array"> <span class="tag array" title="Available on array._">Array</span> </template>
 <template data-end="article > h1.set"> <span class="tag set" title="Available inside $.set()">$.set()</span> </template>
+<template data-end="article > h1.full"> <span class="tag set" title="Available only in Bliss Full">Bliss Full</span> </template>
 
 <!-- Add headings -->
 <template data-before=".args + pre:not(.def)"><h2>Example(s)</h2></template>

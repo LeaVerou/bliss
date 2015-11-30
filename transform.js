@@ -2,7 +2,7 @@
  * Simple HTML transformations, in HTML!
  * Author: Lea Verou
  */
-(function($, $$){
+Bliss.ready().then(function($, $$){
 
 var actions = ["before", "after", "start", "end", "around", "attr"];
 var methods = {"end": "inside"}
@@ -50,4 +50,4 @@ actions.forEach(function(action){
 	});
 });
 
-})(Bliss, Bliss.$);
+}.bind(null, Bliss, Bliss.$));

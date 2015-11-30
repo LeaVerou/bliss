@@ -63,7 +63,7 @@ body > header,
 body > nav,
 body > section,
 body > footer {
-	padding: 0 calc(50% - 20rem);
+	padding: 0 calc(50% - 22rem);
 }
 
 	@media (max-width: 50em) {
@@ -75,7 +75,7 @@ body > footer {
 		}
 	}
 
-	@media (min-width: 110em) {
+	@media (min-width: 100em) {
 		body > header,
 		body > nav,
 		body > section,
@@ -148,9 +148,8 @@ body > section#intro {}
 		@media (min-width: 50em) {
 			body > section#intro li {
 				display: inline-block;
-				width: 49%;
-				width: calc(50% - .3em);
-				margin: 0 0 1em;
+				vertical-align: top;
+				width: calc(50% - 2.8em);
 			}
 		}
 

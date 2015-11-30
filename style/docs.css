@@ -48,8 +48,13 @@
 		padding: 1em;
 		box-sizing: border-box;
 		max-height: 100vh;
-		font-size: 80%;
 		overflow: auto;
+	}
+}
+
+@media (min-width: 60em) and (max-width: 110em) {
+	#toc {
+		font-size: 80%;
 	}
 }
 
