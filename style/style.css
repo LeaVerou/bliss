@@ -10,17 +10,21 @@
 	--magenta: hsl(350, 80%, 55%);
 	--darkgray: hsl(227, 15%, 24%);
 
-	--body-font: Optima, sans-serif;
+	--body-font: Optima, Candara, sans-serif;
 }
 
 body {
 	margin: auto;
-	font: 100%/1.6 Optima, sans-serif;
+	font: 100%/1.6 Optima, Candara, sans-serif;
 	font-kerning: normal;
 	font-synthesis: none;
 	background-color: white;
 	color: hsl(227, 15%, 24%);
 }
+
+	body[data-loading] {
+
+	}
 
 a {
 	color: hsl(190, 52%, 50%);
@@ -28,6 +32,27 @@ a {
 
 	a:not(:hover) {
 		text-decoration: none;
+	}
+
+button, .button {
+	display: inline-block;
+	padding: 0 .5em;
+	border: 0;
+	border-radius: .3em;
+	margin: 0 .2em;
+	background: hsl(190, 52%, 50%);
+	color: white;
+	font: inherit;
+	text-decoration: none;
+	font-size: 80%;
+	font-weight: 100;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+	button:hover,
+	.button:hover {
+		background: hsl(350, 80%, 55%);
 	}
 
 ul {
@@ -47,7 +72,7 @@ section section h1,
 section article h1,
 h2 {
 	margin: 2em 0 0;
-	font-family: Optima, sans-serif;
+	font-family: inherit;
 	font-size: 150%;
 	font-weight: bold;
 }
@@ -63,7 +88,7 @@ body > header,
 body > nav,
 body > section,
 body > footer {
-	padding: 0 calc(50% - 22rem);
+	padding: 0 calc(50% - 24rem);
 }
 
 	@media (max-width: 50em) {
@@ -174,8 +199,7 @@ body > section#intro {}
 		text-align: center;
 	}
 
-		body > section#intro nav a,
-		.button {
+		body > section#intro nav a {
 			display: inline-block;
 			padding: .1em .5em;
 			border: .15em solid;
@@ -206,6 +230,12 @@ body > footer {
 	background: hsl(227, 15%, 24%);
 	color: white;
 }
+
+	footer .twitter-follow-button {
+		float: right;
+		-webkit-filter: hue-rotate(-20deg);
+		filter: hue-rotate(-20deg);
+	}
 
 /* Index page */
 #download:not(:target) {
@@ -273,6 +303,86 @@ body > footer {
 		.bliss-type .logo span {
 			display: block;
 			text-align: right;
-			font-family: Optima, sans-serif;
+			font-family: Optima, Candara, sans-serif;
 			font-size: 25%;
+		}
+
+	#download .button {
+		display: block;
+		width: 6em;
+		font-size: 150%;
+		border-radius: .25em;
+		margin: auto;
+		text-align: center;
+		line-height: 1.8;
+	}
+
+#quick-look pre {
+	position: relative;
+	overflow: visible;
+}
+
+	#quick-look pre code {
+		display: block;
+		overflow: auto;
+	}
+
+@media (min-width: 50em) {
+	#quick-look .comparison {
+		display: flex;
+		margin: 1.5em 0;
+	}
+
+	#quick-look .comparison pre {
+		position: relative;
+		flex: 1;
+		padding: .5em 0;
+		box-shadow: none;
+		border-radius: .5em;
+	}
+
+	#quick-look code {
+		tab-size: 2;
+	}
+}
+
+@media (min-width: 50em) and (max-width: 100em) {
+	#quick-look .comparison pre {
+		font-size: 75%;
+	}
+}
+	
+	#quick-look pre::before {
+		position: absolute;
+		bottom: 100%;
+		font: bold 100%/.6 Optima, Candara, sans-serif;
+	}
+
+	#quick-look pre.vanilla {
+		background: linear-gradient(to left, hsla(350, 80%, 96%,0), hsl(350, 80%, 96%)),
+		            linear-gradient(hsla(0,0%,100%,.5) 50%, transparent 0) 0 0 / auto 3em content-box padding-box
+		            hsl(350, 80%, 96%);
+		box-shadow: -25vw 0 hsl(350, 80%, 96%);
+		border-right: .3em solid white;
+	}
+
+		#quick-look pre.vanilla::before {
+			content: "Plain Vanilla JS";
+			color: hsl(350, 80%, 55%);
+			right: 1em;
+		}
+
+	#quick-look pre.bliss {
+		background: linear-gradient(to right, hsla(145, 34%, 95%,0), hsl(145, 34%, 95%)),
+		            linear-gradient(hsla(0,0%,100%,.5) 50%, transparent 0) 0 0 / auto 3em content-box padding-box
+		            hsl(145, 34%, 95%);
+		box-shadow: 25vw 0 hsl(145, 34%, 95%);
+		padding-left: .8em;
+		border-left: .3em solid white;
+	}
+
+		#quick-look pre.bliss::before {
+			content: "Blissful Vanilla JS";
+			color: hsl(190, 52%, 50%);
+			left: 1em;
 		}

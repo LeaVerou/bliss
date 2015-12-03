@@ -1,10 +1,15 @@
+(function(){
+function titleToId(title) {
+	return title.trim().replace(/^\$\.|\(\)$/g, "");
+}
+
 // Add ids and implementation to all functions
 $$("#docs article > h1").forEach(function(h1) {
 	var article = h1.parentNode;
 
 	h1.firstChild.textContent = h1.firstChild.textContent.trim();
 	
-	var fn = h1.firstChild.textContent.replace(/^\$\.|\(\)$/g, "");
+	var fn = titleToId(h1.firstChild.textContent);
 
 	if (article && !article.id) {
 		article.id = "fn-" + fn;
@@ -120,9 +125,36 @@ if (/\/docs\.html$/.test(location.pathname)) {
 	});
 }
 
+// Find references to Bliss functions and make them links to the docs
+$$(":not(pre) > code").forEach(function(code){
+	if (/\$.*\(\)/.test(code.textContent)) {
+		$.create("a", {
+			href: "#fn-" + titleToId(code.textContent),
+			around: code
+		});
+	}
+});
+
 $$("#download input[type=radio]")._.events({click: function(){
 	var elements = this.form.elements;
 	$("#download a[download]").href = "bliss" + elements.type.value + elements.compression.value + ".js";
 }});
 
-// TODO Find references to Bliss functions and make them links to the docs
+$$(".runnable").forEach(function(p){
+	$.create("button", {
+		textContent: "Run",
+		className: "run",
+		once: {
+			click: function(){
+				$.create("script", {
+					textContent: $("pre.bliss code", p.nextElementSibling).textContent,
+					after: p
+				});
+				$.remove(this);
+			}
+		},
+		inside: p
+	})
+});
+
+})();

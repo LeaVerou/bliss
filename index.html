@@ -24,14 +24,200 @@
 		<li><strong>Light as a feather</strong> Only 3KB minified &amp; gzipped!</li>
 		<li><strong>Chaining without prototype pollution</strong> Only adds one <code>_</code> property (optional, customizable)</li>
 		<li><strong>Extensible</strong> Adding new blissful methods is easy as pie!</li>
-		<li><strong>Readable source</strong> Excellent for learning!</li>
-		<li><strong>Modern</strong> Designed with modern standards in mind.</li>
+		<li><strong>Mostly readable source</strong> Know what you’re running. Excellent for learning!</li>
+		<li><strong>Built with modern standards</strong> Use polyfills to extend browser support.</li>
 	</ul>
 
 	<nav>
 		<a href="#download">Download</a>
 		<a href="docs.html">Read the docs</a>
 	</nav>
+</section>
+
+<section id="quick-look">
+	<h1>A quick look</h1>
+
+	<p>Get the <code>&lt;button></code> element with the class 'continue' and change its content to 'Next Step...' <a href="http://jquery.com">[example credit]</a></p>
+	<div class="comparison">
+		<pre class="vanilla"><code>document.querySelector("button.continue")
+	.textContent = "Next Step...";</code></pre>
+		<pre class="bliss"><code>$("button.continue").textContent = "Next Step...";</code></pre>
+	</div>
+
+	<p>Show the #banner-message element that is hidden with  display:none in its CSS when any button in #button-container is clicked <a href="http://jquery.com">[example credit]</a></p>
+	<div class="comparison"><pre class="vanilla"><code>var hiddenBox = document.querySelector("#banner-message");
+document.querySelector("#button-container button")
+	.addEventListener("click", function(event) {
+		hiddenBox.style.display = "block";
+	});</code></pre>
+	<pre class="bliss"><code>var hiddenBox = $("#banner-message");
+$("#button-container button")
+	.addEventListener("click", function(event) {
+		hiddenBox.style.display = "block";
+	});</code></pre>
+		</div>
+	
+	<p>Ok, these were easy even with plain Vanilla JS. Nobody needs a library for that! Shall we move on to more realistic examples?</p>
+
+	<p class="runnable">Remove the following pink <code>&lt;pre></code> element from the DOM with a fade out and shrink transition, then display a message:</p>
+
+	<div class="comparison">
+		<pre class="vanilla" id="transition-demo"><code>var demo = document.querySelector("#transition-demo");
+demo.style.transitionProperty = "opacity, transform";
+demo.style.transitionDuration = "400ms";
+var callback = function(){
+	demo.removeEventListener("transitionend", callback);
+	clearTimeout(t);
+	this.parentNode.removeChild(this);
+	alert("Removed! Inspect the DOM to verify :)");
+};
+demo.addEventListener("transitionend", callback);
+// Failsafe
+var t = setTimeout(callback, 450);
+demo.style.opacity = "0";
+demo.style.transform = "scale(0)";</code></pre>
+		<pre class="bliss"><code>$("#transition-demo")._.transition({
+	opacity: 0,
+	transform: "scale(0)"
+})
+.then($.remove)
+.then(function(element){
+	alert("Removed! Inspect the DOM to verify :)")
+});</code></pre>
+	</div>
+
+	<p class="runnable">Wrap all headings with links to their section (check this section’s heading after running):</p>
+	<div class="comparison"><pre class="vanilla"><code>var h1s = document.querySelectorAll("section[id] > h1");
+for (var i=0; i&lt;h1s.length; i++) {
+	var h1 = h1s[i];
+	var a = document.createElement("a");
+	a.href = "#" + h1.parentNode.id;
+	a.title = "Permalink";
+	a.className = "permalink";
+
+	a.addEventListener("click", function(evt){
+		// Use History API if available
+		if (history.pushState) {
+			evt.preventDefault();
+			history.pushState(null, "", this.href);
+		}
+	});
+
+	h1.parentNode.insertBefore(a, h1);
+	a.appendChild(h1);
+}</code></pre>
+	<pre class="bliss"><code>
+
+$$("section[id] > h1").forEach(function(h1){
+	$.create("a", {
+		href: "#" + h1.parentNode.id,
+		title: "Permalink",
+		className: "permalink",
+		events: {
+			click: function(evt) {
+				// Use History API if available
+				if (history.pushState) {
+					evt.preventDefault();
+					history.pushState(null, "", this.href);
+				}
+			}
+		},
+		around: h1
+	});
+});</code></pre>
+	</div>
+
+<p class="runnable">Look up the UK postcode <input value="OX49 5NU" id="postcode" /> with <a href="http://postcodes.io">postcodes.io</a> and print the results here: <span id="uk-area"></span></p>
+<div class="comparison">
+	<pre class="vanilla"><code>var txt = document.querySelector("#postcode");
+var out = document.querySelector("#uk-area");
+(txt.oninput = function(){
+	var url = "http://api.postcodes.io/postcodes/"+txt.value;
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", url);
+	xhr.responseType = "json";
+
+	document.body.setAttribute('data-loading', url);
+
+	xhr.onload = function(){
+		document.body.removeAttribute('data-loading');
+			
+		if (xhr.status === 0 
+		 || xhr.status >= 200 && xhr.status < 300
+		 || xhr.status === 304) {
+			var json = xhr.response.result;
+			
+			out.textContent = [
+				json.parliamentary_constituency,
+				json.admin_district,
+				json.country].join(", ");
+		}
+		else {
+			out.textContent = xhr.statusText;
+		}
+	
+	};
+	xhr.onerror = function() {
+		out.textContent = xhr.statusText;
+	};
+	xhr.send(null);
+})();</code></pre>
+	<pre class="bliss"><code>var txt = $("#postcode");
+var out = $("#uk-area");
+(txt.oninput = function(){
+	var url = "http://api.postcodes.io/postcodes/"+txt.value;
+	
+	$.fetch(url, {
+		responseType: "json"
+	}).then(function(xhr){
+		
+
+
+
+
+
+
+
+		var json = xhr.response.result;
+		
+		out.textContent = [
+			json.parliamentary_constituency,
+			json.admin_district,
+			json.country].join(", ");
+	}).catch(function(error){
+		
+		out.textContent = error;
+	});
+})();</code></pre>
+</div>
+
+	
+</section>
+
+<section id="browser-support">
+	<h1>Browser support</h1>
+
+	<p>Bliss is just a collection of helpers and light syntactic sugar over Vanilla JS. It does not account for browser bugs or lack of support of certain APIs, although it only uses features that are both supported across all modern browsers <strong>and</strong> can be polyfilled. For example, it uses <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promises</a> throughout (supported by all latest browsers, can be polyfilled), but — despite the temptation — <strong>not</strong> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">arrow functions</a> (not available in Safari, cannot be polyfilled). The idea is that you can extend support by using polyfills, depending on your needs.</p>
+
+	<ul>
+		<li>Pick the tradeoff of support-size that matches your needs, not what was chosen for you.</li>
+		<li>Use polyfills now, remove them later when not relevant anymore, resulting in a smaller codebase with zero refactoring.</li>
+	</ul>
+
+	<p>Here is a list of suggested polyfills that will help extend Bliss’ browser support and the current browser support of these features, to determine if you need one:</p>
+
+	<dl>
+		<dt><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise#Browser_compatibility">Promises</a></dt>
+		<dd><a href="https://github.com/jakearchibald/es6-promise/">github.com/jakearchibald/es6-promise</a></dd>
+
+		<dt><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/URL#Browser_compatibility">URL</a></dt>
+		<dd><a href="https://github.com/Polymer/URL/blob/master/url.js">github.com/Polymer/URL</a></dd>
+
+		<dt><a href="http://caniuse.com/#feat=es5">ES5</a></dt>
+		<dd><a href="https://github.com/es-shims/es5-shim">github.com/es-shims/es5-shim</a></dd>
+	</dl>
+
+	<p class="note">Note that apart from Promises, all other polyfills can be loaded conditionally, by using Bliss’ <code>$.include()</code>.</p>
 </section>
 
 <section id="download">
@@ -62,7 +248,11 @@
 	<a href="bliss.js" download class="button">Download</a>
 </section>
 
-<footer>By <a href="http://lea.verou.me">Lea Verou</a> &bull; Blog post</footer>
+<footer>
+	By <a href="http://lea.verou.me">Lea Verou</a> &bull; Blog post
+	<a href="https://twitter.com/blissfuljs" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @blissfuljs</a>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+</footer>
 
 <script src="bliss.js"></script>
 <script src="transform.js"></script>

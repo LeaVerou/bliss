@@ -229,7 +229,7 @@ $$(element.attributes).filter(function(attribute){
 			<dd>The text for the text node.</dd>
 
 			<dt>textNode</dt>
-			<dd class="type">Type: Text Node</dd>
+			<dd class="type">Type: <a href="https://developer.mozilla.org/en-US/docs/Web/API/Text">Text Node</a></dd>
 			<dd>The text node</dd>
 		</dl>
 
@@ -315,7 +315,7 @@ $$(element.attributes).filter(function(attribute){
 });</code></pre>
 
 		<ul class="notes">
-			<li><strong>Tip:</strong> Add more handled properties of your own by adding a function to <code>$.setSpecial</code>.</li>
+			<li><strong>Tip:</strong> Add more specially handled properties of your own by just adding a function to <code>$.setProps</code>.</li>
 			<li><strong>Warning:</strong> If setting SVG attributes, use the explicit <code>attributes</code> property, not just properties directly on <code>options</code>. Otherwise, they will be added as properties, and the API for SVG DOM properties is the stuff of nightmares.</li>
 		</ul>
 	</article>
@@ -334,7 +334,7 @@ $$(element.attributes).filter(function(attribute){
 			<dd>The element(s) to apply the CSS properties to.</dd>
 
 			<dt>elements</dt>
-			<dd class="type">Type: Object or Array or String</dd>
+			<dd class="type">Type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></dd>
 			<dd>If it’s an object or string, it will be passed through <code>$.create()</code>, to be converted into an element or text node respectively. If it’s an array, the same will happen to its elements. Note that this lets you recursively create entire subtrees, since these objects can also have a <code>contents</code> property of their own, as seen in the example below.</dd>
 		</dl>
 
@@ -622,9 +622,16 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 
 		<pre class="examples"><code>// Fade out an element then remove it from the DOM
 $.transition(element, {opacity: 0}).then($.remove);</code></pre>
+		<pre><code>// Fade out and shrink all &lt;div>s on a page,
+// then remove them from the DOM
+Promise.all($$("div")._.transition({
+	opacity: 0,
+	transform: "scale(0)"
+})).then($.remove);</code></pre>
 
 		<ul class="notes">
-			<li>Uses CSS transitions, not custom interpolation code.</li>
+			<li>Uses CSS transitions, not custom interpolation code. In browsers that do not support CSS transitions, the style is applied immediately and the promise returned is resolved.</li>
+			<li>The properties applied remain after the transition has ended.</li>
 		</ul>
 
 		<a class="jq">jQuery.fn.animate</a>
@@ -639,11 +646,52 @@ $.transition(element, {opacity: 0}).then($.remove);</code></pre>
 
 		<p class="description">Helper for event delegation.</p>
 
-		<pre><code>$.delegate(subject, type, selector, callback)</code></pre>
+		<pre><code>subject = $.delegate(subject, type, selector, callback)</code></pre>
+		<pre><code>subject = subject._.delegate(type, selector, callback)</code></pre>
 
-		<pre class="def"><code>$.delegate(subject, type, selectorsCallbacks)</code></pre>
+		<dl class="args">
+			<dt class="element-or-array">subject</dt>
+			<dd>The delegation root. Only elements inside this will fire the event.</dd>
 
-		<pre class="def"><code>$.delegate(subject, typesSelectorsCallbacks)</code></pre>
+			<dt class="string">type</dt>
+			<dd>The event type.</dd>
+
+			<dt class="string">selector</dt>
+			<dd>The selector the target of the event needs to match.</dd>
+		</dl>
+
+		<pre class="def"><code>subject = $.delegate(subject, type, selectorsToCallbacks)</code></pre>
+		<pre class="def"><code>subject = subject._.delegate(type, selectorsToCallbacks)</code></pre>
+
+		<dl class="args">
+			<dt class="element-or-array">subject</dt>
+			<dd>The delegation root. Only elements inside this will fire the event.</dd>
+
+			<dt class="string">type</dt>
+			<dd>The event type.</dd>
+
+			<dt class="object">selectorsToCallbacks</dt>
+			<dd>An object of the form <code>{selector1: callback1, …, selectorN: callbackN}</code>.</dd>
+		</dl>
+
+		<pre class="def"><code>subject = $.delegate(subject, typesToSelectorsToCallbacks)</code></pre>
+		<pre class="def"><code>subject = subject._.delegate(typesToSelectorsToCallbacks)</code></pre>
+		<pre class="def"><code>subject = subject._.set({delegate: typesToSelectorsToCallbacks})</code></pre>
+
+		<dl class="args">
+			<dt class="element-or-array">subject</dt>
+			<dd>The delegation root. Only elements inside this will fire the event.</dd>
+
+			<dt class="string">type</dt>
+			<dd>The event type.</dd>
+
+			<dt class="object">typesToSelectorsToCallbacks</dt>
+			<dd>An object of the form <pre><code>{
+	type1: {selector11: callback11, …, selector1N: callback1N},
+	…
+	typeM: {selectorM1: callbackM1, …, selectorMK: callbackMK}
+}</code></pre>.</dd>
+		</dl>
 
 		<a class="jq">jQuery.fn.delegate</a>
 	</article>
@@ -655,13 +703,14 @@ $.transition(element, {opacity: 0}).then($.remove);</code></pre>
 
 		<pre><code>$.events(subject, handlers)</code></pre>
 		<pre><code>subject._.events(handlers)</code></pre>
+		<pre><code>subject = subject._.set({events: handlers})</code></pre>
 
 		<dl class="args">
 			<dt class="element-or-array">subject</dt>
 			<dd>The element(s) to set the event listeners on.</dd>
 
 			<dt>handlers</dt>
-			<dd class="type">Type: Object or Element</dd>
+			<dd class="type">Type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></dd>
 			<dd>If object: An object whose keys are the events and the values the listeners. You can include multiple event types by space-separating them. If it’s an element, all its event listeners are copied from it to <code>subject</code>.</dd>
 		</dl>
 
@@ -722,7 +771,7 @@ myInput._.fire("input");</code></pre>
 
 		<dl class="args">
 			<dt>context</dt>
-			<dd class="type">Type: Document</dd>
+			<dd class="type">Type: <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document">Document</a></dd>
 			<dd>The document whose …readiness we’re interested in.</dd>
 			
 			<dt class="promise">promise</dt>
@@ -804,6 +853,10 @@ $.ready().then(function(){
 				</dl>
 			</dd>
 		</dl>
+
+		<ul class="notes">
+			<li>To enable more properties with “special” handling, like <code>lazy</code> and <code>live</code>, add them to the <code>$.classProps</code> object.</li>
+		</ul>
 	</article>
 
 	<article>
@@ -821,7 +874,7 @@ $.ready().then(function(){
 			<dd>An object containing the additional properties to merge in.</dd>
 
 			<dt>whitelist</dt>
-			<dd class="type">Type: Array or String or Function or RegExp</dd>
+			<dd class="type">Type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp">RegExp</a></dd>
 			<dd>If array, a whitelist of property names. If function, it is called on each property and only the properties it returns a truthy value on will be copied. If it’s a reguar expression, only matching property names will be copied. If it’s the string <code>"own"</code>, inherited properties will not be copied. Other strings are reserved for future use.</dd>
 		</dl>
 		
@@ -945,8 +998,9 @@ if ($.type(arguments[1]) == "regexp") {
 					<dt class="string">method</dt>
 					<dd>The HTTP method, such as <code>"GET"</code> or <code>"POST"</code>.</dd>
 
-					<dt class="string">data</dt>
-					<dd>Any data to send, as a string</dd>
+					<dt>data</dt>
+					<dd class="type">Type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></dd>
+					<dd>Any data to send, as a URLencoded parameter string (e.g. <code>"foo=b%20ar&amp;baz=yolo"</code>) or an object of key-value pairs.</dd>
 
 					<dt class="object">headers</dt>
 					<dd>Object with any extra headers to set.</dd>
@@ -1009,7 +1063,7 @@ $.include(self.Dropbox, url).then(function(){
 <template data-end="article > h1.element"> <span class="tag element" title="Available on element._">Element</span> </template>
 <template data-end="article > h1.array"> <span class="tag array" title="Available on array._">Array</span> </template>
 <template data-end="article > h1.set"> <span class="tag set" title="Available inside $.set()">$.set()</span> </template>
-<template data-end="article > h1.full"> <span class="tag set" title="Available only in Bliss Full">Bliss Full</span> </template>
+<template data-end="article > h1.full"> <span class="tag set" title="Not available in Bliss Shy">Bliss Full</span> </template>
 
 <!-- Add headings -->
 <template data-before=".args + pre:not(.def)"><h2>Example(s)</h2></template>
@@ -1017,14 +1071,30 @@ $.include(self.Dropbox, url).then(function(){
 <template data-before=".notes"><h2>Notes and caveats</h2></template>
 
 <!-- Add argument types -->
-<template data-after=".args dt.object"><dd class="type">Type: Object</dd></template>
-<template data-after=".args dt.string"><dd class="type">Type: String</dd></template>
-<template data-after=".args dt.element"><dd class="type">Type: Element</dd></template>
-<template data-after=".args dt.element-or-array"><dd class="type">Type: Element or Array</dd></template>
-<template data-after=".args dt.promise"><dd class="type">Type: Promise</dd></template>
-<template data-after=".args dt.function"><dd class="type">Type: Function</dd></template>
-<template data-after=".args dt.number"><dd class="type">Type: Number</dd></template>
+<template data-after=".args dt.object">
+	<dd class="type">Type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></dd>
+</template>
+<template data-after=".args dt.string">
+	<dd class="type">Type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></dd>
+</template>
+<template data-after=".args dt.element">
+	<dd class="type">Type: <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></dd>
+</template>
+<template data-after=".args dt.element-or-array">
+	<dd class="type">
+	Type: <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></dd>
+</template>
+<template data-after=".args dt.promise">
+	<dd class="type">Type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></dd>
+</template>
+<template data-after=".args dt.function">
+	<dd class="type">Type: Function</dd>
+</template>
+<template data-after=".args dt.number">
+	<dd class="type">Type: Number</dd>
+</template>
 
+<!-- Make all external links open in a new window -->
 <template data-attr="a[href^='http://'], a[href^='https://']"><content target="_blank"></content></template>
 
 <!-- Add jQuery-like reference -->
