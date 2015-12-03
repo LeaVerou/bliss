@@ -8,7 +8,7 @@ if (!Bliss || Bliss.shy) {
 var _ = Bliss.property;
 
 // Methods requiring Bliss Full
-$.extend($.Element.prototype, {
+$.add({
 	// Clone elements, with events
 	clone: function () {
 		var clone = this.cloneNode(true);
@@ -34,7 +34,7 @@ $.extend($.Element.prototype, {
 			});
 		});
 	}
-});
+}, {array: false});
 
 // Define the _ property on arrays and elements
 
@@ -70,7 +70,7 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	    };
 
 	EventTarget.prototype.addEventListener = function(type, callback, capture) {
-		if (this[_]) {
+		if (this[_] && callback) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 			
 			listeners[type] = listeners[type] || [];
@@ -95,7 +95,7 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	};
 
 	EventTarget.prototype.removeEventListener = function(type, callback, capture) {
-		if (this[_]) {
+		if (this[_] && callback) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 
 			var oldCallback = callback;

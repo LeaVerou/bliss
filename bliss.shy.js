@@ -104,55 +104,6 @@ extend($, {
 		});
 	},
 
-	// Lazily evaluated properties
-	lazy: function(obj, property, getter) {
-		if (arguments.length >= 3) {
-			Object.defineProperty(obj, property, {
-				get: function() {
-					// FIXME this does not work for instances if property is defined on the prototype
-					delete this[property];
-
-					try { this[property] = 5;
-					} catch(e) {console.error(e)}
-
-					return this[property] = getter.call(this);
-				},
-				configurable: true,
-				enumerable: true
-			});
-		}
-		else if (arguments.length === 2) {
-			for (var prop in property) {
-				$.lazy(obj, prop, property[prop]);
-			}
-		}
-	},
-
-	// Properties that behave like normal properties but also execute code upon getting/setting
-	live: function(obj, property, descriptor) {
-		if (arguments.length >= 3) {
-			Object.defineProperty(obj, property, {
-				get: function() {
-					var value = this["_" + property];
-					var ret = descriptor.get && descriptor.get.call(this, value);
-					return ret !== undefined? ret : value;
-				},
-				set: function(v) {
-					var value = this["_" + property];
-					var ret = descriptor.set && descriptor.set.call(this, v, value);
-					this["_" + property] = ret !== undefined? ret : v;
-				},
-				configurable: descriptor.configurable,
-				enumerable: descriptor.enumerable
-			});
-		}
-		else if (arguments.length === 2) {
-			for (var prop in property) {
-				$.stored(obj, prop, property[prop]);
-			}
-		}
-	},
-
 	// Helper for defining OOP-like “classes”
 	Class: function(o) {
 		var init = o.constructor || function(){};
@@ -185,11 +136,12 @@ extend($, {
 		$.extend(ret, o.static);
 		delete o.static;
 
-		$.lazy(ret.prototype, o.lazy);
-		delete o.lazy;
-
-		$.stored(ret.prototype, o.stored);
-		delete o.stored;
+		for (var property in o) {
+			if (property in $.classProps) {
+				$.classProps[property].call(ret, ret.prototype, o[property]);
+				delete o[property];
+			}
+		}
 
 		// Anything that remains is an instance method/property or ret.prototype.constructor
 		$.extend(ret.prototype, o);
@@ -199,6 +151,58 @@ extend($, {
 		ret.prototype.super = ret.super? ret.super.prototype : null;
 		
 		return ret;
+	},
+
+	// Properties with special handling in classes
+	classProps: {
+		// Lazily evaluated properties
+		lazy: function(obj, property, getter) {
+			if (arguments.length >= 3) {
+				Object.defineProperty(obj, property, {
+					get: function() {
+						// FIXME this does not work for instances if property is defined on the prototype
+						delete this[property];
+
+						try { this[property] = 5;
+						} catch(e) {console.error(e)}
+
+						return this[property] = getter.call(this);
+					},
+					configurable: true,
+					enumerable: true
+				});
+			}
+			else if (arguments.length === 2) {
+				for (var prop in property) {
+					$.lazy(obj, prop, property[prop]);
+				}
+			}
+		},
+
+		// Properties that behave like normal properties but also execute code upon getting/setting
+		live: function(obj, property, descriptor) {
+			if (arguments.length >= 3) {
+				Object.defineProperty(obj, property, {
+					get: function() {
+						var value = this["_" + property];
+						var ret = descriptor.get && descriptor.get.call(this, value);
+						return ret !== undefined? ret : value;
+					},
+					set: function(v) {
+						var value = this["_" + property];
+						var ret = descriptor.set && descriptor.set.call(this, v, value);
+						this["_" + property] = ret !== undefined? ret : v;
+					},
+					configurable: descriptor.configurable,
+					enumerable: descriptor.enumerable
+				});
+			}
+			else if (arguments.length === 2) {
+				for (var prop in property) {
+					$.live(obj, prop, property[prop]);
+				}
+			}
+		},
 	},
 
 	// Includes a script, returns a promise
@@ -226,7 +230,7 @@ extend($, {
 	},
 
 	/*
-	 * Fetch API inspired XHR helper. Returns promise.
+	 * Fetch API inspired XHR wrapper. Returns promise.
 	 */
 	fetch: function(url, o) {
 		if (!url) {
@@ -240,9 +244,11 @@ extend($, {
 		o.method = o.method || 'GET';
 		o.headers = o.headers || {};
 
-		// TODO use the Fetch API if available
-
 		var xhr = new XMLHttpRequest();
+
+		if ($.type(o.data) !== "string") {
+			o.data = Object.keys(o.data).map(function(key){ return key + "=" + encodeURIComponent(o.data[key])}).join("&");
+		}
 
 		if (o.method === "GET" && o.data) {
 			url.search += o.data;
@@ -286,6 +292,7 @@ extend($, {
 			};
 			
 			xhr.onerror = function() {
+				document.body.removeAttribute('data-loading');
 				reject(Error("Network Error"));
 			};
 
@@ -309,8 +316,8 @@ $.Element = function (subject) {
 $.Element.prototype = {
 	set: function (properties) {
 		for (var property in properties) {
-			if (property in $.setSpecial) {
-				$.setSpecial[property].call(this, properties[property]);
+			if (property in $.setProps) {
+				$.setProps[property].call(this, properties[property]);
 			}
 			else if (property in this) {
 				this[property] = properties[property];
@@ -327,8 +334,6 @@ $.Element.prototype = {
 
 		return new Promise(function(resolve, reject){
 			if ("transition" in this.style) {
-				var me = this;
-
 				// Get existing style
 				var previous = $.extend({}, this.style, /^transition(Duration|Property)$/);
 
@@ -337,19 +342,19 @@ $.Element.prototype = {
 					transitionProperty: Object.keys(props).join(", ")
 				});
 
-				this.addEventListener("transitionend", function done(){
+				$.once(this, "transitionend", function(){
 					clearTimeout(i);
-					$.style(me, previous);
-					me.removeEventListener(done);
-					resolve(me);
+					$.style(this, previous);
+					resolve(this);
 				});
 
 				// Failsafe, in case transitionend doesn’t fire
-				var i = setTimeout(resolve, duration+50);
+				var i = setTimeout(resolve, duration+50, this);
 
 				$.style(this, props);
 			}
 			else {
+				$.style(this, props);
 				resolve(this);
 			}
 		}.bind(this));
@@ -379,7 +384,7 @@ $.Element.prototype = {
  * Properties with custom handling in $.set()
  * Also available as functions directly on element._ and on $
  */
-$.setSpecial = {
+$.setProps = {
 	// Set a bunch of inline CSS styles
 	style: function (val) {
 		$.extend(this.style, val);
@@ -400,6 +405,7 @@ $.setSpecial = {
 	// Bind one or more events to the element
 	events: function (val) {
 		if (val instanceof EventTarget) {
+			// Copy events from other element (requires Bliss Full)
 			var me = this;
 
 			// Copy listeners
@@ -430,8 +436,14 @@ $.setSpecial = {
 	},
 
 	once: function(val) {
+		if (arguments.length == 2) {
+			val = {};
+			val[arguments[0]] = arguments[1];
+		}
+
 		for (var events in val) {
 			events.split(/\s+/).forEach(function (event) {
+				var me = this;
 				this.addEventListener(event, function callback() {
 					me.removeEventListener(event, callback);
 					return val[events].apply(this, arguments);
@@ -542,17 +554,17 @@ $.add = function (methods, on) {
 		
 		if ($.type(callback) == "function") {
 			if (on.element) {
-				var onElement = $.Element.prototype[method] = function () {
+				$.Element.prototype[method] = function () {
 					return this.subject && $.defined(callback.apply(this.subject, arguments), this.subject);
 				};
 			}
 
 			if (on.array) {
-				var onArray = $.Array.prototype[method] = function() {
+				$.Array.prototype[method] = function() {
 					var args = arguments;
 					
 					return this.subject.map(function(element) {
-						return $.defined(callback.apply(element, args), element);
+						return element && $.defined(callback.apply(element, args), element);
 					});
 				};
 			}
@@ -563,9 +575,9 @@ $.add = function (methods, on) {
 				$[method] = function () {
 					var args = [].slice.apply(arguments);
 					var subject = args.shift();
-					var callback = on.array && Array.isArray(subject)? onArray : onElement;
+					var Type = on.array && Array.isArray(subject)? "Array" : "Element";
 
-					return callback.apply({subject: subject}, args);
+					return $[Type].prototype[method].apply({subject: subject}, args);
 				}
 			}
 		}
@@ -574,8 +586,9 @@ $.add = function (methods, on) {
 	}
 };
 
-$.add($.Element.prototype);
-$.add($.setSpecial);
+$.add($.Element.prototype); // no methods in $.Array.prototype as of yet
+$.add($.setProps);
+$.add($.classProps, {element: false, array: false});
 $.add(HTMLElement.prototype, {$: false});
 
 })();
