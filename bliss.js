@@ -84,8 +84,6 @@ extend($, {
 			tag = o.tag || "div";			
 		}
 		
-		// TODO Do we need an o.document option for different documents?
-		// One can always use $.set(otherDocument.createElement(), o), but what about $.contents()?
 		return $.set(document.createElement(tag), o);
 	},
 
@@ -319,6 +317,11 @@ $.Element = function (subject) {
 
 $.Element.prototype = {
 	set: function (properties) {
+		if ($.type(arguments[0]) === "string") {
+			properties = {};
+			properties[arguments[0]] = arguments[1];
+		}
+
 		for (var property in properties) {
 			if (property in $.setProps) {
 				$.setProps[property].call(this, properties[property]);
@@ -376,11 +379,6 @@ $.Element.prototype = {
 		evt.initEvent(type, true, true );
 
 		this.dispatchEvent($.extend(evt, properties));
-
-		if (this[_]) {
-			var fired = this[_].bliss.fired = this[_].bliss.fired || {};
-			fired[type] = ++fired[type] || 1;
-		}
 	}
 };
 
@@ -535,7 +533,6 @@ $.Array = function (subject) {
 };
 
 // Extends Bliss with more methods
-
 $.add = function (methods, on) {
 	on = $.extend({$: true, element: true, array: true}, on);
 	
@@ -574,14 +571,16 @@ $.add = function (methods, on) {
 			}
 
 			if (on.$) {
-				$.sources[method] = callback;
+				$.sources[method] = $[method] = callback;
 
-				$[method] = function () {
-					var args = [].slice.apply(arguments);
-					var subject = args.shift();
-					var Type = on.array && Array.isArray(subject)? "Array" : "Element";
+				if (on.array || on.element) {
+					$[method] = function () {
+						var args = [].slice.apply(arguments);
+						var subject = args.shift();
+						var Type = on.array && Array.isArray(subject)? "Array" : "Element";
 
-					return $[Type].prototype[method].apply({subject: subject}, args);
+						return $[Type].prototype[method].apply({subject: subject}, args);
+					}
 				}
 			}
 		}
@@ -617,20 +616,6 @@ $.add({
 		});
 
 		return clone;
-	},
-
-	// Returns a promise that gets resolved after {type} has fired at least once
-	waitFor: function(type) {
-		if (this[$.property] && this[$.property].bliss.fired && this[$.property].bliss.fired[type] > 0) {
-			// Already fired
-			return Promise.resolve();
-		}
-		
-		return new Promise(function(resolve, reject){
-			$.once(type, function (evt) {
-				resolve(evt);
-			});
-		});
 	}
 }, {array: false});
 
@@ -672,20 +657,9 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 			
 			listeners[type] = listeners[type] || [];
-
-			var fired = this[_].bliss.fired = this[_].bliss.fired || {};
-			fired[type] = fired[type] || 0;
-			
-			var oldCallback = callback;
-			callback = function() {
-				this[_].bliss.fired[type]++;
-
-				return oldCallback.apply(this, arguments)
-			};
-			oldCallback.callback = callback;
 			
 			if (listeners[type].filter(filter.bind(null, callback, capture)).length === 0) {
-				listeners[type].push({callback: oldCallback, capture: capture});
+				listeners[type].push({callback: callback, capture: capture});
 			}
 		}
 

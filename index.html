@@ -24,7 +24,7 @@
 		<li><strong>Light as a feather</strong> Only 2.5-3KB minified &amp; gzipped!</li>
 		<li><strong>Chaining without prototype pollution</strong> Only adds one <code>_</code> property (optional, customizable)</li>
 		<li><strong>Extensible</strong> <a href="docs.html#fn-add">Adding new blissful methods</a> is easy as pie!</li>
-		<li><strong>Mostly readable source</strong> Know what you’re running. Excellent for learning!</li>
+		<li><strong>(Mostly) readable source</strong> Know what you’re running. Excellent for learning!</li>
 		<li><strong>Built with modern standards</strong> Use polyfills to extend browser support.</li>
 	</ul>
 
@@ -236,7 +236,7 @@ var out = $("#uk-area");
 			<label for="type-shy">
 				<strong class="logo">Bliss <span>Shy</span></strong>
 				Does not touch the host environment in any way, except to add one global <code>Bliss</code> variable.
-				Perfect for inclusion in a third-party library, or any other case where you don’t control the environment. About 1KB smaller.
+				Perfect for inclusion in a third-party library, or any other case where you don’t control the environment. Slightly smaller size.
 			</label>
 		</div>
 		<div class="bliss-compression">
@@ -250,6 +250,9 @@ var out = $("#uk-area");
 
 <footer>
 	By <a href="http://lea.verou.me">Lea Verou</a> &bull; Blog post
+
+	<a href="https://github.com/LeaVerou/bliss" class="github-ribbon" target="_blank">Fork me on GitHub</a>
+
 	<a href="https://twitter.com/blissfuljs" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @blissfuljs</a>
 	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </footer>
@@ -258,6 +261,17 @@ var out = $("#uk-area");
 <script src="transform.js"></script>
 <script src="index.js"></script>
 <script src="style/prism.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-71026615-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 
 </body>
 </html>

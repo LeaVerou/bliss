@@ -19,20 +19,6 @@ $.add({
 		});
 
 		return clone;
-	},
-
-	// Returns a promise that gets resolved after {type} has fired at least once
-	waitFor: function(type) {
-		if (this[$.property] && this[$.property].bliss.fired && this[$.property].bliss.fired[type] > 0) {
-			// Already fired
-			return Promise.resolve();
-		}
-		
-		return new Promise(function(resolve, reject){
-			$.once(type, function (evt) {
-				resolve(evt);
-			});
-		});
 	}
 }, {array: false});
 
@@ -74,20 +60,9 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 			
 			listeners[type] = listeners[type] || [];
-
-			var fired = this[_].bliss.fired = this[_].bliss.fired || {};
-			fired[type] = fired[type] || 0;
-			
-			var oldCallback = callback;
-			callback = function() {
-				this[_].bliss.fired[type]++;
-
-				return oldCallback.apply(this, arguments)
-			};
-			oldCallback.callback = callback;
 			
 			if (listeners[type].filter(filter.bind(null, callback, capture)).length === 0) {
-				listeners[type].push({callback: oldCallback, capture: capture});
+				listeners[type].push({callback: callback, capture: capture});
 			}
 		}
 

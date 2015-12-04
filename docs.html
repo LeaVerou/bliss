@@ -781,35 +781,6 @@ $.ready().then(function(){
 
 		<a class="jq">jQuery.fn.ready</a>
 	</article>
-
-	<article>
-		<h1 class="element full">waitFor</h1>
-
-		<p class="description">Execute some code once, upon an event or immediately if the event has already fired.</p>
-
-		<pre><code>var promise = $.waitFor(subject, event)</code></pre>
-		<pre><code>var promise = subject._.waitFor(event)</code></pre>
-
-		<dl class="args">
-			<dt class="element">subject</dt>
-			<dd>The element on which we want to monitor the event.</dd>
-
-			<dt class="string">event</dt>
-			<dd>The event to wait for.</dd>
-
-			<dt class="promise">promise</dt>
-			<dd>A promise that gets resolved immediately if the event has already fired or when it fires if not.</dd>
-		</dl>
-
-		<pre><code>document._.waitFor("DOMContentLoaded").then(function(){
-	// Execute some code that requires the DOM to be ready
-});</code></pre>
-
-		<ul class="notes">
-			<li><strong>Important:</strong> If there is no event listener attached to that event (even before <code>$.waitFor()</code> was called), then Bliss will not know that the event has fired. Therefore, the usefulness of this method is rather limited.</li>
-			<li>On Bliss Shy, this is equivalent to attaching an event listener and then removing it after it fires.</li>
-		</ul>
-	</article>
 </section>
 
 <section>
@@ -1121,12 +1092,30 @@ $.include(self.Dropbox, url).then(function(){
 </template>
 
 
-<footer>By <a href="http://lea.verou.me">Lea Verou</a> &bull; Blog post</footer>
+<footer>
+	By <a href="http://lea.verou.me">Lea Verou</a> &bull; Blog post
+
+	<a href="https://github.com/LeaVerou/bliss" class="github-ribbon">Fork me on GitHub</a>
+
+	<a href="https://twitter.com/blissfuljs" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @blissfuljs</a>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+</footer>
 
 <script src="bliss.js"></script>
 <script src="transform.js"></script>
 <script src="index.js"></script>
 <script src="style/prism.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-71026615-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 
 </body>
 </html>

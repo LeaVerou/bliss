@@ -405,3 +405,21 @@ body > footer {
 			color: hsl(190, 52%, 50%);
 			left: 1em;
 		}
+
+.github-ribbon {
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform: rotate(90deg) translateX(70.71067814%) rotate(-90deg) rotate(-45deg) translateY(-100%);
+	transform-origin: 0 0;
+	padding: .4em 3em;
+	background: hsl(350, 80%, 55%);
+	text-decoration: none;
+	color: #f5ebd6;
+	box-shadow: 0 0.1em 0 0.1em rgba(0, 0, 0, 0.15);
+}
+	
+	.github-ribbon:hover {
+		background: black;
+		color: white;
+	}
