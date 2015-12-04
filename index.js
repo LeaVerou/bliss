@@ -157,4 +157,44 @@ $$(".runnable").forEach(function(p){
 	})
 });
 
+// Linkify types to MDN
+var urls = {};
+
+// Add global objects
+["Object", "String", "Array", "Number", "Function", "RegExp"].forEach(function(type){
+	urls[type] = "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/" + type;
+});
+
+// Add APIs
+["Node", "Element", "Text", "Document"].forEach(function(type){
+	urls[type] = "https://developer.mozilla.org/en-US/docs/Web/API/" + type;
+});
+
+self.typeRegex = RegExp("\\b(?:" + Object.keys(urls).join("|") + ")\\b", "g");
+
+$$(".args dt[class]").forEach(function(dt){
+	var types = ["Type: "];
+
+	$$(dt.classList).forEach(function(clas, i, arr){
+		var type = (clas + "").replace(/^./, function($0) { return $0.toUpperCase() });
+
+		if (urls[type]) {
+			if (i > 0) {
+				types.push(i === arr.length - 1? " or " : ", ");
+			}
+
+			types.push($.create("a", {
+				href: urls[type],
+				textContent: type
+			}));
+		}
+	});
+
+	$.create("dd", {
+		className: "type",
+		contents: types,
+		after: dt
+	});
+});
+
 })();

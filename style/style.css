@@ -194,6 +194,10 @@ body > section#intro {}
 				font-size: 125%;
 			}
 
+			body > section#intro li a {
+				color: inherit;
+			}
+
 	body > section#intro nav {
 		margin: 2em 0;
 		text-align: center;

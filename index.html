@@ -21,9 +21,9 @@
 
 	<ul>
 		<li><strong>No lock-in, no wrapper objects</strong> Designed to work with Vanilla JS, not replace it.</li>
-		<li><strong>Light as a feather</strong> Only 3KB minified &amp; gzipped!</li>
+		<li><strong>Light as a feather</strong> Only 2.5-3KB minified &amp; gzipped!</li>
 		<li><strong>Chaining without prototype pollution</strong> Only adds one <code>_</code> property (optional, customizable)</li>
-		<li><strong>Extensible</strong> Adding new blissful methods is easy as pie!</li>
+		<li><strong>Extensible</strong> <a href="docs.html#fn-add">Adding new blissful methods</a> is easy as pie!</li>
 		<li><strong>Mostly readable source</strong> Know what you’re running. Excellent for learning!</li>
 		<li><strong>Built with modern standards</strong> Use polyfills to extend browser support.</li>
 	</ul>
@@ -107,8 +107,8 @@ for (var i=0; i&lt;h1s.length; i++) {
 	a.appendChild(h1);
 }</code></pre>
 	<pre class="bliss"><code>
-
 $$("section[id] > h1").forEach(function(h1){
+
 	$.create("a", {
 		href: "#" + h1.parentNode.id,
 		title: "Permalink",
