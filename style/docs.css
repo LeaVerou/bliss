@@ -1,6 +1,6 @@
 /* Documentation-specific CSS */
 
-.tag {
+.tag:not(.token) {
 	display: inline-block;
 	vertical-align: middle;
 	padding: 0 .4em;
@@ -45,7 +45,7 @@
 		text-align: right;
 	}
 
-@media (min-width: 60em) and (min-height: 30em) {
+@media (min-width: 60em) and (min-height: 40em) {
 	#toc {
 		position: fixed;
 		bottom: 0;
@@ -62,7 +62,7 @@
 	}
 }
 
-@media (max-width: 60em), (max-height: 45em) {
+@media (max-width: 60em), (max-height: 55em) {
 	#toc > ol {
 		-webkit-column-count: 2;
 		-moz-column-count: 2;

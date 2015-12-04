@@ -29,18 +29,18 @@
 	<pre><code>var yolo = $.extend({foo: 1}, {bar: 2}); // or Bliss.extend(…)
 // yolo is {foo: 1, bar: 2}</code></pre>
 
-	<p>Some of Bliss’ methods take an element or an array of elements as their first argument. For example, to set both the <code>width</code> and <code>padding</code> of an element to 0, you could use the <a href="#$.style"><code>$.style()</code></a> method:</p>
+	<p>Many of Bliss’ methods take an element or an array of elements as their first argument. For example, to set both the <code>width</code> and <code>padding</code> of an element to 0, you could use the <a href="#$.style"><code>$.style()</code></a> method:</p>
 
 	<pre><code>$.style(element, {width: 0, padding: 0});</code></pre>
 
-	<p>These types of methods are also available on elements and arrays, for convenience. However, since adding convenience methods to elements and arrays directly would be a JS Mortal Sin™, Bliss only <a href="http://lea.verou.me/2015/04/idea-extending-native-dom-prototypes-without-collisions">adds a <code>_</code> property on elements &amp; arrays</a>, on which it hangs all its methods. The previous example would be written as:</p>
+	<p>These types of methods are also available on elements and arrays, for convenience. However, since adding convenience methods to elements and arrays directly would be a JS Mortal Sin™, Bliss only <a href="http://lea.verou.me/2015/04/idea-extending-native-dom-prototypes-without-collisions">adds a <code>_</code> property on elements &amp; arrays</a>, on which it hangs all its methods, to avoid conflicts. The previous example would be written as:</p>
 
 	<pre><code>element._.style({
 	"width": 0, 
 	"padding": 0
 });</code></pre>
 
-	<p>The <code>._.</code> sequence of characters that appears all too often when coding with Bliss is where Bliss gets its logo from.</p>
+	<aside><p>The <code>._.</code> sequence of characters that appears all too often when coding with Bliss is where Bliss gets its logo from. However, <a href="#configuration">the property can be customized to anything you want</a>.</p></aside>
 
 	<p>Methods that are available on elements like this will have an <a class="tag element">Element</a> tag in these docs.</p>
 
@@ -1079,6 +1079,22 @@ $.include(self.Dropbox, url).then(function(){
 			<dd>Same as above.</dd>
 		</dl>
 	</article>
+</section>
+
+<section>
+	<h1>Configuration</h1>
+
+	<p>Bliss comes in two flavors: Bliss Full and Bliss Shy. Bliss Shy is slightly smaller, does not add any globals beyond <code>Bliss</code>, does not add its property to elements and arrays and does not wrap <code>addEventListener</code> and <code>removeEventListener</code>. Bliss Shy is recommended for inclusion in third-party libraries, whereas Bliss Full is recommended for cases where you control the host environment and care more about convenience than unobtrusiveness. This is a download option, but it can also be a runtime option, if you have downloaded Bliss Full. Just run this, before Bliss is included:</p>
+
+		<pre><code class="language-markup">&lt;script>self.Bliss = { shy: true };&lt;/script>
+&lt;script src="bliss.js">&lt;/script></code></pre>
+
+	<p>If you’re running Bliss Full, but want to change the property name from <code>_</code> to something else, you can also do this via the <code>property</code> configuration option. For example, to change the property name to <code>yolo</code>:</p>
+
+	<pre><code class="language-markup">&lt;script>self.Bliss = { property: "yolo" };&lt;/script>
+&lt;script src="bliss.js">&lt;/script></code></pre>
+
+	<p>As of now, these are the only configuration options, but there might be more in the future.</p>
 </section>
 
 <!-- HTML transformations! Like the idea? Check out transform.js and let me know if I should release it :) -->
