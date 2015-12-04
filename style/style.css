@@ -257,9 +257,7 @@ body > footer {
 	}
 
 /* Index page */
-#download:not(:target) {
-	display: none;
-}
+#download {}
 
 	#download p {
 		margin: .3em 0;

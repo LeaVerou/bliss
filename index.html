@@ -4,6 +4,7 @@
 
 <meta charset="utf-8" />
 <title>Bliss.js — Heavenly JavaScript!</title>
+<link rel="shortcut icon" href="style/twitter-avatar.png" />
 <link rel="stylesheet" href="style/prism.css" />
 <link rel="stylesheet" href="style/style.css" />
 
@@ -20,12 +21,12 @@
 	<p>Want to use Vanilla JS but find native APIs a bit unwieldy? Bliss is for you.</p>
 
 	<ul>
-		<li><strong>No lock-in, no wrapper objects</strong> Designed to work with Vanilla JS, not replace it.</li>
-		<li><strong>Light as a feather</strong> Only 2.5-3KB minified &amp; gzipped!</li>
+		<li><strong>No lock-in, <a href="http://lea.verou.me/2015/04/jquery-considered-harmful/">no wrapper objects</a></strong> Designed to work with Vanilla JS, not replace it.</li>
+		<li><strong>Light as a feather</strong> Only <a href="#download">2.5-3KB minified &amp; gzipped!</a></li>
 		<li><strong>Chaining without prototype pollution</strong> Only adds one <code>_</code> property (optional, customizable)</li>
 		<li><strong>Extensible</strong> <a href="docs.html#fn-add">Adding new blissful methods</a> is easy as pie!</li>
 		<li><strong>(Mostly) readable source</strong> Know what you’re running. Excellent for learning!</li>
-		<li><strong>Built with modern standards</strong> Use polyfills to extend browser support.</li>
+		<li><strong>Built with modern standards</strong> <a href="#browser-support">Use polyfills to extend browser support.</a></li>
 	</ul>
 
 	<nav>
@@ -57,7 +58,7 @@ $("#button-container button")
 	});</code></pre>
 		</div>
 	
-	<p>Ok, these were easy even with plain Vanilla JS. Nobody needs a library for that! Shall we move on to more realistic examples?</p>
+	<p>Ok, these were easy even with plain Vanilla JS. <strong>Nobody needs a library for that!</strong> Shall we move on to more realistic examples?</p>
 
 	<p class="runnable">Remove the following pink <code>&lt;pre></code> element from the DOM with a fade out and shrink transition, then display a message:</p>
 
@@ -65,7 +66,7 @@ $("#button-container button")
 		<pre class="vanilla" id="transition-demo"><code>var demo = document.querySelector("#transition-demo");
 demo.style.transitionProperty = "opacity, transform";
 demo.style.transitionDuration = "400ms";
-var callback = function(){
+var callback = function() {
 	demo.removeEventListener("transitionend", callback);
 	clearTimeout(t);
 	this.parentNode.removeChild(this);
@@ -81,7 +82,7 @@ demo.style.transform = "scale(0)";</code></pre>
 	transform: "scale(0)"
 })
 .then($.remove)
-.then(function(element){
+.then(function(element) {
 	alert("Removed! Inspect the DOM to verify :)")
 });</code></pre>
 	</div>
@@ -95,7 +96,7 @@ for (var i=0; i&lt;h1s.length; i++) {
 	a.title = "Permalink";
 	a.className = "permalink";
 
-	a.addEventListener("click", function(evt){
+	a.addEventListener("click", function(evt) {
 		// Use History API if available
 		if (history.pushState) {
 			evt.preventDefault();
@@ -107,7 +108,7 @@ for (var i=0; i&lt;h1s.length; i++) {
 	a.appendChild(h1);
 }</code></pre>
 	<pre class="bliss"><code>
-$$("section[id] > h1").forEach(function(h1){
+$$("section[id] > h1").forEach(function(h1) {
 
 	$.create("a", {
 		href: "#" + h1.parentNode.id,
@@ -131,7 +132,7 @@ $$("section[id] > h1").forEach(function(h1){
 <div class="comparison">
 	<pre class="vanilla"><code>var txt = document.querySelector("#postcode");
 var out = document.querySelector("#uk-area");
-(txt.oninput = function(){
+(txt.oninput = function() {
 	var url = "http://api.postcodes.io/postcodes/"+txt.value;
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", url);
@@ -139,7 +140,7 @@ var out = document.querySelector("#uk-area");
 
 	document.body.setAttribute('data-loading', url);
 
-	xhr.onload = function(){
+	xhr.onload = function() {
 		document.body.removeAttribute('data-loading');
 			
 		if (xhr.status === 0 
@@ -164,12 +165,12 @@ var out = document.querySelector("#uk-area");
 })();</code></pre>
 	<pre class="bliss"><code>var txt = $("#postcode");
 var out = $("#uk-area");
-(txt.oninput = function(){
+(txt.oninput = function() {
 	var url = "http://api.postcodes.io/postcodes/"+txt.value;
 	
 	$.fetch(url, {
 		responseType: "json"
-	}).then(function(xhr){
+	}).then(function(xhr) {
 		
 
 
@@ -184,7 +185,7 @@ var out = $("#uk-area");
 			json.parliamentary_constituency,
 			json.admin_district,
 			json.country].join(", ");
-	}).catch(function(error){
+	}).catch(function(error) {
 		
 		out.textContent = error;
 	});

@@ -3,7 +3,8 @@
 <head>
 
 <meta charset="utf-8" />
-<title>Bliss.js — Heavenly JavaScript!</title>
+<title>Bliss.js — Documentation</title>
+<link rel="shortcut icon" href="style/twitter-avatar.png" />
 <link rel="stylesheet" href="style/prism.css" />
 <link rel="stylesheet" href="style/style.css" />
 <link rel="stylesheet" href="style/docs.css" />
@@ -1008,7 +1009,14 @@ if ($.type(arguments[1]) == "regexp") {
 			<dt class="promise">promise</dt>
 			<dd>A promise that gets resolved when the script has loaded.</dd>
 		</dl>
-
+		
+		<pre><code>// Load ES5-shim if needed
+var url = "https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.3.1/es5-sham.min.js";
+$.include(Array.prototype.forEach, url).then(function(){
+	$$("div").forEach(function(){
+		// some code here
+	});
+});</code></pre>
 		<pre><code>// Load dropbox.js from a CDN if it’s not already loaded and run some code that uses it
 var url = "https://cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js";
 $.include(self.Dropbox, url).then(function(){
