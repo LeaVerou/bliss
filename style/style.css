@@ -135,9 +135,9 @@ body > header {
 	color: hsl(190, 52%, 50%);
 	
 	background: radial-gradient(circle at 50% 90%, white 1em, transparent 0) -2.5em 100% / 5em 5em,
-	            radial-gradient(circle at bottom, white 1.5em, hsl(145, 34%, 99%) 2em, transparent 0) 0em 100% / 5em 5em,
-	            radial-gradient(circle at bottom, white 2em, hsl(145, 34%, 99%) 3em, transparent 0) 0 100% / 10em 10em,
-	            radial-gradient(circle at bottom, white 3em, hsl(145, 34%, 98%) 4em, transparent 0) 0em 100% / 20em 20em;
+	            radial-gradient(circle at bottom, white 1.5em, hsl(145, 34%, 99%) 2em, hsla(145, 34%, 99%, 0) 0) 0em 100% / 5em 5em,
+	            radial-gradient(circle at bottom, white 2em, hsl(145, 34%, 99%) 3em, hsla(145, 34%, 99%, 0) 0) 0 100% / 10em 10em,
+	            radial-gradient(circle at bottom, white 3em, hsl(145, 34%, 98%) 4em, hsla(145, 34%, 99%, 0) 0) 0em 100% / 20em 20em;
 	background-repeat: repeat-x;
 	background-color: hsl(145, 34%, 89%);
 	animation: 20s move infinite linear;
