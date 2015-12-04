@@ -77,11 +77,11 @@ extend($, {
 	create: function (tag, o) {
 		if (arguments.length === 1) {
 			if ($.type(tag) === "string") {
-				return document.createTextNode(o);
+				return document.createTextNode(tag);
 			}
 			
 			o = tag;
-			tag = o.tag;			
+			tag = o.tag || "div";			
 		}
 		
 		// TODO Do we need an o.document option for different documents?
@@ -177,6 +177,8 @@ extend($, {
 					$.lazy(obj, prop, property[prop]);
 				}
 			}
+
+			return obj;
 		},
 
 		// Properties that behave like normal properties but also execute code upon getting/setting
@@ -202,6 +204,8 @@ extend($, {
 					$.live(obj, prop, property[prop]);
 				}
 			}
+
+			return obj;
 		},
 	},
 
