@@ -339,6 +339,7 @@ body > footer {
 #quick-look pre {
 	position: relative;
 	overflow: visible;
+	box-shadow: none;
 }
 
 	#quick-look pre code {
@@ -356,7 +357,6 @@ body > footer {
 		position: relative;
 		flex: 1;
 		padding: .5em 0;
-		box-shadow: none;
 		border-radius: .5em;
 	}
 
@@ -377,11 +377,28 @@ body > footer {
 		font: bold 100%/.6 Optima, Candara, sans-serif;
 	}
 
+	#quick-look pre::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		z-index: -1;
+		width: 50vw;
+		background-color: inherit;
+	}
+
+	#quick-look pre.bliss::after {
+		left: 0;
+	}
+
+	#quick-look pre.vanilla::after {
+		right: 0;
+	}
+
 	#quick-look pre.vanilla {
 		background: linear-gradient(to left, hsla(350, 80%, 96%,0), hsl(350, 80%, 96%)),
 		            linear-gradient(hsla(0,0%,100%,.5) 50%, transparent 0) 0 0 / auto 3em content-box padding-box
 		            hsl(350, 80%, 96%);
-		box-shadow: -25vw 0 hsl(350, 80%, 96%);
 		border-right: .3em solid white;
 	}
 
@@ -395,7 +412,6 @@ body > footer {
 		background: linear-gradient(to right, hsla(145, 34%, 95%,0), hsl(145, 34%, 95%)),
 		            linear-gradient(hsla(0,0%,100%,.5) 50%, transparent 0) 0 0 / auto 3em content-box padding-box
 		            hsl(145, 34%, 95%);
-		box-shadow: 25vw 0 hsl(145, 34%, 95%);
 		padding-left: .8em;
 		border-left: .3em solid white;
 	}
