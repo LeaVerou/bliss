@@ -441,9 +441,9 @@ $$("div").remove();</code></pre>
 
 		<p class="description">Wrap an element around another.</p>
 
-		<pre><code>$.around(subject, element)</code></pre>
-		<pre><code>subject._.around(element)</code></pre>
-		<pre><code>subject._.set({around: element})</code></pre>
+		<pre><code>subject = $.around(subject, element)</code></pre>
+		<pre><code>subject = subject._.around(element)</code></pre>
+		<pre><code>subject = subject._.set({around: element})</code></pre>
 
 		<dl class="args">
 			<dt class="element">subject</dt>
@@ -469,9 +469,9 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 
 		<p class="description">Set multiple attributes on one or more elements.</p>
 
-		<pre><code>$.attributes(subject, attrs)</code></pre>
-		<pre><code>subject._.attributes(attrs)</code></pre>
-		<pre><code>subject._.set({attributes: attrs})</code></pre>
+		<pre><code>subject = $.attributes(subject, attrs)</code></pre>
+		<pre><code>subject = subject._.attributes(attrs)</code></pre>
+		<pre><code>subject = subject._.set({attributes: attrs})</code></pre>
 
 		<dl class="args">
 			<dt class="element array">subject</dt>
@@ -515,9 +515,9 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 
 		<p class="description">Insert the element inside another, after any existing contents.</p>
 
-		<pre><code>$.inside(subject, element)</code></pre>
-		<pre><code>subject._.inside(element)</code></pre>
-		<pre><code>subject._.set({inside: element})</code></pre>
+		<pre><code>subject = $.inside(subject, element)</code></pre>
+		<pre><code>subject = subject._.inside(element)</code></pre>
+		<pre><code>subject = subject._.set({inside: element})</code></pre>
 
 		<ul class="notes">Mainly useful inside <code>$.set()</code>, otherwise just use the native <code>element.appendChild(subject)</code>.</ul>
 
@@ -529,9 +529,9 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 
 		<p class="description">Set a number of properties on an element.</p>
 
-		<pre><code>$.properties(subject, props)</code></pre>
-		<pre><code>subject._.properties(props)</code></pre>
-		<pre><code>subject._.set({properties: props})</code></pre>
+		<pre><code>subject = $.properties(subject, props)</code></pre>
+		<pre><code>subject = subject._.properties(props)</code></pre>
+		<pre><code>subject = subject._.set({properties: props})</code></pre>
 
 		<dl class="args">
 			<dt class="element array">subject</dt>
@@ -559,9 +559,9 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 
 		<p class="description">Insert an element inside another, before its existing contents.</p>
 
-		<pre><code>$.start(subject, element)</code></pre>
-		<pre><code>subject._.start(element)</code></pre>
-		<pre><code>subject._.set({start: element})</code></pre>
+		<pre><code>subject = $.start(subject, element)</code></pre>
+		<pre><code>subject = subject._.start(element)</code></pre>
+		<pre><code>subject = subject._.set({start: element})</code></pre>
 
 		<a class="jq">jQuery.fn.prepend</a>
 	</article>
@@ -571,9 +571,9 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 		
 		<p class="description">Set multiple CSS properties on one or more elements.</p>
 
-		<pre><code>$.style(subject, properties)</code></pre>
-		<pre><code>subject._.style(properties)</code></pre>
-		<pre><code>subject._.set({style: properties})</code></pre>
+		<pre><code>subject = $.style(subject, properties)</code></pre>
+		<pre><code>subject = subject._.style(properties)</code></pre>
+		<pre><code>subject = subject._.set({style: properties})</code></pre>
 
 		<dl class="args">
 			<dt class="element array">subject</dt>
@@ -699,9 +699,9 @@ Promise.all($$("div")._.transition({
 		
 		<p class="description">Set multiple event listeners on an element.</p>
 
-		<pre><code>$.events(subject, handlers)</code></pre>
-		<pre><code>subject._.events(handlers)</code></pre>
-		<pre><code>subject = subject._.set({events: handlers})</code></pre>
+		<pre><code>subject = $.events(subject, handlers)</code></pre>
+		<pre><code>subject = subject._.events(handlers)</code></pre>
+		<pre><code>subject = subject = subject._.set({events: handlers})</code></pre>
 
 		<dl class="args">
 			<dt class="element array">subject</dt>
@@ -729,8 +729,8 @@ Promise.all($$("div")._.transition({
 		
 		<p class="description">Fire a synthesized event.</p>
 
-		<pre><code>$.fire(subject, type [, properties])</code></pre>
-		<pre><code>subject._.fire(type [, properties])</code></pre>
+		<pre><code>subject = $.fire(subject, type [, properties])</code></pre>
+		<pre><code>subject = subject._.fire(type [, properties])</code></pre>
 
 		<dl class="args">
 			<dt class="element array">subject</dt>
@@ -860,7 +860,7 @@ $.ready().then(function(){
 
 		<p class="description">Copy properties of an object onto another.</p>
 
-		<pre><code>$.extend(target, source [, whitelist])</code></pre>
+		<pre><code>target = $.extend(target, source [, whitelist])</code></pre>
 
 		<dl class="args">
 			<dt class="object">target</dt>
@@ -896,7 +896,7 @@ var type = $.extend({},
 
 		<p class="description">Define lazily evaluated properties on an object.</p>
 
-		<pre><code>$.lazy(object, property, getter)</code></pre>
+		<pre><code>object = $.lazy(object, property, getter)</code></pre>
 
 		<dl class="args">
 			<dt class="object">object</dt>
@@ -909,7 +909,7 @@ var type = $.extend({},
 			<dd>A function that returns the value of the property. After the first time the property is used, it will be replaced with the return value of this function.</dd>
 		</dl>
 
-		<pre class="def"><code>$.lazy(object, properties)</code></pre>
+		<pre class="def"><code>object = $.lazy(object, properties)</code></pre>
 
 		<dl class="args">
 			<dt class="object">object</dt>
@@ -925,7 +925,7 @@ var type = $.extend({},
 
 		<p class="description">Define properties that behave like normal properties but also execute code upon getting/setting.</p>
 
-		<pre><code>$.live(object, property, descriptor)</code></pre>
+		<pre><code>object = $.live(object, property, descriptor)</code></pre>
 
 		<dl class="args">
 			<dt class="object">object</dt>
@@ -1089,7 +1089,7 @@ $.include(self.Dropbox, url).then(function(){
 <template data-end="article > h1.element"> <span class="tag element" title="Available on element._">Element</span> </template>
 <template data-end="article > h1.array"> <span class="tag array" title="Available on array._">Array</span> </template>
 <template data-end="article > h1.set"> <span class="tag set" title="Available inside $.set()">$.set()</span> </template>
-<template data-end="article > h1.full"> <span class="tag set" title="Not available in Bliss Shy">Bliss Full</span> </template>
+<template data-end="article > h1.full"> <span class="tag full" title="Not available in Bliss Shy">Bliss Full</span> </template>
 
 <!-- Add headings -->
 <template data-before=".args + pre:not(.def)"><h2>Example(s)</h2></template>

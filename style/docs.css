@@ -26,6 +26,10 @@
 		background: hsl(190, 52%, 50%);
 	}
 
+	.tag.full {
+		background: #c00;
+	}
+
 .args {}
 
 	.args dt {
