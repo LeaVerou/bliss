@@ -1,6 +1,6 @@
 # Bliss: Heavenly JavaScript
 
-http://blissfuljs.com
+[blissfuljs.com](http://blissfuljs.com)
 
 Want to use Vanilla JS but find native APIs a bit unwieldy? Bliss is for you.
 
