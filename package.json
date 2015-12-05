@@ -1,5 +1,5 @@
 {
-  "name": "bliss",
+  "name": "blissfuljs",
   "version": "1.0.0",
   "description": "Lightweight helper library for modern browsers.",
   "main": "bliss.js",
@@ -23,7 +23,7 @@
   "bugs": {
     "url": "https://github.com/LeaVerou/bliss/issues"
   },
-  "homepage": "https://github.com/LeaVerou/bliss",
+  "homepage": "http://blissfuljs.com",
   "devDependencies": {
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
