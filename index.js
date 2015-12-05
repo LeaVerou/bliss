@@ -3,6 +3,23 @@ function titleToId(title) {
 	return title.trim().replace(/^\$\.|\(\)$/g, "");
 }
 
+function sourceFromMethodName(fn) {
+	var source;
+
+	switch(fn) {
+		case "$":
+		case "$$":
+			source = window[fn];
+			break;
+		default:
+			source = ($.sources[fn] || $[fn]);
+	}
+
+	source += "";
+
+	return source.replace(/^\t/gm, "");
+}
+
 // Add ids and implementation to all functions
 $$("#docs article > h1").forEach(function(h1) {
 	var article = h1.parentNode;
@@ -29,9 +46,7 @@ $$("#docs article > h1").forEach(function(h1) {
 
 			if (!pre || !pre.matches("pre")) {
 				pre = document.createElement("pre")._.after(this);
-
-				var source = ($.sources[fn] || $[fn]) + "";
-				source = source.replace(/^\t/gm, "");
+				var source = sourceFromMethodName(fn);
 
 				var code = $.create("code", {
 					textContent: source,
