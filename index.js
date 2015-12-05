@@ -30,7 +30,14 @@ $$("#docs article > h1").forEach(function(h1) {
 			if (!pre || !pre.matches("pre")) {
 				pre = document.createElement("pre")._.after(this);
 
-				var source = ($.sources[fn] || $[fn]) + "";
+				if (fn === "$" || fn === "$$") {
+					var source = self[fn] + "";
+				}
+				else {
+					var source = ($.sources[fn] || $[fn]) + "";	
+				}
+				
+
 				source = source.replace(/^\t/gm, "");
 
 				var code = $.create("code", {
