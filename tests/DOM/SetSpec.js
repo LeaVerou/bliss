@@ -21,6 +21,20 @@ describe("$.set", function() {
 		expect(element.className).to.equal("main-navigation");
 	});
 
+	xit("can be called on arrays", function() {
+		var list = [
+			document.createElement("li"),
+			document.createElement("li"),
+			document.createElement("li")
+		];
+
+		list._.set({className: "list-part"});
+
+		list.forEach(function(item) {
+			expect(item.className).to.equal("list-part");
+		});
+	});
+
 	it("sets other options as properties or attributes on the subject", function() {
 		var element = $.set(document.createElement("input"), {
 			id: "the-main-one",
