@@ -1,8 +1,11 @@
 describe("Core Bliss", function () {
 	"use strict";
 
-	beforeEach(function () {
+	before(function() {
 		fixture.setBase('tests/fixtures');
+	});
+
+	beforeEach(function () {
 		this.fixture = fixture.load('core.html');
 		document.body.innerHTML += this.fixture[0];
 	});
