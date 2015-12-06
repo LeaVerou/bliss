@@ -29,4 +29,10 @@ describe("$.create", function() {
 			expect(element.tagName).to.be.equal("DIV");
 		});
 	});
+
+	it("creates a div when there are no arguments", function() {
+		var element = $.create();
+
+		expect(element.tagName).to.be.equal("DIV");
+	});
 });
