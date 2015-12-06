@@ -331,7 +331,7 @@ $$(element.attributes).filter(function(attribute){
 
 		<dl class="args">
 			<dt class="element array">subject</dt>
-			<dd>The element(s) to apply the CSS properties to.</dd>
+			<dd>The element(s) to append the elements to.</dd>
 
 			<dt class="object array string node">elements</dt>
 			<dd>If it’s an object or string, it will be passed through <code>$.create()</code>, to be converted into an element or text node respectively. If it’s an array, the same will happen to its elements. If it’s a <code>Node</code> it will be used as-is. Note that this lets you recursively create entire subtrees, since these objects can also have a <code>contents</code> property of their own, as seen in the example below.</dd>
@@ -347,12 +347,12 @@ $$(element.attributes).filter(function(attribute){
 		}
 	},
 	contents: [{tag: "li",
-			contents: {tag: "a"
+			contents: {tag: "a",
 				href: "index.html",
 				textContent: "Home"
 			}
 		}, {tag: "li",
-			contents: {tag: "a"
+			contents: {tag: "a",
 				href: "docs.html",
 				textContent: "Docs"
 			}
