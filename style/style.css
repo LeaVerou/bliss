@@ -347,12 +347,14 @@ body > footer {
 
 @media (min-width: 50em) {
 	#quick-look .comparison {
+		display: -webkit-flex;
 		display: flex;
 		margin: 1.5em 0;
 	}
 
 	#quick-look .comparison pre {
 		position: relative;
+		-webkit-flex: 1;
 		flex: 1;
 		padding: .5em 0;
 		border-radius: .5em;
