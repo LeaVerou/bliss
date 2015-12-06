@@ -4,7 +4,7 @@
   "description": "Lightweight helper library for modern browsers.",
   "main": "bliss.js",
   "scripts": {
-    "test": "Bliss.type(\"string\")"
+    "test": "karma start"
   },
   "repository": {
     "type": "git",
