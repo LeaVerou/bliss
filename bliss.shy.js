@@ -81,10 +81,10 @@ extend($, {
 			}
 			
 			o = tag;
-			tag = o.tag || "div";			
+			tag = o.tag;			
 		}
 		
-		return $.set(document.createElement(tag), o);
+		return $.set(document.createElement(tag || "div"), o);
 	},
 
 	ready: function(context) {
