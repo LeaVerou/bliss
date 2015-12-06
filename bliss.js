@@ -532,6 +532,14 @@ $.Array = function (subject) {
 	this.subject = subject;
 };
 
+$.Array.prototype = {
+	all: function(method) {
+		var args = $$(arguments).slice(1);
+
+		return this[method].apply(this, args);
+	}
+};
+
 // Extends Bliss with more methods
 $.add = function (methods, on) {
 	on = $.extend({$: true, element: true, array: true}, on);
@@ -589,7 +597,8 @@ $.add = function (methods, on) {
 	}
 };
 
-$.add($.Element.prototype); // no methods in $.Array.prototype as of yet
+$.add($.Element.prototype);
+$.add($.Array.prototype, {element: false});
 $.add($.setProps);
 $.add($.classProps, {element: false, array: false});
 $.add(HTMLElement.prototype, {$: false});

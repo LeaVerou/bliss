@@ -410,6 +410,7 @@ $$("div").remove();</code></pre>
 
 		<ul class="notes">
 			<li>Does not remove event listeners.</li>
+			<li>Consider using <a href="https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/remove"><code>Element.remove()</code></a> if only removing one element or <code>$.all()</code> for multiple. <strong>This might be removed in a future release.</strong></li>
 		</ul>
 
 		<a class="jq">jQuery.fn.detach</a>
@@ -785,7 +786,33 @@ $.ready().then(function(){
 </section>
 
 <section>
-	<h1>Objects</h1>
+	<h1>Objects and Arrays</h1>
+
+	<article>
+		<h1 class="array">all</h1>
+
+		<p class="description">Run a method on all elements of an array, get the results as an array.</p>
+
+		<pre><code>var ret = $.all(array, method [, args...])</code></pre>
+		<pre><code>var ret = array._.all(array, method [, args...])</code></pre>
+
+		<dl class="args">
+			<dt class="array">array</dt>
+			<dd>The array whose every element we want to run a method on.</dd>
+			
+			<dt class="string">method</dt>
+			<dd>The method name</dd>
+			
+			<dt>args</dt>
+			<dd>Any arguments to pass to the method</dd>
+
+			<dt class="array">ret</dt>
+			<dd>The array of results. If the method returns no results, this will be the same as <code>array</code>.</dd>
+		</dl>
+
+		<pre><code>// Remove all divs from a page
+$$("div")._.all("remove");</code></pre>
+	</article>
 
 	<article>
 		<h1>Class</h1>
