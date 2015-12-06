@@ -1,0 +1,25 @@
+{
+  "name": "bliss",
+  "description": "Heavenly JavaScript",
+  "author": "Lea Verou",
+  "main": [
+    "bliss._.js",
+    "bliss.js",
+    "bliss.min.js",
+    "bliss.shy.js",
+    "bliss.shy.min.js"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "*.html",
+    "*.json",
+    "CNAME",
+    "gulpfile.js"
+    "index.*",
+    "karma.conf.js",
+    "LICENCE",
+    "style",
+    "tests",
+    "transform.js"
+  ]
+}
