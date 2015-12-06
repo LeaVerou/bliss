@@ -7,7 +7,6 @@ describe("Core Bliss", function () {
 
 	beforeEach(function () {
 		this.fixture = fixture.load('core.html');
-		document.body.innerHTML += this.fixture[0];
 	});
 
 	// testing setup
