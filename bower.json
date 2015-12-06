@@ -13,12 +13,15 @@
   "ignore": [
     "*.html",
     "*.json",
+    ".editorconfig",
+    ".travis.yml",
+    "assets",
     "CNAME",
-    "gulpfile.js"
-    "index.*",
+    "docs",
+    "gulpfile.js",
+    "index.html",
     "karma.conf.js",
     "LICENCE",
-    "style",
     "tests",
     "transform.js"
   ]
