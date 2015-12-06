@@ -13,9 +13,9 @@ describe("Core Bliss", function () {
 	});
 
 	it("has global methods and aliases", function() {
-		expect(Bliss).to.be.defined;
-		expect($).to.be.defined;
-		expect($$).to.be.defined;
+		expect(Bliss).to.exist;
+		expect($).to.exist;
+		expect($$).to.exist;
 
 		expect($).to.equal(Bliss);
 		expect($$).to.equal($.$);
