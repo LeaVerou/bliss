@@ -14,7 +14,7 @@
     "*.html",
     "*.json",
     "CNAME",
-    "gulpfile.js"
+    "gulpfile.js",
     "index.*",
     "karma.conf.js",
     "LICENCE",
