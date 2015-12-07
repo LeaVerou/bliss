@@ -9,3 +9,8 @@ before_script:
   - gulp
 
 script: npm test
+
+# whitelist
+branches:
+  only:
+    - gh-pages
