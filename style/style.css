@@ -21,7 +21,7 @@ body {
 	background-color: white;
 	color: hsl(227, 15%, 24%);
 }
-	
+
 	@keyframes pulse {
 		to { line-height: 3; }
 	}
@@ -133,11 +133,11 @@ body > header {
 	padding-top: .5em;
 	font-size: 200%;
 	color: hsl(190, 52%, 50%);
-	
+
 	background: radial-gradient(circle at 50% 90%, white 1em, transparent 0) -2.5em 100% / 5em 5em,
-							radial-gradient(circle at bottom, white 1.5em, hsl(145, 34%, 99%) 2em, hsla(145, 34%, 99%, 0) 0) 0em 100% / 5em 5em,
-							radial-gradient(circle at bottom, white 2em, hsl(145, 34%, 99%) 3em, hsla(145, 34%, 99%, 0) 0) 0 100% / 10em 10em,
-							radial-gradient(circle at bottom, white 3em, hsl(145, 34%, 98%) 4em, hsla(145, 34%, 99%, 0) 0) 0em 100% / 20em 20em;
+	            radial-gradient(circle at bottom, white 1.5em, hsl(145, 34%, 99%) 2em, hsla(145, 34%, 99%, 0) 0) 0em 100% / 5em 5em,
+	            radial-gradient(circle at bottom, white 2em, hsl(145, 34%, 99%) 3em, hsla(145, 34%, 99%, 0) 0) 0 100% / 10em 10em,
+	            radial-gradient(circle at bottom, white 3em, hsl(145, 34%, 98%) 4em, hsla(145, 34%, 99%, 0) 0) 0em 100% / 20em 20em;
 	background-repeat: repeat-x;
 	background-color: hsl(145, 34%, 89%);
 	animation: 20s move infinite linear;
@@ -239,7 +239,7 @@ body > section#intro {}
 
 #docs article:target {
 	background: linear-gradient(hsla(0,0%,100%,.6), white 60%) 0 0 / 100%  8em,
-							repeating-linear-gradient(135deg, hsl(61, 86%, 77%) 0, hsl(61, 86%, 77%) .5em, white 0, white 1em) 0 0 / 100% 8em repeat-x;
+	            repeating-linear-gradient(135deg, hsl(61, 86%, 77%) 0, hsl(61, 86%, 77%) .5em, white 0, white 1em) 0 0 / 100% 8em repeat-x;
 }
 
 body > footer {
@@ -362,10 +362,10 @@ body > footer {
 	#quick-look code {
 		tab-size: 2;
 	}
+}
 
-	body {
-		overflow-x: hidden;
-	}
+body {
+	overflow-x: hidden;
 }
 
 @media (min-width: 50em) and (max-width: 100em) {
@@ -373,7 +373,7 @@ body > footer {
 		font-size: 75%;
 	}
 }
-	
+
 	#quick-look pre::before {
 		position: absolute;
 		bottom: 100%;
@@ -400,8 +400,8 @@ body > footer {
 
 	#quick-look pre.vanilla {
 		background: linear-gradient(to left, hsla(350, 80%, 96%,0), hsl(350, 80%, 96%)),
-								linear-gradient(hsla(0,0%,100%,.5) 50%, transparent 0) 0 0 / auto 3em content-box padding-box
-								hsl(350, 80%, 96%);
+		            linear-gradient(hsla(0,0%,100%,.5) 50%, transparent 0) 0 0 / auto 3em content-box padding-box
+		            hsl(350, 80%, 96%);
 		border-right: .3em solid white;
 	}
 
@@ -413,8 +413,8 @@ body > footer {
 
 	#quick-look pre.bliss {
 		background: linear-gradient(to right, hsla(145, 34%, 95%,0), hsl(145, 34%, 95%)),
-								linear-gradient(hsla(0,0%,100%,.5) 50%, transparent 0) 0 0 / auto 3em content-box padding-box
-								hsl(145, 34%, 95%);
+		            linear-gradient(hsla(0,0%,100%,.5) 50%, transparent 0) 0 0 / auto 3em content-box padding-box
+		            hsl(145, 34%, 95%);
 		padding-left: .8em;
 		border-left: .3em solid white;
 	}
@@ -437,7 +437,7 @@ body > footer {
 	color: #f5ebd6;
 	box-shadow: 0 0.1em 0 0.1em rgba(0, 0, 0, 0.15);
 }
-	
+
 	.github-ribbon:hover {
 		background: black;
 		color: white;
