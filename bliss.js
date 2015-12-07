@@ -83,6 +83,8 @@ extend($, {
 			o = tag;
 			tag = o.tag;			
 		}
+
+		delete o.tag;
 		
 		return $.set(document.createElement(tag || "div"), o);
 	},
