@@ -603,6 +603,7 @@ $.add($.classProps, {element: false, array: false});
 $.add(HTMLElement.prototype, null, true);
 
 })();
+
 (function($) {
 "use strict";
 
@@ -634,7 +635,7 @@ Object.defineProperty(Node.prototype, _, {
 		Object.defineProperty(this, _, {
 			value: new $.Element(this)
 		});
-
+		
 		return this[_];
 	},
 	configurable: true
@@ -645,7 +646,7 @@ Object.defineProperty(Array.prototype, _, {
 		Object.defineProperty(this, _, {
 			value: new $.Array(this)
 		});
-
+		
 		return this[_];
 	},
 	configurable: true
@@ -663,9 +664,9 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	EventTarget.prototype.addEventListener = function(type, callback, capture) {
 		if (this[_] && callback) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
-
+			
 			listeners[type] = listeners[type] || [];
-
+			
 			if (listeners[type].filter(filter.bind(null, callback, capture)).length === 0) {
 				listeners[type].push({callback: callback, capture: capture});
 			}
