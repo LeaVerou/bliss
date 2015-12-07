@@ -882,8 +882,14 @@ $.ready().then(function(){
 			<dd>The array of results. If the method returns no results, this will be the same as <code>array</code>.</dd>
 		</dl>
 
-		<pre><code>// Remove all divs from a page
-$$("div")._.all("remove");</code></pre>
+		<pre><code>// Uppercase all strings in an array
+["Foo", "bar"]._.all("toUpperCase"); // Returns ["FOO", "BAR"]</code></pre>
+
+		<ul class="notes">
+			<li>Basically syntactic sugar over: <pre><code>array.map(function(a) {
+	return a[method](args...);
+});</code></pre></li>
+		</ul>
 	</article>
 
 	<article>
