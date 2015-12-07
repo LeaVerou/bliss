@@ -562,16 +562,16 @@ $.add = function (methods, on) {
 
 		
 		if ($.type(callback) == "function") {
-			if (on.element) {
+			if (on.element && methods !== $.Element.prototype) {
 				$.Element.prototype[method] = function () {
 					return this.subject && $.defined(callback.apply(this.subject, arguments), this.subject);
 				};
 			}
 
-			if (on.array) {
+			if (on.array && methods !== $.Array.prototype) {
 				$.Array.prototype[method] = function() {
 					var args = arguments;
-					
+					console.log(callback === $.Array.prototype[method]);
 					return this.subject.map(function(element) {
 						return element && $.defined(callback.apply(element, args), element);
 					});
