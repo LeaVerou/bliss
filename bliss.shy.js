@@ -26,7 +26,7 @@ function extend(to, from, whitelist) {
 			to[property] = from[property];
 		}
 	}
-	
+
 	return to;
 };
 
@@ -45,24 +45,24 @@ extend($, {
 		return expr instanceof Node || expr instanceof Window? [expr] :
 		       [].slice.call(typeof expr == "string"? (context || document).querySelectorAll(expr) : expr || []);
 	},
-	
+
 	/**
 	 * Returns the [[Class]] of an object in lowercase (eg. array, date, regexp, string etc)
 	 */
 	type: function(obj) {
 		if (obj === null) { return 'null'; }
-	
+
 		if (obj === undefined) { return 'undefined'; }
-	
+
 		var ret = (Object.prototype.toString.call(obj).match(/^\[object\s+(.*?)\]$/)[1] || "").toLowerCase();
-	
+
 		if(ret == 'number' && isNaN(obj)) {
 			return 'nan';
 		}
-	
+
 		return ret;
 	},
-	
+
 	/*
 	 * Return first non-undefined value. Mainly used internally.
 	 */
@@ -73,19 +73,19 @@ extend($, {
 			}
 		}
 	},
-	
+
 	create: function (tag, o) {
 		if (arguments.length === 1) {
 			if ($.type(tag) === "string") {
 				return document.createTextNode(tag);
 			}
-			
+
 			o = tag;
-			tag = o.tag;			
+			tag = o.tag;
 		}
 
 		delete o.tag;
-		
+
 		return $.set(document.createElement(tag || "div"), o);
 	},
 
@@ -149,7 +149,7 @@ extend($, {
 		// For easier calling of super methods
 		// This doesn't save us from having to use .call(this) though
 		ret.prototype.super = ret.super? ret.super.prototype : null;
-		
+
 		return ret;
 	},
 
@@ -230,7 +230,7 @@ extend($, {
 				inside: document.head
 			});
 		});
-		
+
 	},
 
 	/*
@@ -257,9 +257,9 @@ extend($, {
 		if (o.method === "GET" && o.data) {
 			url.search += o.data;
 		}
-		
+
 		document.body.setAttribute('data-loading', url);
-		
+
 		xhr.open(o.method, url, !o.sync);
 
 		for (var property in o) {
@@ -272,19 +272,19 @@ extend($, {
 				}
 			}
 		}
-		
+
 		if (o.method !== 'GET' && !o.headers['Content-type'] && !o.headers['Content-Type']) {
 			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		}
-		
+
 		for (var header in o.headers) {
 			xhr.setRequestHeader(header, o.headers[header]);
 		}
-		
+
 		return new Promise(function(resolve, reject){
 			xhr.onload = function(){
 				document.body.removeAttribute('data-loading');
-					
+
 				if (xhr.status === 0 || xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
 					// Success!
 					resolve(xhr);
@@ -292,9 +292,9 @@ extend($, {
 				else {
 					reject(Error(xhr.statusText));
 				}
-			
+
 			};
-			
+
 			xhr.onerror = function() {
 				document.body.removeAttribute('data-loading');
 				reject(Error("Network Error"));
@@ -371,11 +371,11 @@ $.Element.prototype = {
 			}
 		}.bind(this));
 	},
-	
+
 	// Fire a synthesized event on the element
 	fire: function (type, properties) {
 		var evt = document.createEvent("HTMLEvents");
-				
+
 		evt.initEvent(type, true, true );
 
 		this.dispatchEvent($.extend(evt, properties));
@@ -391,19 +391,19 @@ $.setProps = {
 	style: function (val) {
 		$.extend(this.style, val);
 	},
-	
+
 	// Set a bunch of attributes
 	attributes: function (o) {
 		for (var attribute in o) {
 			this.setAttribute(attribute, o[attribute]);
 		}
 	},
-	
+
 	// Set a bunch of properties on the element
 	properties: function (val) {
 		$.extend(this, val);
 	},
-	
+
 	// Bind one or more events to the element
 	events: function (val) {
 		if (val instanceof EventTarget) {
@@ -477,12 +477,12 @@ $.setProps = {
 						if (evt.target.matches(selector)) { // Do ancestors count?
 							callbacks[selector].call(this, evt);
 						}
-					}	
+					}
 				});
 			})(type, val[type]);
 		}
 	},
-	
+
 	// Set the contents as a string, an element, an object to create an element or an array of these
 	contents: function (val) {
 		if (val || val === 0) {
@@ -490,40 +490,40 @@ $.setProps = {
 				if (/^(string|number|object)$/.test($.type(child))) {
 					child = $.create(child);
 				}
-				
+
 				if (child instanceof Node) {
 					this.appendChild(child);
 				}
 			}, this);
 		}
 	},
-	
+
 	// Append the element inside another element
 	inside: function (element) {
 		element.appendChild(this);
 	},
-	
+
 	// Insert the element before another element
 	before: function (element) {
 		element.parentNode.insertBefore(this, element);
 	},
-	
+
 	// Insert the element after another element
 	after: function (element) {
 		element.parentNode.insertBefore(this, element.nextSibling);
 	},
-	
+
 	// Insert the element before another element's contents
 	start: function (element) {
 		element.insertBefore(this, element.firstChild);
 	},
-	
+
 	// Wrap the element around another element
 	around: function (element) {
 		if (element.parentNode) {
 			$.before(this, element);
 		}
-		
+
 		(/^template$/i.test(this.nodeName)? this.content || this : this).appendChild(element);
 	}
 };
@@ -543,12 +543,12 @@ $.Array.prototype = {
 // Extends Bliss with more methods
 $.add = function (methods, on, noOverwrite) {
 	on = $.extend({$: true, element: true, array: true}, on);
-	
+
 	if ($.type(arguments[0]) === "string") {
 		methods = {};
 		methods[arguments[0]] = arguments[1];
 	}
-	
+
 	for (var method in methods) {
 
 		try {
@@ -557,10 +557,10 @@ $.add = function (methods, on, noOverwrite) {
 		catch (e) {
 			continue;
 		}
-		
+
 		(function(method, callback){
 
-		
+
 		if ($.type(callback) == "function") {
 			if (on.element && (!(method in $.Element.prototype) || !noOverwrite)) {
 				$.Element.prototype[method] = function () {
@@ -591,7 +591,7 @@ $.add = function (methods, on, noOverwrite) {
 				}
 			}
 		}
-		
+
 		})(method, callback);
 	}
 };
