@@ -17,11 +17,15 @@ describe("$.contents", function() {
 		$.contents(element, ["3", "4"]);
 		expect(element.childNodes).to.have.length(4);
 
+		var newElement1 = document.createElement("li");
+		var newElement2 = document.createElement("li");
 		$.contents(element, [
-			document.createElement("li"),
-			document.createElement("li")
+			newElement1,
+			newElement2
 		]);
 		expect(element.childNodes).to.have.length(6);
+		expect(element.childNodes[4]).to.equal(newElement1);
+		expect(element.childNodes[5]).to.equal(newElement2);
 
 		$.contents(element, []);
 		expect(element.childNodes).to.have.length(6);
@@ -41,11 +45,15 @@ describe("$.contents", function() {
 		element._.contents(["3", "4"]);
 		expect(element.childNodes).to.have.length(4);
 
+		var newElement1 = document.createElement("li");
+		var newElement2 = document.createElement("li");
 		element._.contents([
-			document.createElement("li"),
-			document.createElement("li")
+			newElement1,
+			newElement2
 		]);
 		expect(element.childNodes).to.have.length(6);
+		expect(element.childNodes[4]).to.equal(newElement1);
+		expect(element.childNodes[5]).to.equal(newElement2);
 
 		element._.contents([]);
 		expect(element.childNodes).to.have.length(6);
