@@ -106,7 +106,7 @@
 </section>
 
 <section id="vanilla">
-	<h1>Vanilla methods</h1>
+	<h1>Vanilla Methods</h1>
 
 	<p>You don’t need Bliss or any library for any of these. All the following are 100% pure Vanilla JS! Click on the code for documentation and browser support info.</p>
 
@@ -175,6 +175,11 @@
 			<!-- tr>td+td>a[href]>pre>code -->
 		</tbody>
 	</table>
+
+	<p>Note that all vanilla <strong>methods</strong> from elements (specifically, from <code>HTMLElement</code>) are also available on <code>$</code> as well as the <code>_</code> property for both elements and arrays, so for example, to remove all divs on a page, you could write either of the following:</p>
+	<pre><code>$$("div")._.remove();</code></pre>
+	<pre><code>$.remove($$("div"));</code></pre>
+
 </section>
 
 <section>

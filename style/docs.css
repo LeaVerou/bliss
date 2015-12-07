@@ -100,7 +100,7 @@
 	color: inherit;
 }
 
-#vanilla pre {
+#vanilla table pre {
 	box-shadow: none;
 	padding: .6em 1em;
 	border-radius: .3em;
