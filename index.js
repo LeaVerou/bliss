@@ -59,7 +59,7 @@ $$("section h1").forEach(function(h1) {
 	var section = h1.closest("section, article");
 
 	if (section && !section.id) {
-		section.id = h1.textContent.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]/g, "");
+		section.id = h1.textContent.toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-");
 	}
 });
 

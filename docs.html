@@ -105,7 +105,84 @@
 });</code></pre>
 </section>
 
-<section id="methods">
+<section id="vanilla">
+	<h1>Vanilla Methods</h1>
+
+	<p>You don’t need Bliss or any library for any of these. All the following are 100% pure Vanilla JS! Click on the code for documentation and browser support info.</p>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Action</th>
+				<th>Vanilla JS</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Adding the class "my-class" on <code>element</code></td>
+				<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/classList"><pre><code>element.classList.add("my-class");</code></pre></a></td>
+			</tr>
+			<tr>
+				<td>Removing the class "my-class" from <code>element</code></td>
+				<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/classList"><pre><code>element.classList.remove("my-class");</code></pre></a></td>
+			</tr>
+			<tr>
+				<td>Adding the class "my-class" on <code>element</code> if it doesn’t already have it and removing it if it does:</td>
+				<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/classList"><pre><code>element.classList.toggle("my-class");</code></pre></a></td>
+			</tr>
+			<tr>
+				<td>Checking if <code>element</code> contains the class "my-class"</td>
+				<td>
+					<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/classList"><pre><code>element.classList.contains("my-class")</code></pre></a>
+				</td>
+			</tr>
+			<tr>
+				<td>Removing <code>element</code> from the DOM</td>
+				<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/remove"><pre><code>element.remove();</code></pre></a></td>
+			</tr>
+			<tr>
+				<td>Checking if <code>element</code> contains <code>otherElement</code></td>
+				<td>
+					<a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/contains"><pre><code>element.contains(otherElement)</code></pre></a>
+				</td>
+			</tr>
+			<tr>
+				<td>Check if <code>element</code> matches <code>selector</code></td>
+				<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/matches">
+						<pre><code>element.matches(selector)</code></pre>
+					</a></td>
+			</tr>
+			<tr>
+				<td>Find the closest ancestor (or self) of <code>element</code> that matches <code>selector</code></td>
+				<td>
+					<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/closest">
+						<pre><code>element.closest(selector)</code></pre>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td>Find next sibling of <code>element</code> that is a real element (not a text node or comment node):</td>
+				<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/NonDocumentTypeChildNode/nextElementSibling">
+						<pre><code>element.nextElementSibling</code></pre>
+					</a></td>
+			</tr>
+			<tr>
+				<td>Get all children of <code>element</code> which are real elements</td>
+				<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children">
+						<pre><code>element.children</code></pre>
+					</a></td>
+			</tr>
+			<!-- tr>td+td>a[href]>pre>code -->
+		</tbody>
+	</table>
+
+	<p>Note that all vanilla <strong>methods</strong> from elements (specifically, from <code>HTMLElement</code>) are also available on <code>$</code> as well as the <code>_</code> property for both elements and arrays, so for example, to remove all divs on a page, you could write either of the following:</p>
+	<pre><code>$$("div")._.remove();</code></pre>
+	<pre><code>$.remove($$("div"));</code></pre>
+
+</section>
+
+<section>
 	<h1>DOM</h1>
 
 	<p><strong>Note:</strong> The <code>$</code> is just an alias to <code>Bliss</code>. If another library that uses <code>$</code> is included before Bliss, then Bliss will not use <code>$</code>. You can always alias <code>$</code> to <code>Bliss</code> manually, by putting this before any of your code (but after including Bliss):</p>
@@ -288,23 +365,23 @@ $$(element.attributes).filter(function(attribute){
 		click: function(evt) {
 			console.log("YOLO");
 		}
-	}
+	},
 	contents: ["Navigation: ", {tag: "ul",
 		className: "buttons",
 		delegate: {
 			click: {
 				li: function() {
-					console.log("A list item was clicked")
+					console.log("A list item was clicked");
 				}
 			}
 		},
 		contents: [{tag: "li",
-				contents: {tag: "a"
+				contents: {tag: "a",
 					href: "index.html",
 					textContent: "Home"
 				}
 			}, {tag: "li",
-				contents: {tag: "a"
+				contents: {tag: "a",
 					href: "docs.html",
 					textContent: "Docs"
 				}
@@ -331,7 +408,7 @@ $$(element.attributes).filter(function(attribute){
 
 		<dl class="args">
 			<dt class="element array">subject</dt>
-			<dd>The element(s) to apply the CSS properties to.</dd>
+			<dd>The element(s) to append the elements to.</dd>
 
 			<dt class="object array string node">elements</dt>
 			<dd>If it’s an object or string, it will be passed through <code>$.create()</code>, to be converted into an element or text node respectively. If it’s an array, the same will happen to its elements. If it’s a <code>Node</code> it will be used as-is. Note that this lets you recursively create entire subtrees, since these objects can also have a <code>contents</code> property of their own, as seen in the example below.</dd>
@@ -347,12 +424,12 @@ $$(element.attributes).filter(function(attribute){
 		}
 	},
 	contents: [{tag: "li",
-			contents: {tag: "a"
+			contents: {tag: "a",
 				href: "index.html",
 				textContent: "Home"
 			}
 		}, {tag: "li",
-			contents: {tag: "a"
+			contents: {tag: "a",
 				href: "docs.html",
 				textContent: "Docs"
 			}
@@ -392,7 +469,7 @@ var button2 = button._.clone();
 		<a class="jq">jQuery.fn.clone</a>
 	</article>
 
-	<article>
+	<!-- <article>
 		<h1 class="element array">remove</h1>
 
 		<p class="description">Remove an element from the DOM.</p>
@@ -414,7 +491,7 @@ $$("div").remove();</code></pre>
 		</ul>
 
 		<a class="jq">jQuery.fn.detach</a>
-	</article>
+	</article> -->
 
 	<article>
 		<h1 class="element array set">after</h1>
@@ -786,7 +863,7 @@ $.ready().then(function(){
 </section>
 
 <section>
-	<h1>Objects and Arrays</h1>
+	<h1>Objects & Arrays</h1>
 
 	<article>
 		<h1 class="array">all</h1>
@@ -810,8 +887,14 @@ $.ready().then(function(){
 			<dd>The array of results. If the method returns no results, this will be the same as <code>array</code>.</dd>
 		</dl>
 
-		<pre><code>// Remove all divs from a page
-$$("div")._.all("remove");</code></pre>
+		<pre><code>// Uppercase all strings in an array
+["Foo", "bar"]._.all("toUpperCase"); // Returns ["FOO", "BAR"]</code></pre>
+
+		<ul class="notes">
+			<li>Basically syntactic sugar over: <pre><code>array.map(function(a) {
+	return a[method](args...);
+});</code></pre></li>
+		</ul>
 	</article>
 
 	<article>
@@ -1131,6 +1214,8 @@ $.include(self.Dropbox, url).then(function(){
 	By <a href="http://lea.verou.me">Lea Verou</a> &bull; <a href="http://lea.verou.me/2015/12/introducing-bliss-a-3kb-library-for-happier-vanilla-js/">Blog post</a>
 
 	<a href="https://github.com/LeaVerou/bliss" class="github-ribbon">Fork me on GitHub</a>
+
+	<iframe src="http://ghbtns.com/github-btn.html?user=leaverou&repo=bliss&type=watch&count=true&size=large" height="30" width="170" frameborder="0" scrolling="0" style="width:170px; height: 30px;" allowTransparency="true" class="github-star"></iframe>
 
 	<a href="https://twitter.com/blissfuljs" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @blissfuljs</a>
 	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
