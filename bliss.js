@@ -678,9 +678,6 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 		if (this[_] && callback) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 
-			var oldCallback = callback;
-			callback = oldCallback.callback;
-
 			listeners[type] = listeners[type] || [];
 			listeners[type] = listeners[type].filter(filter.bind(null, callback, capture));
 		}
