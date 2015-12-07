@@ -439,3 +439,9 @@ body > footer {
 		background: black;
 		color: white;
 	}
+
+.github-star {
+	position: absolute;
+	top: 1em;
+	right: 1em;
+}
