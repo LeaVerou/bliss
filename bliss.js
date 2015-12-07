@@ -82,9 +82,8 @@ extend($, {
 
 			o = tag;
 			tag = o.tag;
+			delete o.tag;
 		}
-
-		delete o.tag;
 
 		return $.set(document.createElement(tag || "div"), o);
 	},
@@ -678,9 +677,6 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	EventTarget.prototype.removeEventListener = function(type, callback, capture) {
 		if (this[_] && callback) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
-
-			var oldCallback = callback;
-			callback = oldCallback.callback;
 
 			listeners[type] = listeners[type] || [];
 			listeners[type] = listeners[type].filter(filter.bind(null, callback, capture));

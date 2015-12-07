@@ -354,8 +354,8 @@ body > footer {
 
 	#quick-look .comparison pre {
 		position: relative;
-		-webkit-flex: 1;
-		flex: 1;
+		width: calc(50% - .4em);
+		box-sizing: border-box;
 		padding: .5em 0;
 		border-radius: .5em;
 	}
