@@ -288,23 +288,23 @@ $$(element.attributes).filter(function(attribute){
 		click: function(evt) {
 			console.log("YOLO");
 		}
-	}
+	},
 	contents: ["Navigation: ", {tag: "ul",
 		className: "buttons",
 		delegate: {
 			click: {
 				li: function() {
-					console.log("A list item was clicked")
+					console.log("A list item was clicked");
 				}
 			}
 		},
 		contents: [{tag: "li",
-				contents: {tag: "a"
+				contents: {tag: "a",
 					href: "index.html",
 					textContent: "Home"
 				}
 			}, {tag: "li",
-				contents: {tag: "a"
+				contents: {tag: "a",
 					href: "docs.html",
 					textContent: "Docs"
 				}
