@@ -609,93 +609,94 @@
 })();
 
 (function($) {
-"use strict";
 
-if (!Bliss || Bliss.shy) {
-	return;
-}
+	"use strict";
 
-var _ = Bliss.property;
-
-// Methods requiring Bliss Full
-$.add({
-	// Clone elements, with events
-	clone: function () {
-		var clone = this.cloneNode(true);
-		var descendants = $.$("*", clone).concat(clone);
-
-		$.$("*", this).concat(this).forEach(function(element, i, arr) {
-			$.events(descendants[i], element);
-		});
-
-		return clone;
+	if (!Bliss || Bliss.shy) {
+		return;
 	}
-}, {array: false});
 
-// Define the _ property on arrays and elements
+	var _ = Bliss.property;
 
-Object.defineProperty(Node.prototype, _, {
-	get: function () {
-		Object.defineProperty(this, _, {
-			value: new $.Element(this)
-		});
-		
-		return this[_];
-	},
-	configurable: true
-});
+	// Methods requiring Bliss Full
+	$.add({
+		// Clone elements, with events
+		clone: function () {
+			var clone = this.cloneNode(true);
+			var descendants = $.$("*", clone).concat(clone);
 
-Object.defineProperty(Array.prototype, _, {
-	get: function () {
-		Object.defineProperty(this, _, {
-			value: new $.Array(this)
-		});
-		
-		return this[_];
-	},
-	configurable: true
-});
+			$.$("*", this).concat(this).forEach(function(element, i, arr) {
+				$.events(descendants[i], element);
+			});
 
-// Hijack addEventListener and removeEventListener to store callbacks
+			return clone;
+		}
+	}, {array: false});
 
-if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
-	var addEventListener = EventTarget.prototype.addEventListener,
-	    removeEventListener = EventTarget.prototype.removeEventListener,
-	    filter = function(callback, capture, l){
-	    	return !(l.callback === callback && l.capture == capture);
-	    };
+	// Define the _ property on arrays and elements
 
-	EventTarget.prototype.addEventListener = function(type, callback, capture) {
-		if (this[_] && callback) {
-			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
-			
-			listeners[type] = listeners[type] || [];
-			
-			if (listeners[type].filter(filter.bind(null, callback, capture)).length === 0) {
-				listeners[type].push({callback: callback, capture: capture});
+	Object.defineProperty(Node.prototype, _, {
+		get: function () {
+			Object.defineProperty(this, _, {
+				value: new $.Element(this)
+			});
+
+			return this[_];
+		},
+		configurable: true
+	});
+
+	Object.defineProperty(Array.prototype, _, {
+		get: function () {
+			Object.defineProperty(this, _, {
+				value: new $.Array(this)
+			});
+
+			return this[_];
+		},
+		configurable: true
+	});
+
+	// Hijack addEventListener and removeEventListener to store callbacks
+
+	if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
+		var addEventListener = EventTarget.prototype.addEventListener,
+			removeEventListener = EventTarget.prototype.removeEventListener,
+			filter = function(callback, capture, l){
+				return !(l.callback === callback && l.capture == capture);
+			};
+
+		EventTarget.prototype.addEventListener = function(type, callback, capture) {
+			if (this[_] && callback) {
+				var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
+
+				listeners[type] = listeners[type] || [];
+
+				if (listeners[type].filter(filter.bind(null, callback, capture)).length === 0) {
+					listeners[type].push({callback: callback, capture: capture});
+				}
 			}
-		}
 
-		return addEventListener.call(this, type, callback, capture);
-	};
+			return addEventListener.call(this, type, callback, capture);
+		};
 
-	EventTarget.prototype.removeEventListener = function(type, callback, capture) {
-		if (this[_] && callback) {
-			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
+		EventTarget.prototype.removeEventListener = function(type, callback, capture) {
+			if (this[_] && callback) {
+				var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 
-			var oldCallback = callback;
-			callback = oldCallback.callback;
+				var oldCallback = callback;
+				callback = oldCallback.callback;
 
-			listeners[type] = listeners[type] || [];
-			listeners[type] = listeners[type].filter(filter.bind(null, callback, capture));
-		}
+				listeners[type] = listeners[type] || [];
+				listeners[type] = listeners[type].filter(filter.bind(null, callback, capture));
+			}
 
-		return removeEventListener.call(this, type, callback, capture);
-	};
-}
+			return removeEventListener.call(this, type, callback, capture);
+		};
+	}
 
-// Set $ and $$ convenience methods, if not taken
-self.$ = self.$ || $;
-self.$$ = self.$$ || $.$;
+	// Set $ and $$ convenience methods, if not taken
+	self.$ = self.$ || $;
+	self.$$ = self.$$ || $.$;
 
 })(Bliss);
