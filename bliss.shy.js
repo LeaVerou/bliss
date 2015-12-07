@@ -372,11 +372,6 @@ $.Element.prototype = {
 		}.bind(this));
 	},
 	
-	// Remove element from the DOM
-	remove: function() {
-		this.parentNode && this.parentNode.removeChild(this);
-	},
-	
 	// Fire a synthesized event on the element
 	fire: function (type, properties) {
 		var evt = document.createEvent("HTMLEvents");
@@ -546,7 +541,7 @@ $.Array.prototype = {
 };
 
 // Extends Bliss with more methods
-$.add = function (methods, on) {
+$.add = function (methods, on, noOverwrite) {
 	on = $.extend({$: true, element: true, array: true}, on);
 	
 	if ($.type(arguments[0]) === "string") {
@@ -567,13 +562,13 @@ $.add = function (methods, on) {
 
 		
 		if ($.type(callback) == "function") {
-			if (on.element) {
+			if (on.element && (!(method in $.Element.prototype) || !noOverwrite)) {
 				$.Element.prototype[method] = function () {
 					return this.subject && $.defined(callback.apply(this.subject, arguments), this.subject);
 				};
 			}
 
-			if (on.array) {
+			if (on.array && (!(method in $.Array.prototype) || !noOverwrite)) {
 				$.Array.prototype[method] = function() {
 					var args = arguments;
 					return this.subject.map(function(element) {
@@ -605,6 +600,6 @@ $.add($.Array.prototype, {element: false});
 $.add($.Element.prototype);
 $.add($.setProps);
 $.add($.classProps, {element: false, array: false});
-$.add(HTMLElement.prototype, {$: false});
+$.add(HTMLElement.prototype, null, true);
 
 })();
