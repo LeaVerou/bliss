@@ -1,0 +1,31 @@
+{
+	"env": {
+		"browser": true
+	},
+	"globals": {
+		"Bliss": true,
+		"$$": true
+	},
+	"rules": {
+		"brace-style": [2, "stroustrup", {
+			"allowSingleLine": true
+		}],
+		"camelcase": [2, {
+			"properties": "always"
+		}],
+		"comma-dangle": 2,
+    "comma-style": [2, "last"],
+		"eol-last": 2,
+		"indent": [2, "tab"],
+    "key-spacing": [2, {
+      "beforeColon": false,
+      "afterColon": true
+    }],
+    "no-mixed-spaces-and-tabs": 2,
+    "no-multiple-empty-lines": 2,
+    "no-multi-spaces": 2,
+    "no-redeclare": 2,
+    "no-undef": 2,
+    "quotes": [2, "double", "avoid-escape"]
+	}
+}
