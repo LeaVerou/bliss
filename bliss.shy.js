@@ -330,6 +330,9 @@ $.Element.prototype = {
 				this[property] = properties[property];
 			}
 			else {
+				if (!this.setAttribute) {
+					console.log(this);
+				}
 				this.setAttribute(property, properties[property]);
 			}
 		}
@@ -562,16 +565,15 @@ $.add = function (methods, on) {
 
 		
 		if ($.type(callback) == "function") {
-			if (on.element && methods !== $.Element.prototype) {
+			if (on.element) {
 				$.Element.prototype[method] = function () {
 					return this.subject && $.defined(callback.apply(this.subject, arguments), this.subject);
 				};
 			}
 
-			if (on.array && methods !== $.Array.prototype) {
+			if (on.array) {
 				$.Array.prototype[method] = function() {
 					var args = arguments;
-					console.log(callback === $.Array.prototype[method]);
 					return this.subject.map(function(element) {
 						return element && $.defined(callback.apply(element, args), element);
 					});
@@ -597,8 +599,8 @@ $.add = function (methods, on) {
 	}
 };
 
-$.add($.Element.prototype);
 $.add($.Array.prototype, {element: false});
+$.add($.Element.prototype);
 $.add($.setProps);
 $.add($.classProps, {element: false, array: false});
 $.add(HTMLElement.prototype, {$: false});
