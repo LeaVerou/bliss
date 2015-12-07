@@ -84,7 +84,7 @@ extend($, {
 			tag = o.tag;
 		}
 
-		if (o && o.tag) delete o.tag;
+		delete o.tag;
 
 		return $.set(document.createElement(tag || "div"), o);
 	},
