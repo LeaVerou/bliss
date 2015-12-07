@@ -99,3 +99,9 @@
 #docs article h1 a {
 	color: inherit;
 }
+
+#vanilla pre {
+	box-shadow: none;
+	padding: .6em 1em;
+	border-radius: .3em;
+}

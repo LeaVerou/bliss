@@ -105,6 +105,78 @@
 });</code></pre>
 </section>
 
+<section id="vanilla">
+	<h1>Vanilla methods</h1>
+
+	<p>You don’t need Bliss or any library for any of these. All the following are 100% pure Vanilla JS! Click on the code for documentation and browser support info.</p>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Action</th>
+				<th>Vanilla JS</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Adding the class "my-class" on <code>element</code></td>
+				<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/classList"><pre><code>element.classList.add("my-class");</code></pre></a></td>
+			</tr>
+			<tr>
+				<td>Removing the class "my-class" from <code>element</code></td>
+				<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/classList"><pre><code>element.classList.remove("my-class");</code></pre></a></td>
+			</tr>
+			<tr>
+				<td>Adding the class "my-class" on <code>element</code> if it doesn’t already have it and removing it if it does:</td>
+				<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/classList"><pre><code>element.classList.toggle("my-class");</code></pre></a></td>
+			</tr>
+			<tr>
+				<td>Checking if <code>element</code> contains the class "my-class"</td>
+				<td>
+					<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/classList"><pre><code>element.classList.contains("my-class")</code></pre></a>
+				</td>
+			</tr>
+			<tr>
+				<td>Removing <code>element</code> from the DOM</td>
+				<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/ChildNode/remove"><pre><code>element.remove();</code></pre></a></td>
+			</tr>
+			<tr>
+				<td>Checking if <code>element</code> contains <code>otherElement</code></td>
+				<td>
+					<a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/contains"><pre><code>element.contains(otherElement)</code></pre></a>
+				</td>
+			</tr>
+			<tr>
+				<td>Check if <code>element</code> matches <code>selector</code></td>
+				<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/matches">
+						<pre><code>element.matches(selector)</code></pre>
+					</a></td>
+			</tr>
+			<tr>
+				<td>Find the closest ancestor (or self) of <code>element</code> that matches <code>selector</code></td>
+				<td>
+					<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/closest">
+						<pre><code>element.closest(selector)</code></pre>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td>Find next sibling of <code>element</code> that is a real element (not a text node or comment node):</td>
+				<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/NonDocumentTypeChildNode/nextElementSibling">
+						<pre><code>element.nextElementSibling</code></pre>
+					</a></td>
+			</tr>
+			<tr>
+				<td>Get all children of <code>element</code> which are real elements</td>
+				<td><a href="https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children">
+						<pre><code>element.children</code></pre>
+					</a></td>
+			</tr>
+			<!-- tr>td+td>a[href]>pre>code -->
+		</tbody>
+	</table>
+</section>
+
 <section id="methods">
 	<h1>DOM</h1>
 
