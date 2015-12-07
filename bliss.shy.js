@@ -75,11 +75,11 @@ extend($, {
 	},
 	
 	create: function (tag, o) {
-		if (arguments.length === 0) {
+		if (!tag && !o) {
 			return document.createElement("div");
 		}
 
-		if (arguments.length === 1) {
+		if (!o) {
 			if ($.type(tag) === "string") {
 				return document.createTextNode(tag);
 			}
