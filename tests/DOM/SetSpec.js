@@ -21,7 +21,7 @@ describe("$.set", function() {
 		expect(element.className).to.equal("main-navigation");
 	});
 
-	xit("can be called on arrays", function() {
+	it("can be called on arrays", function() {
 		var list = [
 			document.createElement("li"),
 			document.createElement("li"),
