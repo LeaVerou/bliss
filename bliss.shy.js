@@ -42,8 +42,12 @@ extend($, {
 	sources: {},
 
 	$: function(expr, context) {
-		return expr instanceof Node || expr instanceof Window? [expr] :
-		       [].slice.call(typeof expr == "string"? (context || document).querySelectorAll(expr) : expr || []);
+		if (expr instanceof Node || expr instanceof Window) {
+			return [expr];
+		}
+
+		// In the future, we should use Array.from() instead of Array.prototype.slice.call()
+		return Array.prototype.slice.call(typeof expr == "string"? (context || document).querySelectorAll(expr) : expr || []);
 	},
 
 	/**
@@ -405,7 +409,7 @@ $.setProps = {
 
 	// Bind one or more events to the element
 	events: function (val) {
-		if (val instanceof EventTarget) {
+		if (val && val.addEventListener) {
 			// Copy events from other element (requires Bliss Full)
 			var me = this;
 
@@ -549,16 +553,8 @@ $.add = function (methods, on, noOverwrite) {
 	}
 
 	for (var method in methods) {
-
-		try {
-			var callback = methods[method];
-		}
-		catch (e) {
-			continue;
-		}
-
+		// In the future, we should use let instead of a closure
 		(function(method, callback){
-
 
 		if ($.type(callback) == "function") {
 			if (on.element && (!(method in $.Element.prototype) || !noOverwrite)) {
@@ -591,7 +587,7 @@ $.add = function (methods, on, noOverwrite) {
 			}
 		}
 
-		})(method, callback);
+		})(method, methods[method]);
 	}
 };
 
@@ -599,6 +595,12 @@ $.add($.Array.prototype, {element: false});
 $.add($.Element.prototype);
 $.add($.setProps);
 $.add($.classProps, {element: false, array: false});
-$.add(HTMLElement.prototype, null, true);
+
+// Add native methods on $ and _
+var dummy = document.createElement("_");
+$.add($.extend({}, HTMLElement.prototype, function(method){
+	return $.type(dummy[method]) === "function"
+}), null, true);
+
 
 })();
