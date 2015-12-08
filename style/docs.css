@@ -45,10 +45,6 @@
 		text-align: right;
 	}
 
-#toc {
-	z-index: 1;
-}
-
 @media (min-width: 60em) and (min-height: 40em) {
 	#toc {
 		position: fixed;
@@ -57,6 +53,7 @@
 		box-sizing: border-box;
 		max-height: 100vh;
 		overflow: auto;
+		z-index: 1;
 	}
 }
 
