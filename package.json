@@ -35,6 +35,7 @@
     "karma": "^0.13.15",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^0.2.2",
+    "karma-firefox-launcher": "^0.1.7",
     "karma-fixture": "^0.2.5",
     "karma-html2js-preprocessor": "^0.1.0",
     "karma-jasmine": "^0.3.6",
