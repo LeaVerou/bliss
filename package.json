@@ -4,7 +4,7 @@
   "description": "Lightweight helper library for modern browsers.",
   "main": "bliss.js",
   "scripts": {
-    "test": "karma start --single-run --browsers Firefox"
+    "test": "karma start --single-run"
   },
   "repository": {
     "type": "git",
