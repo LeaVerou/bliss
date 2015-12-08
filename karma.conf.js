@@ -2,6 +2,7 @@
 // Generated on Fri Dec 04 2015 17:29:55 GMT-0800 (PST)
 
 module.exports = function(config) {
+
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -56,9 +57,19 @@ module.exports = function(config) {
     autoWatch: true,
 
 
+    customLaunchers: {
+
+      Chrome_travis_ci: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
+      }
+
+    },
+
+
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
+    browsers: ['Chrome_travis_ci'],
 
 
     // Continuous Integration mode
@@ -68,5 +79,6 @@ module.exports = function(config) {
     // Concurrency level
     // how many browser should be started simultanous
     concurrency: Infinity
-  })
+  });
+
 }
