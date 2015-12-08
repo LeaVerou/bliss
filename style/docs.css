@@ -53,6 +53,7 @@
 		box-sizing: border-box;
 		max-height: 100vh;
 		overflow: auto;
+		z-index: 1;
 	}
 }
 
