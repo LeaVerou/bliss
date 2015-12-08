@@ -14,6 +14,7 @@ pre[class*="language-"] {
 	word-wrap: normal;
 	line-height: 1.5;
 	tab-size: 4;
+	isolation: isolate;
 }
 
 pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
