@@ -42,7 +42,8 @@ extend($, {
 	sources: {},
 
 	$: function(expr, context) {
-		if (expr instanceof Node || expr instanceof Window) {
+		var className = expr.constructor.name;
+		if (className === 'Node' || className === 'Window') {
 			return [expr];
 		}
 
