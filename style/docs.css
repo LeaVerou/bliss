@@ -45,6 +45,10 @@
 		text-align: right;
 	}
 
+#toc {
+	z-index: 1;
+}
+
 @media (min-width: 60em) and (min-height: 40em) {
 	#toc {
 		position: fixed;
