@@ -36,4 +36,26 @@ describe("$.clone", function() {
     expect(clone.childNodes[1].childNodes[1].style.color).to.equal("blue");
 	});
 
+  it("clones events on element and all descendants", function(done) {
+    var element = $.create("div", { class: "parent",  contents: "This is the parent" });
+    var child = $.create("p", {contents: "This is the child"});
+    var grandchild = $.create("span", {class: "grandchild", contents: "This is the grandchild"});
+
+    child.appendChild(grandchild);
+    element.appendChild(child);
+
+    grandchild._.set({
+      events: {
+        "click": function() {
+          done();
+        }
+      }
+    });
+    var clone = $.clone(element);
+
+    var ev = document.createEvent("MouseEvent");
+		ev.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    clone.childNodes[1].childNodes[1].dispatchEvent(ev);
+  });
+
 });
