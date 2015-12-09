@@ -60,7 +60,7 @@ describe('$.lazy', function() {
 			// still only one item returned 
 			expect(obj.pets.length).to.equal(1);
 			expect(spy.calledOnce).to.be.true;
-		})
+		});
 
 		it('will return updated values if returning an obj property', function() {
 			var spy = sinon.spy(),

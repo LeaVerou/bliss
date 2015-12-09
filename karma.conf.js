@@ -30,9 +30,30 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      '**/*.html'   : ['html2js']
+      '**/*.html': ['html2js'],
+      'tests/**/*.js': ['jshint'],
+      '*.js': ['jshint']
     },
 
+    jshint: {
+      options: {
+        curly: true,
+        eqeqeq: false,
+        loopfunc: true,
+        immed: true,
+        latedef: true,
+        newcap: true,
+        noarg: true,
+        expr: true,
+        sub: true,
+        undef: false,
+        boss: true,
+        devel: true,
+        eqnull: true,
+        browser: true
+      },
+      summary: false
+    },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
