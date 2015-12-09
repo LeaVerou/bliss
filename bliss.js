@@ -167,7 +167,7 @@ extend($, {
 						delete this[property];
 
 						try { this[property] = 5;
-						} catch(e) {console.error(e);}
+						} catch(e) { console.error(e); }
 
 						return this[property] = getter.call(this);
 					},
