@@ -28,7 +28,7 @@ function extend(to, from, whitelist) {
 	}
 
 	return to;
-};
+}
 
 var $ = self.Bliss = extend(function(expr, context) {
 	return $.type(expr) === "string"? (context || document).querySelector(expr) : expr || null;
@@ -167,7 +167,7 @@ extend($, {
 						delete this[property];
 
 						try { this[property] = 5;
-						} catch(e) {console.error(e)}
+						} catch(e) { console.error(e); }
 
 						return this[property] = getter.call(this);
 					},
@@ -254,7 +254,7 @@ extend($, {
 		var xhr = new XMLHttpRequest();
 
 		if ($.type(o.data) !== "string") {
-			o.data = Object.keys(o.data).map(function(key){ return key + "=" + encodeURIComponent(o.data[key])}).join("&");
+			o.data = Object.keys(o.data).map(function(key){ return key + "=" + encodeURIComponent(o.data[key]); }).join("&");
 		}
 
 		if (o.method === "GET" && o.data) {
@@ -582,7 +582,7 @@ $.add = function (methods, on, noOverwrite) {
 						var Type = on.array && Array.isArray(subject)? "Array" : "Element";
 
 						return $[Type].prototype[method].apply({subject: subject}, args);
-					}
+					};
 				}
 			}
 		}
@@ -599,7 +599,7 @@ $.add($.classProps, {element: false, array: false});
 // Add native methods on $ and _
 var dummy = document.createElement("_");
 $.add($.extend({}, HTMLElement.prototype, function(method){
-	return $.type(dummy[method]) === "function"
+	return $.type(dummy[method]) === "function";
 }), null, true);
 
 
