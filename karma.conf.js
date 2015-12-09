@@ -32,9 +32,7 @@ module.exports = function(config) {
     preprocessors: {
       '**/*.html': ['html2js'],
       'tests/**/*.js': ['jshint'],
-      'bliss.js': ['jshint'],
-      'bliss.shy.js': ['jshint'],
-      'bliss._.js': ['jshint']
+      '*.js': ['jshint']
     },
 
     jshint: {
@@ -52,17 +50,7 @@ module.exports = function(config) {
         boss: true,
         devel: true,
         eqnull: true,
-        browser: true,
-        globals: {
-          Promise: true,
-          $: true,
-          Bliss: true,
-          expect: true,
-          describe: true,
-          it: true,
-          before: true,
-          beforeEach: true
-        }
+        browser: true
       },
       summary: false
     },

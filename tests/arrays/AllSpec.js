@@ -40,7 +40,7 @@ describe('$.all', function() {
       expect(result.length).to.equal(3);
 
       arr.forEach(function (item) {
-        expect(item.method.calledOnce).to.be.true
+        expect(item.method.calledOnce).to.be.true;
       });
 
       expect(result).to.deep.equal(arr._.all('method'));
@@ -49,14 +49,14 @@ describe('$.all', function() {
     it('can take single params', function() {
       var result = $.all(arr, 'method', 'foo');
       arr.forEach(function (item) {
-        expect(item.method.calledWith('foo')).to.be.true
+        expect(item.method.calledWith('foo')).to.be.true;
       });
     });
 
     it("can accept multiple params", function() {
       var result = $.all(arr, 'method', ['foo', 'bar']);
       arr.forEach(function (item) {
-        expect(item.method.calledWith(['foo', 'bar'])).to.be.true
+        expect(item.method.calledWith(['foo', 'bar'])).to.be.true;
       });
     });
   });
