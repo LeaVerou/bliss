@@ -4,6 +4,18 @@
 
 Want to use Vanilla JS but find native APIs a bit unwieldy? Bliss is for you.
 
+## Build
+
+```bash
+npm install
+gulp
+```
+
+## Test
+```bash
+npm test
+```
+
 ## Contribute to Bliss!
 
 - Please follow the existing code style.
