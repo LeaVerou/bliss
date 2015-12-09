@@ -25,11 +25,17 @@ $.add({
 // Define the _ property on arrays and elements
 
 Object.defineProperty(Node.prototype, _, {
-	get: function () {
+	// Written for IE compatability (see #49)
+	get: function getter () {
+		Object.defineProperty(Node.prototype, _, {
+			get: undefined
+		});
 		Object.defineProperty(this, _, {
 			value: new $.Element(this)
 		});
-		
+		Object.defineProperty(Node.prototype, _, {
+			get: getter
+		});
 		return this[_];
 	},
 	configurable: true
