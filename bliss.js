@@ -166,9 +166,6 @@ extend($, {
 						// FIXME this does not work for instances if property is defined on the prototype
 						delete this[property];
 
-						try { this[property] = 5;
-						} catch(e) { console.error(e); }
-
 						return this[property] = getter.call(this);
 					},
 					configurable: true,
