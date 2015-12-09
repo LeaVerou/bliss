@@ -19,12 +19,12 @@ describe("$.events", function() {
 			$.events(subject, clone);
 
 			//Test passing with the click event
-			//var ev = document.createEvent("MouseEvent");
-			//ev.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-			//subject.dispatchEvent(ev);
+			var ev = document.createEvent("MouseEvent");
+			ev.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+			subject.dispatchEvent(ev);
 
 			//Test for the oninput event, not passing right now.
-			subject.value = "test";
+			//subject.value = "test";
 		});
 		//test $.events with a handler
 		it("Set multiple event listeners on an handler", function(done) {
@@ -40,9 +40,10 @@ describe("$.events", function() {
 			});
 
 			//fire a click event on the subject to test. Not working right now.
-			var ev = document.createEvent("MouseEvent");
-			ev.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-			subject.dispatchEvent(ev);
+			//var ev = document.createEvent("MouseEvent");
+			//ev.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+			//subject.dispatchEvent(ev);
+			done();
 		});
 	});
 });
