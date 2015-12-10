@@ -1,49 +1,78 @@
 describe("$.events", function() {
-	//Test the existence of $.events
+
 	it('exists', function() {
 		expect($.events).to.exist;
 	});
-	describe("Pse with global -> $", function() {
-		//test $.events with a clone
+
+	describe("use with global -> $", function() {
+
 		it("Set multiple event listeners on an element based on element", function(done) {
-			//Create subject element
+
+			//Create elements
 			var subject = document.createElement("input");
+			var clone = document.createElement("textarea");
+			var htmlEvt = document.createEvent("HTMLEvents");
+			var spy = sinon.spy();
+
+			// Add properties to the input and add it to the body.
 			subject.type = "text";
 			subject.id = "test";
 			document.body.appendChild(subject);
 
-			//Create the element and create events to clone them
-			var clone = document.createElement("textarea");
-			clone.addEventListener("input", function(e){ done(); });
-			clone.addEventListener("click", function(e){ done(); });
+			htmlEvt.initEvent('input', true, true);
+
+			clone.addEventListener("input", spy);
+			clone.addEventListener("click", spy);
+
 			$.events(subject, clone);
 
-			//Test passing with the click event
-			var ev = document.createEvent("MouseEvent");
-			ev.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-			subject.dispatchEvent(ev);
+			subject.value = 'test';
+			subject.dispatchEvent(htmlEvt);
 
-			//Test for the oninput event, not passing right now.
-			//subject.value = "test";
+			expect(spy.callCount).to.be.equal(1);
+
+			clone.click();
+
+			expect(spy.callCount).to.equal(2);
+
+			clone.value = 'testclone';
+			clone.dispatchEvent(htmlEvt);
+
+			expect(spy.callCount).to.equal(3);
+
+			done();
+
 		});
-		//test $.events with a handler
+
+
 		it("Set multiple event listeners on an handler", function(done) {
-			//Create subject element
+
 			var subject = document.createElement("input");
+			var htmlEvt = document.createEvent("HTMLEvents");
+			var spy = sinon.spy();
+
 			subject.type = "text";
 			subject.id = "test";
 			document.body.appendChild(subject);
 
-			//Add handlers to the subject
-			$.events(subject, {
-				'oninput onclick': function(e){ done(); }
-			});
+			htmlEvt.initEvent('input', true, true);
 
-			//fire a click event on the subject to test. Not working right now.
-			//var ev = document.createEvent("MouseEvent");
-			//ev.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-			//subject.dispatchEvent(ev);
+			//Add handlers to the subject
+			$.events(subject, { 'input click': spy });
+
+			subject.value = 'test';
+			subject.dispatchEvent(htmlEvt);
+
+			expect(spy.callCount).to.be.equal(1);
+
+			subject.click();
+
+			expect(spy.callCount).to.be.equal(2);
+
 			done();
+
 		});
+
 	});
+
 });
