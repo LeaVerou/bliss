@@ -88,16 +88,16 @@ describe('$.lazy', function() {
 				spy2 = sinon.spy(),
 				obj = $.lazy(testObj, {cats: spy1, dogs: spy2});
 
-				expect(obj.cats).to.be.defined;
-				expect(obj.dogs).to.be.defined;
-				
-				obj.cats;
-				obj.cats;
-				obj.dogs;
-				obj.dogs;
+			expect(obj.cats).to.be.defined;
+			expect(obj.dogs).to.be.defined;
+			
+			obj.cats;
+			obj.cats;
+			obj.dogs;
+			obj.dogs;
 
-				expect(spy1.calledOnce).to.be.true;
-				expect(spy2.calledOnce).to.be.true;
+			expect(spy1.calledOnce).to.be.true;
+			expect(spy2.calledOnce).to.be.true;
 		});
 
 	});
