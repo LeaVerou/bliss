@@ -1,4 +1,8 @@
-# Setup
+**Note:**
+Please don't use any Bliss functions in your tests except for the function you're testing. We want to
+make it easy to find those pesky bugs. ;)
+
+### Setup
 
 Install Karma, by running:
 
@@ -12,7 +16,7 @@ Then install the Command Line tools:
 npm install -g karma-cli
 ```
 
-# Running the tests
+### Running the tests
 
 cd to the root of the project
 
