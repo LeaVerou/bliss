@@ -31,48 +31,56 @@ describe('$.lazy', function() {
 		});
 
 		it('deletes the property if exists when getter is called', function() {
-			var obj = {foo: 'bar'},
-				spy = sinon.spy;
-
-			obj = $.lazy(obj, 'foo', function() {
-				spy();
-				return 'not bar';	
-			});
+			var stub = sinon.stub().returns('no bar'),
+				obj = $.lazy({foo: 'bar'}, 'foo', stub);
 
 			obj.foo;
 			expect(obj.foo).to.not.equal('bar');
 			obj.foo;
-			expect(spy.calledOnce).to.equal.true;
+			expect(stub.calledOnce).to.equal.true;
+		});
+
+		it('overwrites a prototype property if exists', function() {
+			var klass = $.extend(TestClass, {pet: 'dog'});
+			var stub = sinon.stub().returns('bird'),
+				result = $.lazy((new klass()), 'pet', stub);
+
+			expect(result.pet).to.equal('bird');
+		});
+
+		it('overwrites multiple prototype properties if exists', function() {
+			TestClass.prototype.pet = 'dog';
+			TestClass.prototype.food = 'pizza';
+
+			var petStub = sinon.stub().returns('snake'),
+				foodStub = sinon.stub().returns('pie'),
+				inst = $.lazy((new TestClass()), {pet: petStub, food: foodStub});
+
+			expect(inst.pet).to.equal('snake');
+			expect(inst.food).to.equal('pie');
 		});
 	});
 
 	describe('the method defined via $.lazy', function() {
 		it('will always return the first value returned', function() {
-			var spy = sinon.spy(),
-				obj = $.lazy(testObj, 'pets', function () { 
-				spy();
-				// return cloned array...
-				return this.animals.slice(0);
-			});
+			var stub = sinon.stub().returns(testObj.animals.slice(0)),
+				obj = $.lazy(testObj, 'pets', stub);
 
 			expect(obj.pets).to.deep.equal(obj.animals);
 			obj.animals.push('dogs');
 			// still only one item returned 
 			expect(obj.pets.length).to.equal(1);
-			expect(spy.calledOnce).to.be.true;
+			expect(stub.calledOnce).to.be.true;
 		});
 
 		it('will return updated values if returning an obj property', function() {
-			var spy = sinon.spy(),
-				obj = $.lazy(testObj, 'pets', function () { 
-				spy();
-				return this.animals;
-			});
+			var stub = sinon.stub().returns(testObj.animals),
+				obj = $.lazy(testObj, 'pets', stub);
 
 			expect(obj.pets).to.deep.equal(obj.animals);
 			obj.animals.push('dogs');
 			expect(obj.pets).to.deep.equal(obj.animals);
-			expect(spy.calledOnce).to.be.true;
+			expect(stub.calledOnce).to.be.true;
 		});
 	
 		it('can take an object as the property parameter', function() {
