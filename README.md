@@ -22,7 +22,7 @@ npm test
 - Do not add new methods before consulting.
 - Remember, code simplicity, readability and conciseness matters a lot for this project. Often juggling the three can be tricky.
 - Right now what Bliss badly needs is **tests**. If you want to contribute, please consider contributing tests!
-- 
+
 
 ## Browser Support
 
