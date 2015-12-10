@@ -37,20 +37,17 @@ module.exports = function(config) {
 
     jshint: {
       options: {
-        curly: true,
-        eqeqeq: false,
-        loopfunc: true,
-        immed: true,
-        latedef: true,
-        newcap: true,
-        noarg: true,
-        expr: true,
-        sub: true,
-        undef: false,
-        boss: true,
-        devel: true,
-        eqnull: true,
-        browser: true
+        curly: true,    // requires you to always put curly braces around blocks in loops and conditionals.
+        eqeqeq: false,  // prohibits the use of == and != in favor of === and !==.
+        loopfunc: true, // suppresses warnings about functions inside of loops. 
+        noarg: true,    // prohibits the use of arguments.caller and arguments.callee
+        expr: true,     // suppresses warnings about the use of expressions where normally you would expect to see assignments or function calls
+        undef: false,   // This option prohibits the use of explicitly undeclared variables
+        boss: true,     // suppresses warnings about the use of assignments in cases where comparisons are expected
+        devel: false,   // defines globals that are usually used for logging poor-man's debugging
+        eqnull: false,  // suppresses warnings about == null comparisons
+        browser: true,  // option defines globals exposed by modern browsers
+        globals: {}     // predefined global variables, if undef is true, this must be populated
       },
       summary: false
     },
