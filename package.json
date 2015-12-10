@@ -42,10 +42,8 @@
     "karma-jasmine": "^0.3.6",
     "karma-jshint": "^0.1.0",
     "karma-mocha": "^0.2.1",
-    "karma-phantomjs-launcher": "^0.2.1",
     "karma-sinon": "^1.0.4",
     "mocha": "^2.3.4",
-    "phantomjs": "^1.9.19",
     "sinon": "^1.17.2"
   },
   "dependencies": {}
