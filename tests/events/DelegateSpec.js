@@ -2,6 +2,8 @@ describe("$.delegate", function() {
 	describe("$.delegate in subject-type-selector-callback form", function() {
 		it("adds events to the children of the subject", function(done) {
 			var subject = document.createElement("div");
+			document.body.appendChild(subject);
+
 			var inner = document.createElement("a");
 			subject.appendChild(inner);
 
@@ -13,6 +15,8 @@ describe("$.delegate", function() {
 
 		it("can be called on elements", function(done) {
 			var subject = document.createElement("div");
+			document.body.appendChild(subject);
+
 			var inner = document.createElement("a");
 			subject.appendChild(inner);
 
@@ -34,6 +38,7 @@ describe("$.delegate", function() {
 				document.createElement("a")  // goes inside div 3
 			];
 			subjects.forEach(function(subject, index) {
+				document.body.appendChild(subject);
 				subject.appendChild(inners[index]);
 			});
 
@@ -51,6 +56,8 @@ describe("$.delegate", function() {
 	describe("$.delegate in subject-type-selectorsToCallbacks form", function() {
 		it("adds events to the children of the subject", function() {
 			var subject = document.createElement("div");
+			document.body.appendChild(subject);
+
 			var inners = [
 				document.createElement("a"),
 				document.createElement("span"),
@@ -76,6 +83,8 @@ describe("$.delegate", function() {
 
 		it("can be called on elements", function() {
 			var subject = document.createElement("div");
+			document.body.appendChild(subject);
+
 			var inners = [
 				document.createElement("a"),
 				document.createElement("span"),
@@ -101,6 +110,8 @@ describe("$.delegate", function() {
 
 		it("can be called on arrays", function() {
 			var subject = document.createElement("div");
+			document.body.appendChild(subject);
+
 			var inners = [
 				document.createElement("a"),
 				document.createElement("span"),
@@ -129,6 +140,8 @@ describe("$.delegate", function() {
 	describe("$.delegate in subject-typesToSelectorsToCallbacks form", function() {
 		it("adds events to the children of the subject", function() {
 			var subject = document.createElement("div");
+			document.body.appendChild(subject);
+
 			var inners = [
 				document.createElement("a"),
 				document.createElement("span"),
