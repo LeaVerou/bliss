@@ -79,14 +79,16 @@ extend($, {
 	},
 
 	create: function (tag, o) {
+		// 4 signatures: (tag, o), (tag), (o), ()
 		if (arguments.length === 1) {
 			if ($.type(tag) === "string") {
-				return document.createTextNode(tag);
+				o = {};
 			}
-
-			o = tag;
-			tag = o.tag;
-			delete o.tag;
+			else {
+				o = tag;
+				tag = o.tag;
+				delete o.tag;
+			}
 		}
 
 		return $.set(document.createElement(tag || "div"), o);
@@ -487,7 +489,12 @@ $.setProps = {
 	contents: function (val) {
 		if (val || val === 0) {
 			(Array.isArray(val)? val : [val]).forEach(function (child) {
-				if (/^(string|number|object)$/.test($.type(child))) {
+				var type = $.type(child);
+
+				if (/^(string|number)$/.test(type)) {
+					child = document.createTextNode(child + "");
+				}
+				else if (type === "object") {
 					child = $.create(child);
 				}
 

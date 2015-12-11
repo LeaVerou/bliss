@@ -9,10 +9,12 @@ describe("$.create", function() {
 		expect(element.tagName).to.be.equal("ARTICLE");
 	});
 
-	it("returns a text node when called with only a string", function() {
-		var text = $.create("Lorem Ipsom dolor sit amet");
+	it("equivalent to document.createElement() when called with only a string", function() {
+		var p = $.create("p");
 
-		expect(text).to.be.an.instanceOf(Text);
+		expect(p).to.be.an.instanceOf(HTMLElement);
+		expect(p.nodeType).to.equal(1);
+		expect(p.nodeName).to.equal("P");
 	});
 
 	describe("passed only an object", function() {
