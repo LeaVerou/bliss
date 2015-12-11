@@ -10,7 +10,7 @@ describe("$.delegate", function() {
 			$.delegate(subject, "click", "a", function() {
 				done();
 			});
-			click(inner);
+			helpers.click(inner);
 		});
 
 		it("can be called on elements", function(done) {
@@ -23,7 +23,7 @@ describe("$.delegate", function() {
 			subject._.delegate("click", "a", function() {
 				done();
 			});
-			click(inner);
+			helpers.click(inner);
 		});
 
 		it("can be called on arrays", function() {
@@ -47,8 +47,8 @@ describe("$.delegate", function() {
 				expect(this).to.equal(expectedSubject);
 			});
 			subjects._.delegate("click", "a", callbackSpy);
-			subjects.forEach(click); // shouldn't trigger callbacks
-			inners.forEach(click);   // should trigger callbacks
+			subjects.forEach(helpers.click); // shouldn't trigger callbacks
+			inners.forEach(helpers.click);   // should trigger callbacks
 			expect(callbackSpy.calledThrice).to.be.ok;
 		});
 	});
@@ -77,7 +77,7 @@ describe("$.delegate", function() {
 				"span": function() { spy(2, this); },
 				"img": function() { spy(3, this); }
 			});
-			inners.forEach(click);
+			inners.forEach(helpers.click);
 			expect(spy.calledThrice).to.be.ok;
 		});
 
@@ -104,7 +104,7 @@ describe("$.delegate", function() {
 				"span": function() { spy(2, this); },
 				"img": function() { spy(3, this); }
 			});
-			inners.forEach(click);
+			inners.forEach(helpers.click);
 			expect(spy.calledThrice).to.be.ok;
 		});
 
@@ -132,7 +132,7 @@ describe("$.delegate", function() {
 				"span": function() { spy(2, this); },
 				"img": function() { spy(3, this); }
 			});
-			inners.forEach(click);
+			inners.forEach(helpers.click);
 			expect(spy.calledThrice).to.be.ok;
 		});
 	});
@@ -173,9 +173,9 @@ describe("$.delegate", function() {
 				}
 			});
 
-			inners.forEach(mouseDown);
+			inners.forEach(helpers.mouseDown);
 			expect(mouseDownSpy.calledThrice).to.be.ok;
-			inners.forEach(mouseUp);
+			inners.forEach(helpers.mouseUp);
 			expect(mouseUpSpy.calledThrice).to.be.ok;
 		});
 	});
