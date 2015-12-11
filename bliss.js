@@ -57,7 +57,8 @@ extend($, {
 		var ret;
 		if(obj === null || obj === undefined) {
 			ret = obj + '';
-		} else {
+		}
+		else {
 			ret = (Object.prototype.toString.call(obj).match(/^\[object\s+(.*?)\]$/)[1] || "").toLowerCase();
 			if(ret === 'number' && isNaN(obj)) {
 				ret = 'nan';
