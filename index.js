@@ -173,7 +173,7 @@ var urls = {};
 });
 
 // Add APIs
-["Node", "Element", "Text", "Document"].forEach(function(type){
+["Node", "Element", "Text", "Document", "Promise"].forEach(function(type){
 	urls[type] = "https://developer.mozilla.org/en-US/docs/Web/API/" + type;
 });
 
