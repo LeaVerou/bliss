@@ -66,9 +66,9 @@ describe("$.delegate", function() {
 			});
 
 			$.delegate(subject, "click", {
-				"a": function() { spy(1, this) },
-				"span": function() { spy(2, this) },
-				"img": function() { spy(3, this) }
+				"a": function() { spy(1, this); },
+				"span": function() { spy(2, this); },
+				"img": function() { spy(3, this); }
 			});
 			inners.forEach(click);
 			expect(spy.calledThrice).to.be.ok;
@@ -91,9 +91,9 @@ describe("$.delegate", function() {
 			});
 
 			subject._.delegate("click", {
-				"a": function() { spy(1, this) },
-				"span": function() { spy(2, this) },
-				"img": function() { spy(3, this) }
+				"a": function() { spy(1, this); },
+				"span": function() { spy(2, this); },
+				"img": function() { spy(3, this); }
 			});
 			inners.forEach(click);
 			expect(spy.calledThrice).to.be.ok;
@@ -117,9 +117,9 @@ describe("$.delegate", function() {
 
 			// TODO: Make less trivial (multiple subjects)
 			[subject]._.delegate("click", {
-				"a": function() { spy(1, this) },
-				"span": function() { spy(2, this) },
-				"img": function() { spy(3, this) }
+				"a": function() { spy(1, this); },
+				"span": function() { spy(2, this); },
+				"img": function() { spy(3, this); }
 			});
 			inners.forEach(click);
 			expect(spy.calledThrice).to.be.ok;
@@ -149,14 +149,14 @@ describe("$.delegate", function() {
 
 			$.delegate(subject, {
 				"mousedown": {
-					"a": function() { mouseDownSpy(1, this) },
-					"span": function() { mouseDownSpy(2, this) },
-					"img": function() { mouseDownSpy(3, this) }
+					"a": function() { mouseDownSpy(1, this); },
+					"span": function() { mouseDownSpy(2, this); },
+					"img": function() { mouseDownSpy(3, this); }
 				},
 				"mouseup": {
-					"a": function() { mouseUpSpy(1, this) },
-					"span": function() { mouseUpSpy(2, this) },
-					"img": function() { mouseUpSpy(3, this) }
+					"a": function() { mouseUpSpy(1, this); },
+					"span": function() { mouseUpSpy(2, this); },
+					"img": function() { mouseUpSpy(3, this); }
 				}
 			});
 
