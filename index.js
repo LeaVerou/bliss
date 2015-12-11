@@ -168,7 +168,7 @@ $$(".runnable").forEach(function(p){
 var urls = {};
 
 // Add global objects
-["Object", "String", "Array", "Number", "Function", "RegExp"].forEach(function(type){
+["Object", "String", "Array", "Number", "Function", "RegExp", "Boolean"].forEach(function(type){
 	urls[type] = "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/" + type;
 });
 
