@@ -233,8 +233,18 @@ var ret = $(".bar .foo");</code></pre>
 $(".foo").setAttribute("title", "yolo");</code></pre>
 
 		<ul class="notes">
-			<li>If the element is not found, it will return <code>null</code>. This could cause an exception if methods are called on the result.</li>
+			<li>If the element is not found, it will return <code>null</code>. This could cause an exception if methods are called on the result.
+			You might previously check if the element exists by caching the node in a variable
+			into an <code>if</code> statement:</li>
 		</ul>
+
+<pre><code>// Check if the .foo element exists
+// and set an attribute by using a variable "foo"
+// as a reference of the element
+var foo;
+if (foo = $(".foo")) {
+    foo.setAttribute("title", "yolo");
+}</code></pre>
 
 		<a href="http://api.jquery.com/jQuery/#jQuery1" class="jq">$</a>
 	</article>
