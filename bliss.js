@@ -94,6 +94,16 @@ extend($, {
 		return $.set(document.createElement(tag || "div"), o);
 	},
 
+	each: function(obj, callback, ret) {
+		ret = ret || {};
+
+		for (var property in obj) {
+			ret[property] = callback.call(obj, property, obj[property]);
+		}
+
+		return ret;
+	},
+
 	ready: function(context) {
 		context = context || document;
 
@@ -445,15 +455,23 @@ $.setProps = {
 			val[arguments[0]] = arguments[1];
 		}
 
-		for (var events in val) {
-			events.split(/\s+/).forEach(function (event) {
-				var me = this;
-				this.addEventListener(event, function callback() {
-					me.removeEventListener(event, callback);
-					return val[events].apply(this, arguments);
+		var me = this;
+
+		$.each(val, function(events, callback){
+			events = events.split(/\s+/);
+
+			var once = function() {
+				events.forEach(function(event){
+					me.removeEventListener(event, once);
 				});
-			}, this);
-		}
+				
+				return callback.apply(me, arguments);
+			};
+
+			events.forEach(function (event) {
+				me.addEventListener(event, once);
+			});
+		});
 	},
 
 	// Event delegation
@@ -472,17 +490,15 @@ $.setProps = {
 
 		var element = this;
 
-		for (var type in val) {
-			(function (type, callbacks) {
-				element.addEventListener(type, function(evt) {
-					for (var selector in callbacks) {
-						if (evt.target.matches(selector)) { // Do ancestors count?
-							callbacks[selector].call(this, evt);
-						}
+		$.each(val, function (type, callbacks) {
+			element.addEventListener(type, function(evt) {
+				for (var selector in callbacks) {
+					if (evt.target.matches(selector)) { // Do ancestors count?
+						callbacks[selector].call(this, evt);
 					}
-				});
-			})(type, val[type]);
-		}
+				}
+			});
+		});
 	},
 
 	// Set the contents as a string, an element, an object to create an element or an array of these
@@ -556,10 +572,7 @@ $.add = function (methods, on, noOverwrite) {
 		methods[arguments[0]] = arguments[1];
 	}
 
-	for (var method in methods) {
-		// In the future, we should use let instead of a closure
-		(function(method, callback){
-
+	$.each(methods, function(method, callback){
 		if ($.type(callback) == "function") {
 			if (on.element && (!(method in $.Element.prototype) || !noOverwrite)) {
 				$.Element.prototype[method] = function () {
@@ -590,9 +603,7 @@ $.add = function (methods, on, noOverwrite) {
 				}
 			}
 		}
-
-		})(method, methods[method]);
-	}
+	});
 };
 
 $.add($.Array.prototype, {element: false});
@@ -668,9 +679,10 @@ Object.defineProperty(Array.prototype, _, {
 if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	var addEventListener = EventTarget.prototype.addEventListener,
 	    removeEventListener = EventTarget.prototype.removeEventListener,
-	    filter = function(callback, capture, l){
-	    	return !(l.callback === callback && l.capture == capture);
-	    };
+	    equal = function(callback, capture, l){
+	    	return l.callback === callback && l.capture == capture;
+	    },
+	    notEqual = function() { return !equal.apply(this, arguments); };
 
 	EventTarget.prototype.addEventListener = function(type, callback, capture) {
 		if (this[_] && callback) {
@@ -678,7 +690,7 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 			
 			listeners[type] = listeners[type] || [];
 			
-			if (listeners[type].filter(filter.bind(null, callback, capture)).length === 0) {
+			if (listeners[type].filter(equal.bind(null, callback, capture)).length === 0) {
 				listeners[type].push({callback: callback, capture: capture});
 			}
 		}
@@ -690,8 +702,9 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 		if (this[_] && callback) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 
-			listeners[type] = listeners[type] || [];
-			listeners[type] = listeners[type].filter(filter.bind(null, callback, capture));
+			if (listeners[type]) {
+				listeners[type] = listeners[type].filter(notEqual.bind(null, callback, capture));
+			}
 		}
 
 		return removeEventListener.call(this, type, callback, capture);
