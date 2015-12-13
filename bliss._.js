@@ -57,9 +57,10 @@ Object.defineProperty(Array.prototype, _, {
 if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	var addEventListener = EventTarget.prototype.addEventListener,
 	    removeEventListener = EventTarget.prototype.removeEventListener,
-	    filter = function(callback, capture, l){
-	    	return !(l.callback === callback && l.capture == capture);
-	    };
+	    equal = function(callback, capture, l){
+	    	return l.callback === callback && l.capture == capture;
+	    },
+	    notEqual = function() { return !equal.apply(this, arguments); };
 
 	EventTarget.prototype.addEventListener = function(type, callback, capture) {
 		if (this[_] && callback) {
@@ -67,7 +68,7 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 			
 			listeners[type] = listeners[type] || [];
 			
-			if (listeners[type].filter(filter.bind(null, callback, capture)).length === 0) {
+			if (listeners[type].filter(equal.bind(null, callback, capture)).length === 0) {
 				listeners[type].push({callback: callback, capture: capture});
 			}
 		}
@@ -79,8 +80,9 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 		if (this[_] && callback) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 
-			listeners[type] = listeners[type] || [];
-			listeners[type] = listeners[type].filter(filter.bind(null, callback, capture));
+			if (listeners[type]) {
+				listeners[type] = listeners[type].filter(notEqual.bind(null, callback, capture));
+			}
 		}
 
 		return removeEventListener.call(this, type, callback, capture);

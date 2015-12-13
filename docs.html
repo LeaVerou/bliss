@@ -287,29 +287,19 @@ $$(element.attributes).filter(function(attribute){
 	<article>
 		<h1>create</h1>
 
-		<p class="description">Create an element or text node.</p>
+		<p class="description">Create an element.</p>
 
-		<pre><code>var element = $.create([tag,] options);</code></pre>
+		<pre><code>var element = $.create([tag,] [options]);</code></pre>
 
 		<dl class="args">
 			<dt class="string">tag</dt>
 			<dd>The tag name of the element to create.</dd>
 
 			<dt class="object">options</dt>
-			<dd>An object with several options for the new element (properties, attributes, events etc). For details about what options this object accepts, see <code>$.set()</code>. If <code>tagName</code> is omitted, you need to provide it in the <code>options</code> object.</dd>
+			<dd>An object with several options for the new element (properties, attributes, events etc). For details about what options this object accepts, see <code>$.set()</code>. If <code>tag</code> is omitted, you need to provide it in the <code>options</code> object.</dd>
 
 			<dt class="element">element</dt>
 			<dd>The newly created element.</dd>
-		</dl>
-
-		<pre class="def"><code>var textNode = $.create(text);</code></pre>
-
-		<dl class="args">
-			<dt class="string">text</dt>
-			<dd>The text for the text node.</dd>
-
-			<dt class="text">textNode</dt>
-			<dd>The text node</dd>
 		</dl>
 
 		<pre><code>$.create("ul", {
@@ -331,11 +321,14 @@ $$(element.attributes).filter(function(attribute){
 	]
 });</code></pre>
 
+		<pre><code>var paragraph = $.create("p");</code></pre>
+
+		<pre><code>var div = $.create();</code></pre>
+
 		<ul class="notes">
 			<li>If you’re only creating an element without setting any options on it, just use the native <code>document.createElement(tag)</code></li>
 			<li><code>$.create(tag, options)</code> is equivalent to:
 			<pre><code>$.set(document.createElement(tag), options)</code></pre> This is also the recommended syntax if you need a different <code>document</code> than the current one.</li>
-			<li>The text node syntax is mainly useful for inside <code>$.contents()</code>. Otherwise, just use the native <code>document.createTextNode(text)</code> or the newer and more elegant <a href="https://developer.mozilla.org/en-US/docs/Web/API/Text/Text"><code>new Text(text)</code></a>.</li>
 		</ul>
 	</article>
 
@@ -412,8 +405,8 @@ $$(element.attributes).filter(function(attribute){
 			<dt class="element array">subject</dt>
 			<dd>The element(s) to append the elements to.</dd>
 
-			<dt class="object array string node">elements</dt>
-			<dd>If it’s an object or string, it will be passed through <code>$.create()</code>, to be converted into an element or text node respectively. If it’s an array, the same will happen to its elements. If it’s a <code>Node</code> it will be used as-is. Note that this lets you recursively create entire subtrees, since these objects can also have a <code>contents</code> property of their own, as seen in the example below.</dd>
+			<dt class="object array string number node">elements</dt>
+			<dd>If it’s an object, it will be passed through <code>$.create()</code>, to be converted into an element. If it’s a string or number, it will be converted to a text node. If it’s a <code>Node</code> it will be used as-is. If it’s an array, its elements will be processed according to the aforementioned rules. Note that this lets you recursively create entire subtrees, since these objects can also have a <code>contents</code> property of their own, as seen in the example below.</dd>
 		</dl>
 
 		<pre><code>nav._.contents(["Navigation: ", {tag: "ul",
@@ -836,6 +829,25 @@ myInput._.fire("input");</code></pre>
 		<a class="jq">jQuery.fn.trigger</a>
 	</article>
 
+	<article>
+		<h1 class="element array set">once</h1>
+
+		<p class="description">Set event listeners that will be fired once per callback per element.</p>
+
+		<pre><code>subject = $.once(subject, handlers)</code></pre>
+		<pre><code>subject = subject._.once(handlers)</code></pre>
+		<pre><code>subject = subject = subject._.set({once: handlers})</code></pre>
+
+		<dl class="args">
+			<dt class="element array">subject</dt>
+			<dd>The element(s) to set the event listeners on.</dd>
+
+			<dt class="object element">handlers</dt>
+			<dd>An object whose keys are the events and the values the listeners. You can include multiple event types by space-separating them.</dd>
+		</dl>
+
+		<a class="jq">jQuery.fn.one</a>
+	</article>
 
 	<article>
 		<h1>ready</h1>
@@ -933,6 +945,29 @@ $.ready().then(function(){
 
 		<ul class="notes">
 			<li>To enable more properties with “special” handling, like <code>lazy</code> and <code>live</code>, add them to the <code>$.classProps</code> object.</li>
+		</ul>
+	</article>
+
+	<article>
+		<h1>each</h1>
+
+		<p class="description">Loop over properties of an object and map them onto another object.</p>
+
+		<pre><code>var ret = $.each(obj, callback [, ret]);</code></pre>
+
+		<dl class="args">
+			<dt class="object">obj</dt>
+			<dd>The object to loop over</dd>
+
+			<dt class="function">callback</dt>
+			<dd>The function to be executed for every property. It will be called with <code>obj</code> as its context and the property and value as its arguments.</dd>
+
+			<dt class="object">ret</dt>
+			<dd>The returned object. If not provided, a new object will be created. Provide the same object as <code>obj</code> to overwrite.</dd>
+		</dl>
+
+		<ul class="notes">
+			<li>Inherited properties will be included in the loop.</li>
 		</ul>
 	</article>
 

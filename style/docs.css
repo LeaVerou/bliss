@@ -47,6 +47,7 @@
 
 @media (min-width: 60em) and (min-height: 40em) {
 	#toc {
+		white-space: nowrap;
 		position: fixed;
 		bottom: 0;
 		padding: 1em;
