@@ -79,17 +79,29 @@ extend($, {
 	},
 
 	create: function (tag, o) {
+		// 4 signatures: (tag, o), (tag), (o), ()
 		if (arguments.length === 1) {
 			if ($.type(tag) === "string") {
-				return document.createTextNode(tag);
+				o = {};
 			}
-
-			o = tag;
-			tag = o.tag;
-			delete o.tag;
+			else {
+				o = tag;
+				tag = o.tag;
+				delete o.tag;
+			}
 		}
 
 		return $.set(document.createElement(tag || "div"), o);
+	},
+
+	each: function(obj, callback, ret) {
+		ret = ret || {};
+
+		for (var property in obj) {
+			ret[property] = callback.call(obj, property, obj[property]);
+		}
+
+		return ret;
 	},
 
 	ready: function(context) {
@@ -443,15 +455,23 @@ $.setProps = {
 			val[arguments[0]] = arguments[1];
 		}
 
-		for (var events in val) {
-			events.split(/\s+/).forEach(function (event) {
-				var me = this;
-				this.addEventListener(event, function callback() {
-					me.removeEventListener(event, callback);
-					return val[events].apply(this, arguments);
+		var me = this;
+
+		$.each(val, function(events, callback){
+			events = events.split(/\s+/);
+
+			var once = function() {
+				events.forEach(function(event){
+					me.removeEventListener(event, once);
 				});
-			}, this);
-		}
+				
+				return callback.apply(me, arguments);
+			};
+
+			events.forEach(function (event) {
+				me.addEventListener(event, once);
+			});
+		});
 	},
 
 	// Event delegation
@@ -470,24 +490,27 @@ $.setProps = {
 
 		var element = this;
 
-		for (var type in val) {
-			(function (type, callbacks) {
-				element.addEventListener(type, function(evt) {
-					for (var selector in callbacks) {
-						if (evt.target.matches(selector)) { // Do ancestors count?
-							callbacks[selector].call(this, evt);
-						}
+		$.each(val, function (type, callbacks) {
+			element.addEventListener(type, function(evt) {
+				for (var selector in callbacks) {
+					if (evt.target.matches(selector)) { // Do ancestors count?
+						callbacks[selector].call(this, evt);
 					}
-				});
-			})(type, val[type]);
-		}
+				}
+			});
+		});
 	},
 
 	// Set the contents as a string, an element, an object to create an element or an array of these
 	contents: function (val) {
 		if (val || val === 0) {
 			(Array.isArray(val)? val : [val]).forEach(function (child) {
-				if (/^(string|number|object)$/.test($.type(child))) {
+				var type = $.type(child);
+
+				if (/^(string|number)$/.test(type)) {
+					child = document.createTextNode(child + "");
+				}
+				else if (type === "object") {
 					child = $.create(child);
 				}
 
@@ -549,10 +572,7 @@ $.add = function (methods, on, noOverwrite) {
 		methods[arguments[0]] = arguments[1];
 	}
 
-	for (var method in methods) {
-		// In the future, we should use let instead of a closure
-		(function(method, callback){
-
+	$.each(methods, function(method, callback){
 		if ($.type(callback) == "function") {
 			if (on.element && (!(method in $.Element.prototype) || !noOverwrite)) {
 				$.Element.prototype[method] = function () {
@@ -583,9 +603,7 @@ $.add = function (methods, on, noOverwrite) {
 				}
 			}
 		}
-
-		})(method, methods[method]);
-	}
+	});
 };
 
 $.add($.Array.prototype, {element: false});

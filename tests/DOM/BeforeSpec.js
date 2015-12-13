@@ -1,120 +1,65 @@
-describe('$.before() API', function() {
+describe("$.before()", function () {
 
-  it('exists', function() {
+	it("exists", function () {
 		expect($.before).to.exist;
 	});
 
-  it('inserts an element before the subject', function() {
+	before(function () {
+		fixture.setBase("tests/fixtures");
+	});
 
-    var para1 = $.create('p', { id: 'para1', contents: 'para1' });
-    var para0 = $.create('p', { id: 'para0', contents: 'para0' });
-    var elements;
+	var testContainer, para0, para1, para2;
 
-    $('body').appendChild(para1);
+	beforeEach(function () {
+		this.fixture = fixture.load("core.html");
+		testContainer = document.querySelector("#fixture-container .foo");
 
-    elements = $$('p');
+		expect(testContainer.tagName).to.equal("DIV");
+		expect(testContainer.children.length).to.equal(0);
 
-    expect(elements.length).to.equal(1);
-    expect(elements[0].id).to.equal('para1');
+		para0 = document.createElement("p");
+		para0.setAttribute("id", "para0");
+		para1 = document.createElement("p");
+		para1.setAttribute("id", "para1");
+		para2 = document.createElement("p");
+		para2.setAttribute("id", "para2");
 
-    $.before(para0, para1);
+		testContainer.appendChild(para0);
+		testContainer.appendChild(para1);
 
-    elements = $$('p');
+		expect(testContainer.children.length).to.equal(2);
+		expect(testContainer.children[0].getAttribute("id")).to.equal("para0");
+		expect(testContainer.children[1].getAttribute("id")).to.equal("para1");
+	});
 
-    expect(elements.length).to.equal(2);
-    expect(elements[0].id).to.equal('para0');
-    expect(elements[1].id).to.equal('para1');
+	afterEach(function(){
+		fixture.cleanup();
+	});
 
-    // Cleanup.
-    $('body').removeChild(para0);
-    $('body').removeChild(para1);
+	it("inserts an element before the subject", function () {
+		$.before(para2, para1);
 
-  });
+		expect(testContainer.children.length).to.equal(3);
+		expect(testContainer.children[0].id).to.equal("para0");
+		expect(testContainer.children[1].id).to.equal("para2");
+		expect(testContainer.children[2].id).to.equal("para1");
+	});
 
-  it('inserts an element with "_.before()"', function() {
+	it("inserts an element with '_.before()'", function () {
+		para2._.before(para1);
 
-    var para1 = $.create('p', { id: 'para1', contents: 'para1' });
-    var para0 = $.create('p', { id: 'para0', contents: 'para0' });
-    var elements;
+		expect(testContainer.children.length).to.equal(3);
+		expect(testContainer.children[0].id).to.equal("para0");
+		expect(testContainer.children[1].id).to.equal("para2");
+		expect(testContainer.children[2].id).to.equal("para1");
+	});
 
-    $('body').appendChild(para1);
+	it("inserts an element with '_.set({ before: element })'", function () {
+		para2._.set({before: para1});
 
-    elements = $$('p');
-
-    expect(elements.length).to.equal(1);
-    expect(elements[0].id).to.equal('para1');
-
-    para0._.before(para1);
-
-    elements = $$('p');
-
-    expect(elements.length).to.equal(2);
-    expect(elements[0].id).to.equal('para0');
-    expect(elements[1].id).to.equal('para1');
-
-    // Cleanup.
-    $('body').removeChild(para0);
-    $('body').removeChild(para1);
-
-  });
-
-  it('inserts an element with "_.set({ before: element })"', function() {
-
-    var para1 = $.create('p', { id: 'para1', contents: 'para1' });
-    var para0 = $.create('p', { id: 'para0', contents: 'para0' });
-    var elements;
-
-    $('body').appendChild(para1);
-
-    elements = $$('p');
-
-    expect(elements.length).to.equal(1);
-    expect(elements[0].id).to.equal('para1');
-
-    para0._.set({ before: para1 });
-
-    elements = $$('p');
-
-    expect(elements.length).to.equal(2);
-    expect(elements[0].id).to.equal('para0');
-    expect(elements[1].id).to.equal('para1');
-
-    // Cleanup.
-    $('body').removeChild(para0);
-    $('body').removeChild(para1);
-
-  });
-
-  it('inserts an element on nested elements', function() {
-
-    var ul1 = $.create('ul', {
-      contents: [
-        {
-          tag: 'li',
-          contents: 'hello1'
-        }
-      ]
-    });
-
-    var li1 = ul1.childNodes[0];
-    var li2 = $.create('li', { contents: 'hello0' });
-    var elements;
-
-    $('body').appendChild(ul1);
-
-    elements = $$('li');
-
-    expect(elements.length).to.equal(1);
-
-    $.before(li2, elements[0]);
-
-    elements = $$('li');
-
-    expect(elements[0].textContent).to.be.equal('hello0');
-    expect(elements[1].textContent).to.be.equal('hello1');
-
-    $('body').removeChild(ul1);
-
-  });
-
+		expect(testContainer.children.length).to.equal(3);
+		expect(testContainer.children[0].id).to.equal("para0");
+		expect(testContainer.children[1].id).to.equal("para2");
+		expect(testContainer.children[2].id).to.equal("para1");
+	});
 });

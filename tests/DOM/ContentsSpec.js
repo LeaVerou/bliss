@@ -8,14 +8,19 @@ describe("$.contents", function() {
 
 		$.contents(element, "Test Text");
 		expect(element.childNodes).to.have.length(1);
+		expect(element.firstChild.nodeType).to.equal(3);
 
 		$.contents(element, {
 			tag: "li"
 		});
 		expect(element.childNodes).to.have.length(2);
 
-		$.contents(element, ["3", "4"]);
+		$.contents(element, [3, "4"]);
 		expect(element.childNodes).to.have.length(4);
+		expect(element.childNodes[2].nodeType).to.equal(3);
+		expect(element.childNodes[2].nodeValue).to.equal("3");
+		expect(element.childNodes[3].nodeType).to.equal(3);
+		expect(element.childNodes[3].nodeValue).to.equal("4");
 
 		var newElement1 = document.createElement("li");
 		var newElement2 = document.createElement("li");

@@ -2,24 +2,28 @@ describe("$.delegate", function() {
 	describe("$.delegate in subject-type-selector-callback form", function() {
 		it("adds events to the children of the subject", function(done) {
 			var subject = document.createElement("div");
+			document.body.appendChild(subject);
+
 			var inner = document.createElement("a");
 			subject.appendChild(inner);
 
 			$.delegate(subject, "click", "a", function() {
 				done();
 			});
-			click(inner);
+			helpers.click(inner);
 		});
 
 		it("can be called on elements", function(done) {
 			var subject = document.createElement("div");
+			document.body.appendChild(subject);
+
 			var inner = document.createElement("a");
 			subject.appendChild(inner);
 
 			subject._.delegate("click", "a", function() {
 				done();
 			});
-			click(inner);
+			helpers.click(inner);
 		});
 
 		it("can be called on arrays", function() {
@@ -34,6 +38,7 @@ describe("$.delegate", function() {
 				document.createElement("a")  // goes inside div 3
 			];
 			subjects.forEach(function(subject, index) {
+				document.body.appendChild(subject);
 				subject.appendChild(inners[index]);
 			});
 
@@ -42,8 +47,8 @@ describe("$.delegate", function() {
 				expect(this).to.equal(expectedSubject);
 			});
 			subjects._.delegate("click", "a", callbackSpy);
-			subjects.forEach(click); // shouldn't trigger callbacks
-			inners.forEach(click);   // should trigger callbacks
+			subjects.forEach(helpers.click); // shouldn't trigger callbacks
+			inners.forEach(helpers.click);   // should trigger callbacks
 			expect(callbackSpy.calledThrice).to.be.ok;
 		});
 	});
@@ -51,6 +56,8 @@ describe("$.delegate", function() {
 	describe("$.delegate in subject-type-selectorsToCallbacks form", function() {
 		it("adds events to the children of the subject", function() {
 			var subject = document.createElement("div");
+			document.body.appendChild(subject);
+
 			var inners = [
 				document.createElement("a"),
 				document.createElement("span"),
@@ -70,12 +77,14 @@ describe("$.delegate", function() {
 				"span": function() { spy(2, this); },
 				"img": function() { spy(3, this); }
 			});
-			inners.forEach(click);
+			inners.forEach(helpers.click);
 			expect(spy.calledThrice).to.be.ok;
 		});
 
 		it("can be called on elements", function() {
 			var subject = document.createElement("div");
+			document.body.appendChild(subject);
+
 			var inners = [
 				document.createElement("a"),
 				document.createElement("span"),
@@ -95,12 +104,14 @@ describe("$.delegate", function() {
 				"span": function() { spy(2, this); },
 				"img": function() { spy(3, this); }
 			});
-			inners.forEach(click);
+			inners.forEach(helpers.click);
 			expect(spy.calledThrice).to.be.ok;
 		});
 
 		it("can be called on arrays", function() {
 			var subject = document.createElement("div");
+			document.body.appendChild(subject);
+
 			var inners = [
 				document.createElement("a"),
 				document.createElement("span"),
@@ -121,7 +132,7 @@ describe("$.delegate", function() {
 				"span": function() { spy(2, this); },
 				"img": function() { spy(3, this); }
 			});
-			inners.forEach(click);
+			inners.forEach(helpers.click);
 			expect(spy.calledThrice).to.be.ok;
 		});
 	});
@@ -129,6 +140,8 @@ describe("$.delegate", function() {
 	describe("$.delegate in subject-typesToSelectorsToCallbacks form", function() {
 		it("adds events to the children of the subject", function() {
 			var subject = document.createElement("div");
+			document.body.appendChild(subject);
+
 			var inners = [
 				document.createElement("a"),
 				document.createElement("span"),
@@ -160,9 +173,9 @@ describe("$.delegate", function() {
 				}
 			});
 
-			inners.forEach(mouseDown);
+			inners.forEach(helpers.mouseDown);
 			expect(mouseDownSpy.calledThrice).to.be.ok;
-			inners.forEach(mouseUp);
+			inners.forEach(helpers.mouseUp);
 			expect(mouseUpSpy.calledThrice).to.be.ok;
 		});
 	});
