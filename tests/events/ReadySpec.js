@@ -2,7 +2,7 @@ describe('$.ready', function () {
 	it('exists', function () {
 		expect($.ready).to.exist;
 	});
-	it('Test without params', function (done) {
+	it('Test $.ready()', function (done) {
     // Should fire when DOM is ready
     var spy = sinon.spy();
 
