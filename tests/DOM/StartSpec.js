@@ -12,7 +12,7 @@ describe("$.start()", function () {
 
 	beforeEach(function () {
 		fixture.load("core.html");
-		testContainer = document.querySelector("#fixture-container");
+		testContainer = document.getElementById("fixture-container");
 		
 		para = document.createElement("p");
 		para.setAttribute("id", "para");
@@ -23,7 +23,7 @@ describe("$.start()", function () {
 	});
 
 	it("inserts an element before existing content", function () {
-		$.start( para, testContainer );
+		$.start(para, testContainer);
 		expect(testContainer.children.length).to.equal(2);
 		expect(testContainer.children[0].id).to.equal("para");
 	});
