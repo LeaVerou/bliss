@@ -464,7 +464,7 @@ $.setProps = {
 				events.forEach(function(event){
 					me.removeEventListener(event, once);
 				});
-				
+
 				return callback.apply(me, arguments);
 			};
 

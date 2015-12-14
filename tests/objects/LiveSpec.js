@@ -1,5 +1,5 @@
 describe("$.live", function () {
-	
+
 	it('should exist', function () {
 		expect($.live).to.be.defined;
 	});

@@ -35,7 +35,7 @@ describe('$.extend', function() {
 	it('takes an array of white list properties', function() {
 		var orgChild = child;
 		$.extend(child, parent, ['hobby', 'food']);
-		
+
 		expect(child.hobby).to.equal(parent.hobby);
 		expect(child.food).to.equal(parent.food);
 
@@ -46,7 +46,7 @@ describe('$.extend', function() {
 	it('takes the string "own" to reserve own properties', function() {
 		var orgChild = child;
 		$.extend(child, parent, "own");
-		
+
 		for(var prop in orgChild) {
 			expect(child[prop]).to.equal(orgChild[prop]);
 		}

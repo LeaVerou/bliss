@@ -7,7 +7,7 @@ Please use HTML fixtures whenever possible vs creating DOM elements with JS. Thi
 [View Example](https://github.com/LeaVerou/bliss/blob/gh-pages/tests/CoreSpec.js#L4-L15)
 
 Please use spies or stubs for callbacks whenever possible. This makes the tests more readable and easier to make assertions on the callback function.
-[View Example](https://github.com/LeaVerou/bliss/blob/gh-pages/tests/objects/LazySpec.js#L15-L22)  
+[View Example](https://github.com/LeaVerou/bliss/blob/gh-pages/tests/objects/LazySpec.js#L15-L22)
 [More info on Sinon here](http://sinonjs.org/)
 
 ### Setup
