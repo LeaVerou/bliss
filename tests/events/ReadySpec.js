@@ -3,13 +3,13 @@ describe('$.ready', function () {
 		expect($.ready).to.exist;
 	});
 	it('Test $.ready()', function (done) {
-    // Should fire when DOM is ready
-    var spy = sinon.spy();
+		// Should fire when DOM is ready
+		var spy = sinon.spy();
 
-    $.ready().then(function(){
-    	spy();
-    	expect(spy.callCount).to.equal(1);
-    	done();
-    });
-  });
+		$.ready().then(function(){
+			spy();
+			expect(spy.callCount).to.equal(1);
+			done();
+		});
+	});
 });
