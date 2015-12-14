@@ -1,15 +1,62 @@
 describe('$.ready', function () {
+
+	var mocDoc, spy;
+
+	beforeEach(function () {
+		mocDoc = document.createElement('div');
+		spy = sinon.spy();
+	});
+
+	afterEach(function () {
+		mocDoc.remove();
+	});
+
 	it('exists', function () {
 		expect($.ready).to.exist;
+		expect($.ready(document) instanceof Promise).to.be.true;
 	});
-	// Should fire when DOM is ready
-	it('Test $.ready()', function (done) {
-		var spy = sinon.spy();
 
-		$.ready().then(function(){
-			spy();
-			expect(spy.callCount).to.equal(1);
+	it('should work with no context passed', function (done) {
+		$.ready().then(spy);
+
+		setTimeout(function () {
+			expect(spy.calledOnce).to.be.true;
 			done();
 		});
 	});
+	
+	// should fire automatically because DOM is already loaded
+	it('should fire immediately', function (done) {
+		mocDoc.readyState = 'complete';
+		
+		$.ready(mocDoc).then(spy);
+
+		setTimeout(function () {
+			expect(spy.calledOnce).to.be.true;
+			done();
+		}, 100);
+	});
+
+	it('should not call the promise if context is loading', function (done) {
+		mocDoc.readyState = 'loading';
+		$.ready(mocDoc).then(spy);
+
+		setTimeout(function () {
+			expect(spy.callCount).to.equal(0);
+			done();
+		}, 100);
+	});
+
+	it('should trigger the promise to resolve when the event is fired', function (done) {
+		mocDoc.readyState = 'loading';
+		$.ready(mocDoc).then(spy);
+
+		mocDoc.dispatchEvent(new Event('DOMContentLoaded'));
+
+		setTimeout(function () {
+			expect(spy.calledOnce).to.be.true;
+			done();
+		}, 100);
+	});
+
 });
