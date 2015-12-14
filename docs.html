@@ -241,8 +241,8 @@ $(".foo").setAttribute("title", "yolo");</code></pre>
 <pre><code>// Check if the .foo element exists
 // and set an attribute by using a variable "foo"
 // as a reference of the element
-var foo;
-if (foo = $(".foo")) {
+var foo = $(".foo");
+if (foo) {
     foo.setAttribute("title", "yolo");
 }</code></pre>
 
