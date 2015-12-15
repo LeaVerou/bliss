@@ -272,7 +272,7 @@ extend($, {
 
 		document.body.setAttribute('data-loading', url);
 
-		xhr.open(o.method, url, !o.sync);
+		xhr.open(o.method, url.href, !o.sync);
 
 		for (var property in o) {
 			if (property in xhr) {
