@@ -22,7 +22,7 @@ describe('$.ready', function () {
 		setTimeout(function () {
 			expect(spy.calledOnce).to.be.true;
 			done();
-		});
+		}, 1);
 	});
 	
 	// should fire automatically because DOM is already loaded
@@ -34,7 +34,7 @@ describe('$.ready', function () {
 		setTimeout(function () {
 			expect(spy.calledOnce).to.be.true;
 			done();
-		}, 100);
+		}, 1);
 	});
 
 	it('should not call the promise if context is loading', function (done) {
@@ -44,7 +44,7 @@ describe('$.ready', function () {
 		setTimeout(function () {
 			expect(spy.callCount).to.equal(0);
 			done();
-		}, 100);
+		}, 1);
 	});
 
 	it('should trigger the promise to resolve when the event is fired', function (done) {
@@ -56,7 +56,7 @@ describe('$.ready', function () {
 		setTimeout(function () {
 			expect(spy.calledOnce).to.be.true;
 			done();
-		}, 100);
+		}, 1);
 	});
 
 });

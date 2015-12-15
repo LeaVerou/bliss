@@ -99,6 +99,16 @@ section h2 {
 	color: hsl(227, 10%, 50%);
 }
 
+details summary {
+	display: block;
+	cursor: pointer;
+}
+
+	details summary h2 {
+		display: inline;
+		margin: 0;
+	}
+
 body > header,
 body > nav,
 body > section,
@@ -134,7 +144,7 @@ body > header {
 	font-size: 200%;
 	color: hsl(190, 52%, 50%);
 
-	background: radial-gradient(circle at 50% 90%, white 1em, transparent 0) -2.5em 100% / 5em 5em,
+	background: radial-gradient(circle at 50% 90%, white 1em, hsla(0,0%,100%,0) 0) -2.5em 100% / 5em 5em,
 	            radial-gradient(circle at bottom, white 1.5em, hsl(145, 34%, 99%) 2em, hsla(145, 34%, 99%, 0) 0) 0em 100% / 5em 5em,
 	            radial-gradient(circle at bottom, white 2em, hsl(145, 34%, 99%) 3em, hsla(145, 34%, 99%, 0) 0) 0 100% / 10em 10em,
 	            radial-gradient(circle at bottom, white 3em, hsl(145, 34%, 98%) 4em, hsla(145, 34%, 99%, 0) 0) 0em 100% / 20em 20em;

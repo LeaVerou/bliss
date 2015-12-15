@@ -200,27 +200,43 @@ var out = $("#uk-area");
 <section id="browser-support">
 	<h1>Browser support</h1>
 
-	<p>Bliss is just a collection of helpers and light syntactic sugar over Vanilla JS. It does not account for browser bugs or lack of support of certain APIs, although it only uses features that are both supported across all modern browsers <strong>and</strong> can be polyfilled. For example, it uses <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promises</a> throughout (supported by all latest browsers, can be polyfilled), but — despite the temptation — <strong>not</strong> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">arrow functions</a> (not available in Safari, cannot be polyfilled). The idea is that you can extend support by using polyfills, depending on your needs.</p>
+	<p>Bliss is just a collection of helpers and light syntactic sugar over Vanilla JS. It does not account for browser bugs or lack of support of certain APIs, although it only uses features that are both supported across most modern browsers <strong>and</strong> can be polyfilled. For example, it uses <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promises</a> throughout (supported by all latest browsers, can be polyfilled), but — despite the temptation — <strong>not</strong> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">arrow functions</a> (syntactic extension, cannot be polyfilled). The idea is that you can extend support by using polyfills, depending on your needs.</p>
 
-	<ul>
-		<li>Pick the tradeoff of support-size that matches your needs, not what was chosen for you.</li>
-		<li>Use polyfills now, remove them later when not relevant anymore, resulting in a smaller codebase with zero refactoring.</li>
-	</ul>
+	<p>We recommend using Bliss with <a href="https://polyfill.io">polyfill.io</a>, as follows:</p>
 
-	<p>Here is a list of suggested polyfills that will help extend Bliss’ browser support and the current browser support of these features, to determine if you need one:</p>
+	<pre><code class="language-markup">&lt;script src="https://cdn.polyfill.io/v2/polyfill.min.js">&lt;/script>
+&lt;script src="bliss.js">&lt;/script></code></pre>
 
-	<dl>
-		<dt><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise#Browser_compatibility">Promises</a></dt>
-		<dd><a href="https://github.com/jakearchibald/es6-promise/">github.com/jakearchibald/es6-promise</a></dd>
+	<p><a href="https://polyfill.io">Polyfill.io</a> is a service that automatically loads the right polyfills for your browser, to maximize browser support of any Vanilla JS, without penalizing newer browsers and making them download polyfills they don’t actually need. In modern browsers, polyfill.io <a href="https://cdn.polyfill.io/v2/docs/features/#understanding-polyfill-sizes">adds less than 1KB of weight</a>!</p>
 
-		<dt><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/URL#Browser_compatibility">URL</a></dt>
-		<dd><a href="https://github.com/Polymer/URL/blob/master/url.js">github.com/Polymer/URL</a></dd>
+	<details>
+		<summary>
+			<h2>Manual polyfilling</h2>
+		</summary>
 
-		<dt><a href="http://caniuse.com/#feat=es5">ES5</a></dt>
-		<dd><a href="https://github.com/es-shims/es5-shim">github.com/es-shims/es5-shim</a></dd>
-	</dl>
+		<p>If you don’t want to load a polyfill bundle, but prefer the flexibility of loading your own polyfills, here is a list of polyfills that you might want to include for Bliss:</p>
 
-	<p class="note">Note that apart from Promises, all other polyfills can be loaded conditionally, by using Bliss’ <code>$.include()</code>.</p>
+		<dl>
+			<dt><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise#Browser_compatibility">Promises</a></dt>
+			<dd><a href="https://github.com/jakearchibald/es6-promise/">github.com/jakearchibald/es6-promise</a></dd>
+
+			<dt><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/URL#Browser_compatibility">URL</a></dt>
+			<dd><a href="https://github.com/Polymer/URL/blob/master/url.js">github.com/Polymer/URL</a></dd>
+
+			<dt><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/classList">element.classList</a></dt>
+			<dd><a href="https://github.com/eligrey/classList.js/">github.com/eligrey/classList.js</a></dd>
+
+			<dt><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/closest">element.closest()</a></dt>
+			<dd><a href="https://github.com/jonathantneal/closest">github.com/jonathantneal/closest</a></dd>
+
+			<dt><a href="http://caniuse.com/#feat=es5">ES5</a></dt>
+			<dd><a href="https://github.com/es-shims/es5-shim">github.com/es-shims/es5-shim</a></dd>
+		</dl>
+
+		<p class="note">Note that apart from Promises, all other polyfills can be loaded conditionally, by using Bliss’ <code>$.include()</code>.</p>
+	</details>
+
+	
 </section>
 
 <section id="download">
@@ -262,6 +278,7 @@ var out = $("#uk-area");
 	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </footer>
 
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
 <script src="bliss.js"></script>
 <script src="transform.js"></script>
 <script src="index.js"></script>
