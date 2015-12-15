@@ -464,7 +464,7 @@ $.setProps = {
 				events.forEach(function(event){
 					me.removeEventListener(event, once);
 				});
-				
+
 				return callback.apply(me, arguments);
 			};
 
@@ -493,7 +493,9 @@ $.setProps = {
 		$.each(val, function (type, callbacks) {
 			element.addEventListener(type, function(evt) {
 				for (var selector in callbacks) {
-					if (evt.target.matches(selector)) { // Do ancestors count?
+					if ((evt.target.matches ||
+						 evt.target.msMatchesSelector ||
+						 evt.target.oMatchesSelector)(selector)) { // Do ancestors count?
 						callbacks[selector].call(this, evt);
 					}
 				}
@@ -668,7 +670,7 @@ Object.defineProperty(Array.prototype, _, {
 		Object.defineProperty(this, _, {
 			value: new $.Array(this)
 		});
-		
+
 		return this[_];
 	},
 	configurable: true
@@ -687,9 +689,9 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	EventTarget.prototype.addEventListener = function(type, callback, capture) {
 		if (this[_] && callback) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
-			
+
 			listeners[type] = listeners[type] || [];
-			
+
 			if (listeners[type].filter(equal.bind(null, callback, capture)).length === 0) {
 				listeners[type].push({callback: callback, capture: capture});
 			}
