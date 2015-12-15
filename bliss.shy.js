@@ -46,8 +46,7 @@ extend($, {
 			return [expr];
 		}
 
-		// In the future, we should use Array.from() instead of Array.prototype.slice.call()
-		return Array.prototype.slice.call(typeof expr == "string"? (context || document).querySelectorAll(expr) : expr || []);
+		return Array.from(typeof expr == "string"? (context || document).querySelectorAll(expr) : expr || []);
 	},
 
 	/**
