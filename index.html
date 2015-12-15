@@ -204,10 +204,10 @@ var out = $("#uk-area");
 
 	<p>We recommend using Bliss with <a href="https://polyfill.io">polyfill.io</a>, as follows:</p>
 
-	<pre><code class="language-markup">&lt;script src="https://cdn.polyfill.io/v2/polyfill.min.js">&lt;/script>
+	<pre><code class="language-markup">&lt;script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=all">&lt;/script>
 &lt;script src="bliss.js">&lt;/script></code></pre>
 
-	<p><a href="https://polyfill.io">Polyfill.io</a> is a service that automatically loads the right polyfills for your browser, to maximize browser support of any Vanilla JS, without penalizing newer browsers and making them download polyfills they don’t actually need. In modern browsers, polyfill.io <a href="https://cdn.polyfill.io/v2/docs/features/#understanding-polyfill-sizes">adds less than 1KB of weight</a>!</p>
+	<p><a href="https://polyfill.io">Polyfill.io</a> is a service that automatically loads the right polyfills for your browser, to maximize browser support of any Vanilla JS, without penalizing newer browsers and making them download polyfills they don’t actually need. In modern browsers, polyfill.io only adds a few KB of weight.</p>
 
 	<details>
 		<summary>
@@ -278,7 +278,7 @@ var out = $("#uk-area");
 	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </footer>
 
-<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=all"></script>
 <script src="bliss.js"></script>
 <script src="transform.js"></script>
 <script src="index.js"></script>
