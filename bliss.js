@@ -685,8 +685,9 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	    notEqual = function() { return !equal.apply(this, arguments); };
 
 	EventTarget.prototype.addEventListener = function(type, callback, capture) {
-		if (this[_] && callback) {
-			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
+		var that = this || window;
+		if (that[_] && callback) {
+			var listeners = that[_].bliss.listeners = that[_].bliss.listeners || {};
 			
 			listeners[type] = listeners[type] || [];
 			
@@ -695,19 +696,20 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 			}
 		}
 
-		return addEventListener.call(this, type, callback, capture);
+		return addEventListener.call(that, type, callback, capture);
 	};
 
 	EventTarget.prototype.removeEventListener = function(type, callback, capture) {
-		if (this[_] && callback) {
-			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
+		var that = this || window;
+		if (that[_] && callback) {
+			var listeners = that[_].bliss.listeners = that[_].bliss.listeners || {};
 
 			if (listeners[type]) {
 				listeners[type] = listeners[type].filter(notEqual.bind(null, callback, capture));
 			}
 		}
 
-		return removeEventListener.call(this, type, callback, capture);
+		return removeEventListener.call(that, type, callback, capture);
 	};
 }
 
