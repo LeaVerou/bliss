@@ -45,11 +45,11 @@
 		text-align: right;
 	}
 
-@media (min-width: 60em) and (min-height: 40em) {
+@media (min-width: 75em) and (min-height: 40em) {
 	#toc {
 		white-space: nowrap;
 		position: fixed;
-		bottom: 0;
+		bottom: 2.5rem;
 		padding: 1em;
 		box-sizing: border-box;
 		max-height: 100vh;
