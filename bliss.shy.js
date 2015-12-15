@@ -34,6 +34,8 @@ var $ = self.Bliss = extend(function(expr, context) {
 	return $.type(expr) === "string"? (context || document).querySelector(expr) : expr || null;
 }, self.Bliss);
 
+var identity = function(a) { return a; };
+
 extend($, {
 	extend: extend,
 
@@ -102,6 +104,23 @@ extend($, {
 		}
 
 		return ret;
+	},
+	
+	stringify: function(obj, o) {
+		o = extend({
+			pair: ": ",
+			line: "\n",
+			key: identity,
+			value: identity
+		}, o);
+
+		var ret = [];
+
+		$.each(obj, function(key, value){
+			ret.push(o.key(key) + o.pair + o.value(value));
+		});
+
+		return ret.join(o.line);
 	},
 
 	ready: function(context) {
