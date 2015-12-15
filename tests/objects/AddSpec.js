@@ -1,11 +1,11 @@
 describe("$.add", function () {
   before(function() {
-		fixture.setBase('tests/fixtures');
-	});
+    fixture.setBase('tests/fixtures');
+  });
 
-	beforeEach(function () {
-		this.fixture = fixture.load('core.html');
-	});
+  beforeEach(function () {
+    this.fixture = fixture.load('core.html');
+  });
 
   it("exists", function () {
     expect($.add).to.be.ok;
