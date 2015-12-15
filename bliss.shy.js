@@ -257,7 +257,7 @@ extend($, {
 		url = new URL(url, location);
 		o = o || {};
 		o.data = o.data || '';
-		o.method = o.method || 'GET';
+		o.method = (o.method || 'GET').toUpperCase();
 		o.headers = o.headers || {};
 
 		var xhr = new XMLHttpRequest();
