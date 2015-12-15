@@ -49,7 +49,7 @@
 	#toc {
 		white-space: nowrap;
 		position: fixed;
-		bottom: 2.5rem;
+		bottom: 0rem;
 		padding: 1em;
 		box-sizing: border-box;
 		max-height: 100vh;
@@ -60,6 +60,7 @@
 
 @media (min-width: 75em) and (max-width: 110em) {
 	#toc {
+		bottom: 2.5rem;
 		font-size: 80%;
 	}
 }
