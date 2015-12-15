@@ -99,6 +99,16 @@ section h2 {
 	color: hsl(227, 10%, 50%);
 }
 
+details summary {
+	display: block;
+	cursor: pointer;
+}
+
+	details summary h2 {
+		display: inline;
+		margin: 0;
+	}
+
 body > header,
 body > nav,
 body > section,
