@@ -8,7 +8,7 @@ $$("#docs article > h1").forEach(function(h1) {
 	var article = h1.parentNode;
 
 	h1.firstChild.textContent = h1.firstChild.textContent.trim();
-	
+
 	var fn = titleToId(h1.firstChild.textContent);
 
 	if (article && !article.id) {
@@ -34,9 +34,9 @@ $$("#docs article > h1").forEach(function(h1) {
 					var source = self[fn] + "";
 				}
 				else {
-					var source = ($.sources[fn] || $[fn]) + "";	
+					var source = ($.sources[fn] || $[fn]) + "";
 				}
-				
+
 
 				source = source.replace(/^\t/gm, "");
 
@@ -113,12 +113,12 @@ if (/\/docs\.html$/.test(location.pathname)) {
 		});
 	});
 
-	
+
 	$$("a.jq").forEach(function(a){
 		if (!a.href) {
 			var content = a.textContent;
 			var url = "http://api.jquery.com/";
-			
+
 			var fn = content.match(/jQuery(?:\.fn)?\.([a-z]+)/i)[1];
 
 			if (content.indexOf('jQuery.fn') === -1) {

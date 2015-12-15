@@ -59,7 +59,7 @@ $("#button-container button")
 		hiddenBox.style.display = "block";
 	});</code></pre>
 		</div>
-	
+
 	<p>Ok, these were easy even with plain Vanilla JS. <strong>Nobody needs a library for that!</strong> Shall we move on to more realistic examples?</p>
 
 	<p class="runnable">Remove the following pink <code>&lt;pre></code> element from the DOM with a fade out and shrink transition, then display a message:</p>
@@ -144,12 +144,12 @@ var out = document.querySelector("#uk-area");
 
 	xhr.onload = function() {
 		document.body.removeAttribute('data-loading');
-			
-		if (xhr.status === 0 
+
+		if (xhr.status === 0
 		 || xhr.status >= 200 && xhr.status < 300
 		 || xhr.status === 304) {
 			var json = xhr.response.result;
-			
+
 			out.textContent = [
 				json.parliamentary_constituency,
 				json.admin_district,
@@ -158,7 +158,7 @@ var out = document.querySelector("#uk-area");
 		else {
 			out.textContent = xhr.statusText;
 		}
-	
+
 	};
 	xhr.onerror = function() {
 		out.textContent = xhr.statusText;
@@ -169,11 +169,11 @@ var out = document.querySelector("#uk-area");
 var out = $("#uk-area");
 (txt.oninput = function() {
 	var url = "http://api.postcodes.io/postcodes/"+txt.value;
-	
+
 	$.fetch(url, {
 		responseType: "json"
 	}).then(function(xhr) {
-		
+
 
 
 
@@ -182,19 +182,19 @@ var out = $("#uk-area");
 
 
 		var json = xhr.response.result;
-		
+
 		out.textContent = [
 			json.parliamentary_constituency,
 			json.admin_district,
 			json.country].join(", ");
 	}).catch(function(error) {
-		
+
 		out.textContent = error;
 	});
 })();</code></pre>
 </div>
 
-	
+
 </section>
 
 <section id="browser-support">

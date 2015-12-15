@@ -6,7 +6,7 @@ describe("$.live", function () {
 		setSpy = sinon.spy();
 		getSpy = sinon.spy();
 	});
-	
+
 	it('should exist', function () {
 		expect($.live).to.be.defined;
 	});
@@ -18,7 +18,7 @@ describe("$.live", function () {
 
 	describe('getters and setters', function () {
 
-		it('should define getter and call custom function', function () {			
+		it('should define getter and call custom function', function () {
 			var getSpy = sinon.spy(),
 				obj = $.live({}, 'pet', {
 					get: function (value) {

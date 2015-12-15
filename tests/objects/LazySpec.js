@@ -5,8 +5,8 @@ describe('$.lazy', function() {
 	beforeEach(function() {
 		TestClass = function () { return this; };
 		testObj = {animals: ["kittens"]};
-	});	
-	
+	});
+
 	it('exists', function() {
 		expect($.lazy).to.exist;
 	});
@@ -68,7 +68,7 @@ describe('$.lazy', function() {
 
 			expect(obj.pets).to.deep.equal(obj.animals);
 			obj.animals.push('dogs');
-			// still only one item returned 
+			// still only one item returned
 			expect(obj.pets.length).to.equal(1);
 			expect(stub.calledOnce).to.be.true;
 		});
@@ -82,15 +82,15 @@ describe('$.lazy', function() {
 			expect(obj.pets).to.deep.equal(obj.animals);
 			expect(stub.calledOnce).to.be.true;
 		});
-	
+
 		it('can take an object as the property parameter', function() {
-			var spy1 = sinon.spy(), 
+			var spy1 = sinon.spy(),
 				spy2 = sinon.spy(),
 				obj = $.lazy(testObj, {cats: spy1, dogs: spy2});
 
 			expect(obj.cats).to.be.defined;
 			expect(obj.dogs).to.be.defined;
-			
+
 			obj.cats;
 			obj.cats;
 			obj.dogs;

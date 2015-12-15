@@ -22,7 +22,7 @@ gulp.task('minify', ['concat'], function() {
 	.pipe(u)
 	.pipe(rename({ suffix: '.min' }))
 	.pipe(gulp.dest('.'))
-	
+
 });
 
 gulp.task('watch', function() {
