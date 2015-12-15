@@ -1,5 +1,7 @@
 # Bliss: Heavenly JavaScript
 
+[![Join the chat at https://gitter.im/LeaVerou/bliss](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/LeaVerou/bliss?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [blissfuljs.com](http://blissfuljs.com)
 
 Want to use Vanilla JS but find native APIs a bit unwieldy? Bliss is for you.
