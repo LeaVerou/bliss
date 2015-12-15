@@ -464,7 +464,7 @@ $.setProps = {
 				events.forEach(function(event){
 					me.removeEventListener(event, once);
 				});
-				
+
 				return callback.apply(me, arguments);
 			};
 
@@ -493,7 +493,9 @@ $.setProps = {
 		$.each(val, function (type, callbacks) {
 			element.addEventListener(type, function(evt) {
 				for (var selector in callbacks) {
-					if (evt.target.matches(selector)) { // Do ancestors count?
+					if ((evt.target.matches ||
+						 evt.target.msMatchesSelector ||
+						 evt.target.oMatchesSelector)(selector)) { // Do ancestors count?
 						callbacks[selector].call(this, evt);
 					}
 				}
