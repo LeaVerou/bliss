@@ -58,13 +58,13 @@
 	}
 }
 
-@media (min-width: 60em) and (max-width: 110em) {
+@media (min-width: 75em) and (max-width: 110em) {
 	#toc {
 		font-size: 80%;
 	}
 }
 
-@media (max-width: 60em), (max-height: 55em) {
+@media (max-width: 75em), (max-height: 55em) {
 	#toc > ol {
 		-webkit-column-count: 2;
 		-moz-column-count: 2;
