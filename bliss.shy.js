@@ -464,7 +464,7 @@ $.setProps = {
 				events.forEach(function(event){
 					me.removeEventListener(event, once);
 				});
-				
+
 				return callback.apply(me, arguments);
 			};
 
@@ -567,9 +567,14 @@ $.Array.prototype = {
 $.add = function (methods, on, noOverwrite) {
 	on = $.extend({$: true, element: true, array: true}, on);
 
+	// $.add(name, callback [, on])
 	if ($.type(arguments[0]) === "string") {
 		methods = {};
 		methods[arguments[0]] = arguments[1];
+
+		if ($.type(arguments[2]) === "object") {
+			on = $.extend(on, arguments[2]);
+		}
 	}
 
 	$.each(methods, function(method, callback){
