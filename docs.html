@@ -794,11 +794,11 @@ Promise.all($$("div")._.transition({
 
 		<pre><code>$$('input[type="range"]')._.events({
 	"input change": function(evt) { this.title = this.value}
-})</code></pre>
+});</code></pre>
 
 		<ul class="notes">
 			<li>If only setting one event listener, just use the native <code>element.addEventListener(type, handler, useCapture)</code> syntax. If setting one event listener on multiple elements, you can use <code>array._.addEventListener</code>, like so:
-			<pre><code>$$("input")._.addEventListener("input", function(){ /* ... */);</code></pre>
+			<pre><code>$$("input")._.addEventListener("input", function(){ /* ... */ });</code></pre>
 			</li>
 		</ul>
 
