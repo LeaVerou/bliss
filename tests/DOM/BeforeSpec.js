@@ -1,17 +1,14 @@
 describe("$.before()", function () {
 
+	helpers.fixture("core.html");
+
 	it("exists", function () {
 		expect($.before).to.exist;
-	});
-
-	before(function () {
-		fixture.setBase("tests/fixtures");
 	});
 
 	var testContainer, para0, para1, para2;
 
 	beforeEach(function () {
-		this.fixture = fixture.load("core.html");
 		testContainer = document.querySelector("#fixture-container .foo");
 
 		expect(testContainer.tagName).to.equal("DIV");
@@ -30,10 +27,6 @@ describe("$.before()", function () {
 		expect(testContainer.children.length).to.equal(2);
 		expect(testContainer.children[0].getAttribute("id")).to.equal("para0");
 		expect(testContainer.children[1].getAttribute("id")).to.equal("para1");
-	});
-
-	afterEach(function(){
-		fixture.cleanup();
 	});
 
 	it("inserts an element before the subject", function () {

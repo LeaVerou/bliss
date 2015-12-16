@@ -1,12 +1,6 @@
 describe('$() API', function() {
 
-  before(function() {
-    fixture.setBase('tests/fixtures');
-  });
-
-  beforeEach(function() {
-    this.fixture = fixture.load('querySelector.html');
-  });
+  helpers.fixture("querySelector.html");
 
   it('returns the first element with an ID', function() {
 
