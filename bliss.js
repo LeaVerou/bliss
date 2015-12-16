@@ -93,6 +93,19 @@ extend($, {
 		return $.set(document.createElement(tag || "div"), o);
 	},
 
+	hooks: {
+		add: function (name, callback) {
+			this[name] = hooks[name] || [];
+			this[name].push(callback);
+		},
+
+		run: function (name, env) {
+			(this[name] || []).forEach(function(callback) {
+				callback(env);
+			});
+		}
+	},
+
 	each: function(obj, callback, ret) {
 		ret = ret || {};
 
