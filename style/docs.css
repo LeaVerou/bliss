@@ -108,3 +108,7 @@
 	padding: .6em 1em;
 	border-radius: .3em;
 }
+
+ul.notes {
+	list-style-position: inside;
+}

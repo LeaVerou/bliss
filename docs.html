@@ -1233,10 +1233,10 @@ $.include(self.Dropbox, url).then(function(){
 		<pre><code>// Handle simple objects as data in $.fetch()
 $.hooks.add("fetch-args", function(env) {
 	if ($.type(env.data) === "object") {
--		env.data = Object.keys(env.data).map(function(key){
+		env.data = Object.keys(env.data).map(function(key){
 			return key + "=" + encodeURIComponent(o.data[key]);
 		}).join("&");
--	}
+	}
 });</code></pre>
 
 		<ul class="notes">
