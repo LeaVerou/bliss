@@ -1,11 +1,6 @@
 describe("$.add", function () {
-  before(function() {
-		fixture.setBase('tests/fixtures');
-	});
 
-	beforeEach(function () {
-		this.fixture = fixture.load('core.html');
-	});
+  helpers.fixture("core.html");
 
   it("exists", function () {
     expect($.add).to.exist;
