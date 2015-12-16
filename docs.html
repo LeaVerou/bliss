@@ -1120,7 +1120,7 @@ if ($.type(arguments[1]) == "regexp") {
 					<dd>The HTTP method, such as <code>"GET"</code> or <code>"POST"</code>.</dd>
 
 					<dt class="string object">data</dt>
-					<dd>Any data to send, as a URLencoded parameter string (e.g. <code>"foo=b%20ar&amp;baz=yolo"</code>) or an object of key-value pairs.</dd>
+					<dd>Any data to send, as a URLencoded parameter string.</dd>
 
 					<dt class="object">headers</dt>
 					<dd>Object with any extra headers to set.</dd>
@@ -1142,6 +1142,8 @@ if ($.type(arguments[1]) == "regexp") {
 }).catch(function(error){
 	console.error(error);
 });</code></pre>
+
+		<p><strong>Hooks:</strong> <code>fetch-args</code></p>
 
 		<a class="jq">jQuery.ajax</a>
 	</article>
@@ -1210,6 +1212,38 @@ $.include(self.Dropbox, url).then(function(){
 
 			<dt class="object">on</dt>
 			<dd>Same as above.</dd>
+		</dl>
+	</article>
+
+	<article>
+		<h1>hooks.add</h1>
+
+		<p class="description">Register a function to be executed at a certain hook</p>
+
+		<pre><code>$.hooks.add(name, callback);</code></pre>
+
+		<dl class="args">
+			<dt class="string">name</dt>
+			<dd>The hook identifier.</dd>
+
+			<dt class="function">callback</dt>
+			<dd>A function that accepts a sole parameter: <code>env</code> that contains different properties about the environment.</dd>
+		</dl>
+	</article>
+
+	<article>
+		<h1>hooks.run</h1>
+
+		<p class="description">Run all code associated with a hook. Mainly used internally, but can be used by plugins too.</p>
+
+		<pre><code>$.hooks.run(name, env);</code></pre>
+
+		<dl class="args">
+			<dt class="string">name</dt>
+			<dd>The hook identifier.</dd>
+
+			<dt class="object">env</dt>
+			<dd>An object that describes the environment.</dd>
 		</dl>
 	</article>
 </section>
