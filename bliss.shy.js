@@ -204,23 +204,18 @@ extend($, {
 	classProps: {
 		// Lazily evaluated properties
 		lazy: function(obj, property, getter) {
-			if (arguments.length >= 3) {
-				Object.defineProperty(obj, property, {
+			$.overload(arguments, function(prop, func) {
+				Object.defineProperty(obj, prop, {
 					get: function() {
 						// FIXME this does not work for instances if property is defined on the prototype
-						delete this[property];
+						delete this[prop];
 
-						return this[property] = getter.call(this);
+						return this[prop] = func.call(this);
 					},
 					configurable: true,
 					enumerable: true
 				});
-			}
-			else if (arguments.length === 2) {
-				for (var prop in property) {
-					$.lazy(obj, prop, property[prop]);
-				}
-			}
+			});
 
 			return obj;
 		},
