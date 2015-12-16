@@ -440,7 +440,7 @@ $$(element.attributes).filter(function(attribute){
 			}
 		}
 	]
-}])</code></pre>
+}]);</code></pre>
 
 		<a class="jq">jQuery.fn.html</a>
 	</article>
@@ -794,11 +794,11 @@ Promise.all($$("div")._.transition({
 
 		<pre><code>$$('input[type="range"]')._.events({
 	"input change": function(evt) { this.title = this.value}
-})</code></pre>
+});</code></pre>
 
 		<ul class="notes">
 			<li>If only setting one event listener, just use the native <code>element.addEventListener(type, handler, useCapture)</code> syntax. If setting one event listener on multiple elements, you can use <code>array._.addEventListener</code>, like so:
-			<pre><code>$$("input")._.addEventListener("input", function(){ /* ... */);</code></pre>
+			<pre><code>$$("input")._.addEventListener("input", function(){ /* ... */ });</code></pre>
 			</li>
 		</ul>
 
@@ -1211,7 +1211,7 @@ $.include(self.Dropbox, url).then(function(){
 			<dd>Multiple functions, as an object where the keys are the function names (see above) and the values are the callbacks (see above).</dd>
 
 			<dt class="object">on</dt>
-			<dd>Same as above.</dd>
+			<dd>What the function should be added on. The available keys are: <code>$</code>, <code>element</code>, <code>array</code> and their values are <code>true</code> by default so only set them if you want to set them to <code>false</code>.</dd>
 		</dl>
 	</article>
 
@@ -1233,10 +1233,10 @@ $.include(self.Dropbox, url).then(function(){
 		<pre><code>// Handle simple objects as data in $.fetch()
 $.hooks.add("fetch-args", function(env) {
 	if ($.type(env.data) === "object") {
--		env.data = Object.keys(env.data).map(function(key){
+		env.data = Object.keys(env.data).map(function(key){
 			return key + "=" + encodeURIComponent(o.data[key]);
 		}).join("&");
--	}
+	}
 });</code></pre>
 
 		<ul class="notes">
