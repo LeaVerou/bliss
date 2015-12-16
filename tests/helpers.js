@@ -23,6 +23,10 @@
 			return helpers.initMouseEvent(element, "click");
 		},
 
+		nodesToArray: function (nodes) {
+			return Array.prototype.slice.call(nodes);
+		},
+
 		mouseDown: function(element) {
 			return helpers.initMouseEvent(element, "mousedown");
 		},

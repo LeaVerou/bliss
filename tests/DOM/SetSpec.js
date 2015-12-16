@@ -1,32 +1,40 @@
 describe("$.set", function() {
+
+	var el;
+	helpers.fixture('set.html');
+
+	beforeEach(function() {
+		el = document.querySelector('#fixture-container');
+	});
+
 	it("exists", function() {
 		expect($.set).to.exist;
+		expect(el._.set).to.exist;
 	});
 
 	it("sets options on the provided subject", function() {
-		var element = $.set(document.createElement("nav"), {
+		$.set(el, {
 			style: {
 				color: "red"
 			}
 		});
 
-		expect(element).to.exist;
-		expect(element.style.color).to.equal("red");
+		expect(el).to.exist;
+		expect(el.style.color).to.equal("red");
 	});
 
-	it("can be called on elements", function() {
-		var element = document.createElement("nav");
-		element._.set({className: "main-navigation"});
+	it('returns the element from set', function() {
+		var result = el._.set({color: 'red'});
+		expect(el).to.deep.equal(result);
+	});
 
-		expect(element.className).to.equal("main-navigation");
+	it("can be called on els", function() {
+		el._.set({className: "main-navigation"});
+		expect(el.className).to.equal("main-navigation");
 	});
 
 	it("can be called on arrays", function() {
-		var list = [
-			document.createElement("li"),
-			document.createElement("li"),
-			document.createElement("li")
-		];
+		var list = helpers.nodesToArray(el.querySelectorAll("li"));
 
 		list._.set({className: "list-part"});
 
@@ -35,15 +43,21 @@ describe("$.set", function() {
 		});
 	});
 
+	it("can take string as key and val", function() {
+		el._.set('className', 'foo');
+		expect(el.className).to.deep.equal('foo');
+	});
+
 	it("sets other options as properties or attributes on the subject", function() {
-		var element = $.set(document.createElement("input"), {
+		var input = document.querySelector('input');
+		$.set(input, {
 			id: "the-main-one",
 			type: "text",
 			disabled: true
 		});
 
-		expect(element.id).to.equal("the-main-one");
-		expect(element.disabled).to.be.true;
-		expect(element.type).to.equal("text");
+		expect(input.id).to.equal("the-main-one");
+		expect(input.disabled).to.be.true;
+		expect(input.type).to.equal("text");
 	});
 });
