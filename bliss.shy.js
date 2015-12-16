@@ -286,7 +286,7 @@ extend($, {
 
 		document.body.setAttribute('data-loading', env.url);
 
-		env.xhr.open(env.method, env.url, !env.sync);
+		env.xhr.open(env.method, env.url, env.async !== false, env.user, env.password);
 
 		for (var property in o) {
 			if (property in env.xhr) {
