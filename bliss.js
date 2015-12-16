@@ -286,12 +286,12 @@ extend($, {
 
 		document.body.setAttribute('data-loading', env.url);
 
-		xhr.open(env.method, env.url, !env.sync);
+		env.xhr.open(env.method, env.url, !env.sync);
 
 		for (var property in o) {
-			if (property in xhr) {
+			if (property in env.xhr) {
 				try {
-					xhr[property] = o[property];
+					env.xhr[property] = o[property];
 				}
 				catch (e) {
 					self.console && console.error(e);
@@ -300,33 +300,33 @@ extend($, {
 		}
 
 		if (env.method !== 'GET' && !env.headers['Content-type'] && !env.headers['Content-Type']) {
-			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			env.xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		}
 
 		for (var header in env.headers) {
-			xhr.setRequestHeader(header, env.headers[header]);
+			env.xhr.setRequestHeader(header, env.headers[header]);
 		}
 
 		return new Promise(function(resolve, reject){
-			xhr.onload = function(){
+			env.xhr.onload = function(){
 				document.body.removeAttribute('data-loading');
 
-				if (xhr.status === 0 || xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+				if (env.xhr.status === 0 || env.xhr.status >= 200 && env.xhr.status < 300 || env.xhr.status === 304) {
 					// Success!
-					resolve(xhr);
+					resolve(env.xhr);
 				}
 				else {
-					reject(Error(xhr.statusText));
+					reject(Error(env.xhr.statusText));
 				}
 
 			};
 
-			xhr.onerror = function() {
+			env.xhr.onerror = function() {
 				document.body.removeAttribute('data-loading');
 				reject(Error("Network Error"));
 			};
 
-			xhr.send(env.method === 'GET'? null : env.data);
+			env.xhr.send(env.method === 'GET'? null : env.data);
 		});
 	}
 });
