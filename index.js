@@ -33,6 +33,9 @@ $$("#docs article > h1").forEach(function(h1) {
 				if (fn === "$" || fn === "$$") {
 					var source = self[fn] + "";
 				}
+				else if (fn.indexOf("hooks.") === 0) {
+					var source = $.hooks[fn.replace(/^hooks./, "")] + "";
+				}
 				else {
 					var source = ($.sources[fn] || $[fn]) + "";	
 				}

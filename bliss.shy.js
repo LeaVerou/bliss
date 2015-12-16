@@ -46,8 +46,7 @@ extend($, {
 			return [expr];
 		}
 
-		// In the future, we should use Array.from() instead of Array.prototype.slice.call()
-		return Array.prototype.slice.call(typeof expr == "string"? (context || document).querySelectorAll(expr) : expr || []);
+		return Array.from(typeof expr == "string"? (context || document).querySelectorAll(expr) : expr || []);
 	},
 
 	/**
@@ -92,6 +91,19 @@ extend($, {
 		}
 
 		return $.set(document.createElement(tag || "div"), o);
+	},
+
+	hooks: {
+		add: function (name, callback) {
+			this[name] = this[name] || [];
+			this[name].push(callback);
+		},
+
+		run: function (name, env) {
+			(this[name] || []).forEach(function(callback) {
+				callback(env);
+			});
+		}
 	},
 
 	each: function(obj, callback, ret) {
@@ -254,30 +266,32 @@ extend($, {
 		}
 
 		// Set defaults & fixup arguments
-		url = new URL(url, location);
-		o = o || {};
-		o.data = o.data || '';
-		o.method = o.method || 'GET';
-		o.headers = o.headers || {};
+		var env = extend({
+			url: new URL(url, location),
+			data: "",
+			method: "GET",
+			headers: {},
+			xhr: new XMLHttpRequest()
+		}, o);
 
-		var xhr = new XMLHttpRequest();
+		env.method = env.method.toUpperCase();
 
-		if ($.type(o.data) !== "string") {
-			o.data = Object.keys(o.data).map(function(key){ return key + "=" + encodeURIComponent(o.data[key]); }).join("&");
+		$.hooks.run("fetch-args", env);
+
+		// Start sending the request
+
+		if (env.method === "GET" && env.data) {
+			env.url.search += env.data;
 		}
 
-		if (o.method === "GET" && o.data) {
-			url.search += o.data;
-		}
+		document.body.setAttribute('data-loading', env.url);
 
-		document.body.setAttribute('data-loading', url);
-
-		xhr.open(o.method, url, !o.sync);
+		env.xhr.open(env.method, env.url, env.async !== false, env.user, env.password);
 
 		for (var property in o) {
-			if (property in xhr) {
+			if (property in env.xhr) {
 				try {
-					xhr[property] = o[property];
+					env.xhr[property] = o[property];
 				}
 				catch (e) {
 					self.console && console.error(e);
@@ -285,34 +299,34 @@ extend($, {
 			}
 		}
 
-		if (o.method !== 'GET' && !o.headers['Content-type'] && !o.headers['Content-Type']) {
-			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		if (env.method !== 'GET' && !env.headers['Content-type'] && !env.headers['Content-Type']) {
+			env.xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		}
 
-		for (var header in o.headers) {
-			xhr.setRequestHeader(header, o.headers[header]);
+		for (var header in env.headers) {
+			env.xhr.setRequestHeader(header, env.headers[header]);
 		}
 
 		return new Promise(function(resolve, reject){
-			xhr.onload = function(){
+			env.xhr.onload = function(){
 				document.body.removeAttribute('data-loading');
 
-				if (xhr.status === 0 || xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
+				if (env.xhr.status === 0 || env.xhr.status >= 200 && env.xhr.status < 300 || env.xhr.status === 304) {
 					// Success!
-					resolve(xhr);
+					resolve(env.xhr);
 				}
 				else {
-					reject(Error(xhr.statusText));
+					reject(Error(env.xhr.statusText));
 				}
 
 			};
 
-			xhr.onerror = function() {
+			env.xhr.onerror = function() {
 				document.body.removeAttribute('data-loading');
 				reject(Error("Network Error"));
 			};
 
-			xhr.send(o.method === 'GET'? null : o.data);
+			env.xhr.send(env.method === 'GET'? null : env.data);
 		});
 	}
 });
@@ -464,7 +478,7 @@ $.setProps = {
 				events.forEach(function(event){
 					me.removeEventListener(event, once);
 				});
-				
+
 				return callback.apply(me, arguments);
 			};
 
@@ -493,7 +507,7 @@ $.setProps = {
 		$.each(val, function (type, callbacks) {
 			element.addEventListener(type, function(evt) {
 				for (var selector in callbacks) {
-					if (evt.target.matches(selector)) { // Do ancestors count?
+					if (evt.target.closest(selector)) {
 						callbacks[selector].call(this, evt);
 					}
 				}

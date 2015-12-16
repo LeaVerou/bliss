@@ -45,11 +45,11 @@
 		text-align: right;
 	}
 
-@media (min-width: 60em) and (min-height: 40em) {
+@media (min-width: 75em) and (min-height: 40em) {
 	#toc {
 		white-space: nowrap;
 		position: fixed;
-		bottom: 0;
+		bottom: 0rem;
 		padding: 1em;
 		box-sizing: border-box;
 		max-height: 100vh;
@@ -58,13 +58,14 @@
 	}
 }
 
-@media (min-width: 60em) and (max-width: 110em) {
+@media (min-width: 75em) and (max-width: 110em) {
 	#toc {
+		bottom: 2.5rem;
 		font-size: 80%;
 	}
 }
 
-@media (max-width: 60em), (max-height: 55em) {
+@media (max-width: 75em), (max-height: 55em) {
 	#toc > ol {
 		-webkit-column-count: 2;
 		-moz-column-count: 2;
