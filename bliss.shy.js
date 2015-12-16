@@ -96,16 +96,16 @@ extend($, {
 	},
 
 	overload: function(args, callback, index) {
-		index = index || 1;
-		var name = args[index], value = args[index + 1];
+		index = index === undefined ? 1 : index;
+		var obj = args[index], value = args[index + 1];
 				
 		if (!value) {
-			for (var key in name) {
-				callback(key, name[key]);
+			for (var key in obj) {
+				callback(key, obj[key], obj);
 			}
 		}
 		else {
-			callback(name, value);
+			callback(obj, value, value);
 		}
 	},
 
@@ -380,26 +380,20 @@ $.Element = function (subject) {
 };
 
 $.Element.prototype = {
-	set: function (properties) {
-		if ($.type(arguments[0]) === "string") {
-			properties = {};
-			properties[arguments[0]] = arguments[1];
-		}
+	set: function (prop, value) {
 
-		for (var property in properties) {
+		$.overload(arguments, function(property, value, values) {
 			if (property in $.setProps) {
-				$.setProps[property].call(this, properties[property]);
+				$.setProps[property].call(this, value);
 			}
 			else if (property in this) {
-				this[property] = properties[property];
+				this[property] = value;
 			}
 			else {
-				if (!this.setAttribute) {
-					console.log(this);
-				}
-				this.setAttribute(property, properties[property]);
+				this.setAttribute(property, value);
 			}
-		}
+		}.bind(this), 0);
+		
 	},
 
 	// Run a CSS transition, return promise
