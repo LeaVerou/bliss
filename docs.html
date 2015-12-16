@@ -1120,7 +1120,7 @@ if ($.type(arguments[1]) == "regexp") {
 					<dd>The HTTP method, such as <code>"GET"</code> or <code>"POST"</code>.</dd>
 
 					<dt class="string object">data</dt>
-					<dd>Any data to send, as a URLencoded parameter string (e.g. <code>"foo=b%20ar&amp;baz=yolo"</code>) or an object of key-value pairs.</dd>
+					<dd>Any data to send, as a URLencoded parameter string.</dd>
 
 					<dt class="object">headers</dt>
 					<dd>Object with any extra headers to set.</dd>
@@ -1142,6 +1142,8 @@ if ($.type(arguments[1]) == "regexp") {
 }).catch(function(error){
 	console.error(error);
 });</code></pre>
+
+		<p><strong>Hooks:</strong> <code>fetch-args</code></p>
 
 		<a class="jq">jQuery.ajax</a>
 	</article>

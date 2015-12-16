@@ -266,25 +266,27 @@ extend($, {
 		}
 
 		// Set defaults & fixup arguments
-		url = new URL(url, location);
-		o = o || {};
-		o.data = o.data || '';
-		o.method = (o.method || 'GET').toUpperCase();
-		o.headers = o.headers || {};
+		var env = extend({
+			url: new URL(url, location),
+			data: "",
+			method: "GET",
+			headers: {},
+			xhr: new XMLHttpRequest()
+		}, o);
 
-		var xhr = new XMLHttpRequest();
+		env.method = env.method.toUpperCase();
 
-		if ($.type(o.data) !== "string") {
-			o.data = Object.keys(o.data).map(function(key){ return key + "=" + encodeURIComponent(o.data[key]); }).join("&");
+		$.hooks.run("fetch-args", env);
+
+		// Start sending the request
+
+		if (env.method === "GET" && env.data) {
+			env.url.search += env.data;
 		}
 
-		if (o.method === "GET" && o.data) {
-			url.search += o.data;
-		}
+		document.body.setAttribute('data-loading', env.url);
 
-		document.body.setAttribute('data-loading', url);
-
-		xhr.open(o.method, url, !o.sync);
+		xhr.open(env.method, env.url, !env.sync);
 
 		for (var property in o) {
 			if (property in xhr) {
@@ -297,12 +299,12 @@ extend($, {
 			}
 		}
 
-		if (o.method !== 'GET' && !o.headers['Content-type'] && !o.headers['Content-Type']) {
+		if (env.method !== 'GET' && !env.headers['Content-type'] && !env.headers['Content-Type']) {
 			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		}
 
-		for (var header in o.headers) {
-			xhr.setRequestHeader(header, o.headers[header]);
+		for (var header in env.headers) {
+			xhr.setRequestHeader(header, env.headers[header]);
 		}
 
 		return new Promise(function(resolve, reject){
@@ -324,7 +326,7 @@ extend($, {
 				reject(Error("Network Error"));
 			};
 
-			xhr.send(o.method === 'GET'? null : o.data);
+			xhr.send(env.method === 'GET'? null : env.data);
 		});
 	}
 });
