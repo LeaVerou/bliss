@@ -263,32 +263,30 @@ extend($, {
 		}
 
 		// Set defaults & fixup arguments
-		var env = extend({
-			url: new URL(url, location),
-			data: "",
-			method: "GET",
-			headers: {},
-			xhr: new XMLHttpRequest()
-		}, o);
+		url = new URL(url, location);
+		o = o || {};
+		o.data = o.data || '';
+		o.method = (o.method || 'GET').toUpperCase();
+		o.headers = o.headers || {};
 
-		env.method = env.method.toUpperCase();
+		var xhr = new XMLHttpRequest();
 
-		$.hooks.run("fetch-args", env);
-
-		// Start sending the request
-
-		if (env.method === "GET" && env.data) {
-			env.url.search += env.data;
+		if ($.type(o.data) !== "string") {
+			o.data = Object.keys(o.data).map(function(key){ return key + "=" + encodeURIComponent(o.data[key]); }).join("&");
 		}
 
-		document.body.setAttribute('data-loading', env.url);
+		if (o.method === "GET" && o.data) {
+			url.search += o.data;
+		}
+
+		document.body.setAttribute('data-loading', url);
 
 		env.xhr.open(env.method, env.url.href, env.async !== false, env.user, env.password);
 
 		for (var property in o) {
-			if (property in env.xhr) {
+			if (property in xhr) {
 				try {
-					env.xhr[property] = o[property];
+					xhr[property] = o[property];
 				}
 				catch (e) {
 					self.console && console.error(e);
@@ -296,34 +294,34 @@ extend($, {
 			}
 		}
 
-		if (env.method !== 'GET' && !env.headers['Content-type'] && !env.headers['Content-Type']) {
-			env.xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		if (o.method !== 'GET' && !o.headers['Content-type'] && !o.headers['Content-Type']) {
+			xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		}
 
-		for (var header in env.headers) {
-			env.xhr.setRequestHeader(header, env.headers[header]);
+		for (var header in o.headers) {
+			xhr.setRequestHeader(header, o.headers[header]);
 		}
 
 		return new Promise(function(resolve, reject){
-			env.xhr.onload = function(){
+			xhr.onload = function(){
 				document.body.removeAttribute('data-loading');
 
-				if (env.xhr.status === 0 || env.xhr.status >= 200 && env.xhr.status < 300 || env.xhr.status === 304) {
+				if (xhr.status === 0 || xhr.status >= 200 && xhr.status < 300 || xhr.status === 304) {
 					// Success!
-					resolve(env.xhr);
+					resolve(xhr);
 				}
 				else {
-					reject(Error(env.xhr.statusText));
+					reject(Error(xhr.statusText));
 				}
 
 			};
 
-			env.xhr.onerror = function() {
+			xhr.onerror = function() {
 				document.body.removeAttribute('data-loading');
 				reject(Error("Network Error"));
 			};
 
-			env.xhr.send(env.method === 'GET'? null : env.data);
+			xhr.send(o.method === 'GET'? null : o.data);
 		});
 	},
 

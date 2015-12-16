@@ -95,6 +95,33 @@ extend($, {
 		return $.set(document.createElement(tag || "div"), o);
 	},
 
+	overload: function(args, callback, index) {
+		index = index || 1;
+		var name = args[index], value = args[index + 1];
+				
+		if (!value) {
+			for (var key in name) {
+				callback(key, name[key]);
+			}
+		}
+		else {
+			callback(name, value);
+		}
+	},
+
+	hooks: {
+		add: function (name, callback) {
+			this[name] = this[name] || [];
+			this[name].push(callback);
+		},
+
+		run: function (name, env) {
+			(this[name] || []).forEach(function(callback) {
+				callback(env);
+			});
+		}
+	},
+
 	each: function(obj, callback, ret) {
 		ret = ret || {};
 
@@ -199,35 +226,29 @@ extend($, {
 		},
 
 		// Properties that behave like normal properties but also execute code upon getting/setting
-		live: function(obj, property, descriptor) {
-			if (arguments.length >= 3) {
-				if ($.type(descriptor) === "function") {
-					descriptor = {set: descriptor};
+		live: $.overload(arguments, function(prop, desc) {
+                if ($.type(descriptor) === "function") {
+					descriptor = {set: descriptor}
 				}
 
-				Object.defineProperty(obj, property, {
+				Object.defineProperty(obj, prop, {
 					get: function() {
-						var value = this["_" + property];
-						var ret = descriptor.get && descriptor.get.call(this, value);
+						var value = this["_" + prop];
+						var ret = desc.get && desc.get.call(this, value);
 						return ret !== undefined? ret : value;
 					},
 					set: function(v) {
-						var value = this["_" + property];
-						var ret = descriptor.set && descriptor.set.call(this, v, value);
-						this["_" + property] = ret !== undefined? ret : v;
+						var value = this["_" + prop];
+						var ret = desc.set && desc.set.call(this, v, value);
+						this["_" + prop] = ret !== undefined? ret : v;
 					},
-					configurable: descriptor.configurable,
-					enumerable: descriptor.enumerable
+					configurable: desc.configurable,
+					enumerable: desc.enumerable
 				});
-			}
-			else if (arguments.length === 2) {
-				for (var prop in property) {
-					$.live(obj, prop, property[prop]);
-				}
-			}
+			});
 
 			return obj;
-		},
+		}
 	},
 
 	// Includes a script, returns a promise
