@@ -1,25 +1,18 @@
 describe("$.start()", function () {
 
+	helpers.fixture("core.html");
+
 	it("exists", function () {
 		expect($.start).to.exist;
-	});
-
-	before(function () {
-		fixture.setBase("tests/fixtures");
 	});
 
 	var testContainer, para;
 
 	beforeEach(function () {
-		fixture.load("core.html");
 		testContainer = document.getElementById("fixture-container");
 		
 		para = document.createElement("p");
 		para.setAttribute("id", "para");
-	});
-
-	afterEach(function(){
-		fixture.cleanup();
 	});
 
 	it("inserts an element before existing content", function () {

@@ -95,7 +95,7 @@ extend($, {
 
 	hooks: {
 		add: function (name, callback) {
-			this[name] = hooks[name] || [];
+			this[name] = this[name] || [];
 			this[name].push(callback);
 		},
 
