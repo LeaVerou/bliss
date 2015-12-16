@@ -1229,6 +1229,19 @@ $.include(self.Dropbox, url).then(function(){
 			<dt class="function">callback</dt>
 			<dd>A function that accepts a sole parameter: <code>env</code> that contains different properties about the environment.</dd>
 		</dl>
+
+		<pre><code>// Handle simple objects as data in $.fetch()
+$.hooks.add("fetch-args", function(env) {
+	if ($.type(env.data) === "object") {
+-		env.data = Object.keys(env.data).map(function(key){
+			return key + "=" + encodeURIComponent(o.data[key]);
+		}).join("&");
+-	}
+});</code></pre>
+
+		<ul class="notes">
+			<li>Want new hooks? Request them <a href="https://github.com/LeaVerou/bliss/issues/139">here</a>!</li>
+		</ul>
 	</article>
 
 	<article>
@@ -1245,6 +1258,8 @@ $.include(self.Dropbox, url).then(function(){
 			<dt class="object">env</dt>
 			<dd>An object that describes the environment.</dd>
 		</dl>
+
+		<pre><code>$.hooks.run("fetch-args", env);</code></pre>
 	</article>
 </section>
 
