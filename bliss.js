@@ -332,6 +332,14 @@ extend($, {
 
 			env.xhr.send(env.method === 'GET'? null : env.data);
 		});
+	},
+
+	value: function(obj) {
+		var hasRoot = $.type(obj) !== "string";
+
+		return $$(arguments).slice(+hasRoot).reduce(function(obj, property) {
+	        return obj && obj[property];
+	    }, hasRoot? obj : self);
 	}
 });
 

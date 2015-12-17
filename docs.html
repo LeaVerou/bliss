@@ -1097,6 +1097,24 @@ if ($.type(arguments[1]) == "regexp") {
 
 		<a class="jq">jQuery.type</a>
 	</article>
+
+	<article>
+		<h1>value</h1>
+		<p class="description">Get the value of a nested property reference if it exists, and <code>undefined</code> without any errors if not.</p>
+		<pre><code>var val = $.value([obj, ] property1, [property2 [,...[, propertyN]]])</code></pre>
+
+		<dl class="args">
+			<dt class="object">obj</dt>
+			<dd>The object to use as the root of the property chain. If not provided, <code>self</code> will be used</dd>
+
+			<dt class="string">property1, ..., propertyN</dt>
+			<dd>The properties to resolve on the root object. Order denotes hierarchy.</dd>
+		</dl>
+
+		<pre><code>$.value(document, "body", "nodeType"); // 1
+$.value(document, "body", "foo", "bar", "baz"); // undefined, no errors
+$.value("document", "body", "nodeType"); // 1, no root, starting from self</code></pre>
+	</article>
 </section>
 
 <section>
