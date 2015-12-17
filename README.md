@@ -1,6 +1,4 @@
-# Bliss: Heavenly JavaScript
-
-[![Join the chat at https://gitter.im/LeaVerou/bliss](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/LeaVerou/bliss?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# Bliss: Heavenly JavaScript [![Join the chat at https://gitter.im/LeaVerou/bliss](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/LeaVerou/bliss?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/LeaVerou/bliss.svg)](https://travis-ci.org/LeaVerou/bliss)
 
 [blissfuljs.com](http://blissfuljs.com)
 
