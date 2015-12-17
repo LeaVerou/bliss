@@ -73,6 +73,8 @@ var $ = self.Bliss = extend(function(expr, context) {
 
 extend($, {
 	extend: extend,
+	
+	overload: overload,
 
 	property: $.property || "_",
 
