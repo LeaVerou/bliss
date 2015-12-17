@@ -208,6 +208,10 @@ extend($, {
 		// Properties that behave like normal properties but also execute code upon getting/setting
 		live: function(obj, property, descriptor) {
 			if (arguments.length >= 3) {
+				if ($.type(descriptor) === "function") {
+					descriptor = {set: descriptor}
+				}
+
 				Object.defineProperty(obj, property, {
 					get: function() {
 						var value = this["_" + property];

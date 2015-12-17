@@ -1060,8 +1060,8 @@ var type = $.extend({},
 			<dt class="string">property</dt>
 			<dd>The name of the property to define.</dd>
 
-			<dt class="object">descriptor</dt>
-			<dd>An <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty#Description">accessor descriptor</a> of the property.</dd>
+			<dt class="object function">descriptor</dt>
+			<dd>If an object, an <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty#Description">accessor descriptor</a> of the property. If a function, it will be assumed to be executed upon <strong>setting</strong> the property.</dd>
 		</dl>
 
 		<pre class="def"><code>$.live(object, properties)</code></pre>
