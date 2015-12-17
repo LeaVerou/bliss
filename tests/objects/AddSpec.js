@@ -1,6 +1,12 @@
 describe("$.add", function () {
 
   helpers.fixture("core.html");
+  
+  var spy;
+
+  beforeEach(function() {
+  	spy = sinon.spy();
+  });
 
   it("exists", function () {
     expect($.add).to.exist;
@@ -11,7 +17,7 @@ describe("$.add", function () {
       $.add("foo", function () {});
 
       expect([1,2,3]._.foo).to.exist;
-      expect($(".foo")._.foo).to.exist;
+      expect($('.foo')._.foo).to.exist;
       expect($.foo).to.exist;
     });
 
@@ -20,8 +26,8 @@ describe("$.add", function () {
         array: false
       });
 
-      expect([1,2,3]._.bar).to.exist;
-      expect($(".foo")._.bar).to.exist;
+      expect([1,2,3]._.bar).to.not.exist;
+      expect($('.foo')._.bar).to.exist;
       expect($.bar).to.exist;
     });
 
@@ -35,7 +41,7 @@ describe("$.add", function () {
 
       ["baz", "baz2"].forEach(function (method) {
         expect([1,2,3]._[method]).to.exist;
-        expect($(".foo")._[method]).to.exist;
+        expect($('.foo')._[method]).to.exist;
         expect($[method]).to.exist;
       });
     });
@@ -60,53 +66,53 @@ describe("$.add", function () {
     });
 
     it("overwrites functions by default", function () {
-      var spy = sinon.spy();
+    	var stub = sinon.stub.returns('foo');
+      $.add("overwrite", function () {return 'bar';});
+      expect($.overwrite()).to.equal('bar');
+      $.add("overwrite", function () {return 'foo';});
+      $.overwrite();
 
-      $.add("overwrite", spy);
-      $.overwrite([1]);
-      $.add("overwrite", function () {});
-      $.overwrite([1]);
-
-      expect(spy.callCount).to.equal(1);
+      expect($.overwrite()).to.equal('foo');
     });
 
     it("refuses to overwrite functions when told", function () {
-      var spy = sinon.spy();
-
       $.add("overwrite", spy);
-      $.overwrite([1]);
-      $.add({overwrite: function () {}}, null, true);
-      $.overwrite([1]);
+      $.overwrite();
+			expect(spy.callCount).to.equal(1);
 
-      expect(spy.callCount).to.equal(2);
+			var newSpy = sinon.spy();
+      $.add({overwrite: newSpy}, null, true);
+      $.overwrite();
+
+      expect(newSpy.callCount).to.equal(1);
     });
   });
 
   describe("Calling functions", function () {
     it("calls the function for each element in a Array", function () {
-      var spy = sinon.spy();
-
       $.add("run", spy);
       [1,2,3]._.run();
 
       expect(spy.callCount).to.equal(3);
-
       $.run([1,2,3,4]);
-
       expect(spy.callCount).to.equal(7);
     });
 
     it("calls the function once when given a single Element", function () {
-      var spy = sinon.spy();
 
       $.add("run", spy);
       $(".foo")._.run();
 
       expect(spy.callCount).to.equal(1);
-
       $.run($(".foo"));
-
       expect(spy.callCount).to.equal(2);
+    });
+
+    it('only adds to the items specified', function () {
+    	$.add('run', spy, {array: false});
+    	expect($.run).to.exist;
+    	expect(document._.run).to.exist;
+    	expect([]._.run).to.not.undefined;
     });
   });
 });

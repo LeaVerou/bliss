@@ -1,21 +1,38 @@
 (function() {
 "use strict";
 
-function overload(callback, index) {
-	index = index === undefined ? 1 : index;
-		
-	return function () {
-		var obj = $.type(arguments[index]) === 'object' ? arguments[index] : {}, 
-			value = arguments[index + 1],
-			rest = Array.prototype.slice.call(arguments).splice(0, index),
-			ret;
+function overload(callback, start) {
+	start = start === undefined ? 1 : start;
 
-		if (value !== undefined) {
-			obj[arguments[index]] = arguments[index + 1];
+	return function() {
+		var isSingleParam = $.type(arguments[start]) === 'object', 
+			argsArray = Array.prototype.slice.call(arguments),
+			end = start + 1,
+			obj = {}, 
+			ret,
+			paramsBefore = [],
+			paramsAfter = [];
+
+		if (isSingleParam) {
+			obj = arguments[start];
 		}
-			
+		else {
+			end += 1;
+			obj[arguments[start]] = arguments[start + 1];
+		}
+		
+		paramsBefore = argsArray.slice(0, start);
+		paramsAfter = argsArray.slice(end);
+
 		for (var key in obj) {
-			ret = callback.apply(this, rest.concat([key, obj[key]]) );
+
+			// console.log(paramsBefore);
+			// console.log([key, obj[key]]);
+			// console.log(paramsAfter);
+
+			ret = callback.apply(
+				this, paramsBefore.concat([key, obj[key]], paramsAfter)
+			);
 		}
 		return ret;
 	};
@@ -608,47 +625,40 @@ $.Array.prototype = {
 };
 
 // Extends Bliss with more methods
-$.add = function (methods, on, noOverwrite) {
+$.add = overload(function(method, callback, on, noOverwrite) {
 	on = $.extend({$: true, element: true, array: true}, on);
 
-	if ($.type(arguments[0]) === "string") {
-		methods = {};
-		methods[arguments[0]] = arguments[1];
-	}
+	if ($.type(callback) == "function") {
+		if (on.element && (!(method in $.Element.prototype) || !noOverwrite)) {
+			$.Element.prototype[method] = function () {
+				return this.subject && $.defined(callback.apply(this.subject, arguments), this.subject);
+			};
+		}
 
-	$.each(methods, function(method, callback){
-		if ($.type(callback) == "function") {
-			if (on.element && (!(method in $.Element.prototype) || !noOverwrite)) {
-				$.Element.prototype[method] = function () {
-					return this.subject && $.defined(callback.apply(this.subject, arguments), this.subject);
+		if (on.array && (!(method in $.Array.prototype) || !noOverwrite)) {
+			$.Array.prototype[method] = function() {
+				var args = arguments;
+				return this.subject.map(function(element) {
+					return element && $.defined(callback.apply(element, args), element);
+				});
+			};
+		}
+
+		if (on.$) {
+			$.sources[method] = $[method] = callback;
+
+			if (on.array || on.element) {
+				$[method] = function () {
+					var args = [].slice.apply(arguments);
+					var subject = args.shift();
+					var Type = on.array && Array.isArray(subject)? "Array" : "Element";
+
+					return $[Type].prototype[method].apply({subject: subject}, args);
 				};
-			}
-
-			if (on.array && (!(method in $.Array.prototype) || !noOverwrite)) {
-				$.Array.prototype[method] = function() {
-					var args = arguments;
-					return this.subject.map(function(element) {
-						return element && $.defined(callback.apply(element, args), element);
-					});
-				};
-			}
-
-			if (on.$) {
-				$.sources[method] = $[method] = callback;
-
-				if (on.array || on.element) {
-					$[method] = function () {
-						var args = [].slice.apply(arguments);
-						var subject = args.shift();
-						var Type = on.array && Array.isArray(subject)? "Array" : "Element";
-
-						return $[Type].prototype[method].apply({subject: subject}, args);
-					};
-				}
 			}
 		}
-	});
-};
+	}
+}, 0);
 
 $.add($.Array.prototype, {element: false});
 $.add($.Element.prototype);
