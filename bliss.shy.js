@@ -1,6 +1,26 @@
 (function() {
 "use strict";
 
+function overload(callback, index) {
+	index = index === undefined ? 1 : index;
+		
+	return function () {
+		var obj = $.type(arguments[index]) === 'object' ? arguments[index] : {}, 
+			value = arguments[index + 1],
+			rest = Array.prototype.slice.call(arguments).splice(0, index),
+			ret;
+
+		if (value !== undefined) {
+			obj[arguments[index]] = arguments[index + 1];
+		}
+			
+		for (var key in obj) {
+			ret = callback.apply(this, rest.concat([key, obj[key]]) );
+		}
+		return ret;
+	};
+}
+
 // Copy properties from one object to another. Overwrites allowed.
 function extend(to, from, whitelist) {
 	for (var property in from) {
@@ -93,20 +113,6 @@ extend($, {
 		}
 
 		return $.set(document.createElement(tag || "div"), o);
-	},
-
-	overload: function(args, callback, index) {
-		index = index === undefined ? 1 : index;
-		var obj = args[index], value = args[index + 1];
-				
-		if (!value) {
-			for (var key in obj) {
-				callback(key, obj[key], obj);
-			}
-		}
-		else {
-			callback(obj, value, value);
-		}
 	},
 
 	hooks: {
@@ -203,22 +209,18 @@ extend($, {
 	// Properties with special handling in classes
 	classProps: {
 		// Lazily evaluated properties
-		lazy: function(obj, property, getter) {
-			$.overload(arguments, function(prop, func) {
-				Object.defineProperty(obj, prop, {
-					get: function() {
-						// FIXME this does not work for instances if property is defined on the prototype
-						delete this[prop];
-
-						return this[prop] = func.call(this);
-					},
-					configurable: true,
-					enumerable: true
-				});
+		lazy: overload(function(obj, property, getter) {
+			Object.defineProperty(obj, property, {
+				get: function() {
+					// FIXME this does not work for instances if property is defined on the prototype
+					delete this[property];
+					return this[property] = getter.call(this);
+				},
+				configurable: true,
+				enumerable: true
 			});
-
 			return obj;
-		},
+		}),
 
 		// Properties that behave like normal properties but also execute code upon getting/setting
 		live: $.overload(arguments, function(prop, desc) {
@@ -226,24 +228,24 @@ extend($, {
 					descriptor = {set: descriptor}
 				}
 
-				Object.defineProperty(obj, prop, {
-					get: function() {
-						var value = this["_" + prop];
-						var ret = desc.get && desc.get.call(this, value);
-						return ret !== undefined? ret : value;
-					},
-					set: function(v) {
-						var value = this["_" + prop];
-						var ret = desc.set && desc.set.call(this, v, value);
-						this["_" + prop] = ret !== undefined? ret : v;
-					},
-					configurable: desc.configurable,
-					enumerable: desc.enumerable
-				});
+			Object.defineProperty(obj, property, {
+				get: function() {
+					var value = this["_" + property];
+					var ret = descriptor.get && descriptor.get.call(this, value);
+					return ret !== undefined? ret : value;
+				},
+				set: function(v) {
+					var value = this["_" + property];
+					var ret = descriptor.set && descriptor.set.call(this, v, value);
+					this["_" + property] = ret !== undefined? ret : v;
+				},
+				configurable: descriptor.configurable,
+				enumerable: descriptor.enumerable
 			});
 
 			return obj;
-		}
+		})
+
 	},
 
 	// Includes a script, returns a promise
@@ -380,22 +382,20 @@ $.Element = function (subject) {
 };
 
 $.Element.prototype = {
-	set: function (prop, value) {
+	set: overload(function(property, value, values) {
 
-		$.overload(arguments, function(property, value, values) {
-			if (property in $.setProps) {
-				$.setProps[property].call(this, value);
-			}
-			else if (property in this) {
-				this[property] = value;
-			}
-			else {
-				this.setAttribute(property, value);
-			}
-		}.bind(this), 0);
-		
-	},
+		if (property in $.setProps) {
+			$.setProps[property].call(this, value);
+		}
+		else if (property in this) {
+			this[property] = value;
+		}
+		else {
+			this.setAttribute(property, value);
+		}
 
+	}, 0),
+	
 	// Run a CSS transition, return promise
 	transition: function(props, duration) {
 		duration = +duration || 400;
