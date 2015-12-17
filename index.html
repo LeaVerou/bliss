@@ -40,14 +40,14 @@
 <section id="quick-look">
 	<h1>A quick look</h1>
 
-	<p>Get the <code>&lt;button></code> element with the class 'continue' and change its content to 'Next Step...' <a href="http://jquery.com">[example credit]</a></p>
+	<p>Get the <code>&lt;button&gt;</code> element with the class <code>continue</code> and change its content to 'Next Step...' <a href="http://jquery.com">[example credit]</a></p>
 	<div class="comparison">
 		<pre class="vanilla"><code>document.querySelector("button.continue")
 	.textContent = "Next Step...";</code></pre>
 		<pre class="bliss"><code>$("button.continue").textContent = "Next Step...";</code></pre>
 	</div>
 
-	<p>Show the #banner-message element that is hidden with  display:none in its CSS when any button in #button-container is clicked <a href="http://jquery.com">[example credit]</a></p>
+	<p>Show the <code>#banner-message</code> element that is hidden with  <code>display:none</code> in its CSS when any button in <code>#button-container</code> is clicked <a href="http://jquery.com">[example credit]</a></p>
 	<div class="comparison"><pre class="vanilla"><code>var hiddenBox = document.querySelector("#banner-message");
 document.querySelector("#button-container button")
 	.addEventListener("click", function(event) {
