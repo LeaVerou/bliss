@@ -237,10 +237,10 @@ extend($, {
 		}),
 
 		// Properties that behave like normal properties but also execute code upon getting/setting
-		live: $.overload(arguments, function(prop, desc) {
-                if ($.type(descriptor) === "function") {
-					descriptor = {set: descriptor}
-				}
+		live: overload(function(obj, property, descriptor) {
+			if ($.type(descriptor) === "function") {
+				descriptor = {set: descriptor};
+			}
 
 			Object.defineProperty(obj, property, {
 				get: function() {
