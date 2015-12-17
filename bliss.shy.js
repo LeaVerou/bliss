@@ -25,11 +25,6 @@ function overload(callback, start) {
 		paramsAfter = argsArray.slice(end);
 
 		for (var key in obj) {
-
-			// console.log(paramsBefore);
-			// console.log([key, obj[key]]);
-			// console.log(paramsAfter);
-
 			ret = callback.apply(
 				this, paramsBefore.concat([key, obj[key]], paramsAfter)
 			);
@@ -401,7 +396,7 @@ $.Element = function (subject) {
 };
 
 $.Element.prototype = {
-	set: overload(function(property, value, values) {
+	set: overload(function(property, value) {
 
 		if (property in $.setProps) {
 			$.setProps[property].call(this, value);
@@ -538,31 +533,26 @@ $.setProps = {
 	},
 
 	// Event delegation
-	delegate: function(val) {
-		if (arguments.length === 3) {
-			// Called with ("type", "selector", callback)
-			val = {};
-			val[arguments[0]] = {};
-			val[arguments[0]][arguments[1]] = arguments[2];
-		}
-		else if (arguments.length === 2) {
-			// Called with ("type", selectors & callbacks)
-			val = {};
-			val[arguments[0]] = arguments[1];
+	delegate: overload(function (type, selector, callback) {
+
+		var obj = {};
+
+		if ($.type(selector) === 'object') {
+			obj = selector;
+		} 
+		else {
+			obj[selector] = callback;
 		}
 
-		var element = this;
-
-		$.each(val, function (type, callbacks) {
-			element.addEventListener(type, function(evt) {
-				for (var selector in callbacks) {
-					if (evt.target.closest(selector)) {
-						callbacks[selector].call(this, evt);
-					}
+		this.addEventListener(type, function(evt) {
+			for (var selector in obj) {
+				if (evt.target.closest(selector)) {
+					obj[selector].call(this, evt);
 				}
-			});
+			}
 		});
-	},
+
+	}, 0),
 
 	// Set the contents as a string, an element, an object to create an element or an array of these
 	contents: function (val) {
