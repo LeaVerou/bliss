@@ -41,6 +41,8 @@ extend($, {
 
 	sources: {},
 
+	noop: function(){},
+
 	$: function(expr, context) {
 		if (expr instanceof Node || expr instanceof Window) {
 			return [expr];
@@ -93,19 +95,6 @@ extend($, {
 		return $.set(document.createElement(tag || "div"), o);
 	},
 
-	hooks: {
-		add: function (name, callback) {
-			this[name] = this[name] || [];
-			this[name].push(callback);
-		},
-
-		run: function (name, env) {
-			(this[name] || []).forEach(function(callback) {
-				callback(env);
-			});
-		}
-	},
-
 	each: function(obj, callback, ret) {
 		ret = ret || {};
 
@@ -133,13 +122,18 @@ extend($, {
 
 	// Helper for defining OOP-like “classes”
 	Class: function(o) {
-		var init = o.constructor || function(){};
-		delete o.constructor;
+		var init = $.noop;
+
+		if (o.hasOwnProperty("constructor")) {
+			init = o.constructor;
+			delete o.constructor;
+		}
 
 		var abstract = o.abstract;
 		delete o.abstract;
 
 		var ret = function() {
+			console.log("yo", init);
 			if (abstract && this.constructor === ret) {
 				throw new Error("Abstract classes cannot be directly instantiated.");
 			}
@@ -156,7 +150,7 @@ extend($, {
 		ret.super = o.extends || null;
 		delete o.extends;
 
-		ret.prototype = $.extend(Object.create(ret.super && ret.super.prototype), {
+		ret.prototype = $.extend(Object.create(ret.super? ret.super.prototype : Object), {
 			constructor: ret
 		});
 
@@ -209,7 +203,7 @@ extend($, {
 		live: function(obj, property, descriptor) {
 			if (arguments.length >= 3) {
 				if ($.type(descriptor) === "function") {
-					descriptor = {set: descriptor}
+					descriptor = {set: descriptor};
 				}
 
 				Object.defineProperty(obj, property, {
@@ -342,6 +336,21 @@ extend($, {
 	    }, hasRoot? obj : self);
 	}
 });
+
+$.Hooks = new $.Class({
+	add: function (name, callback) {
+		this[name] = this[name] || [];
+		this[name].push(callback);
+	},
+
+	run: function (name, env) {
+		(this[name] || []).forEach(function(callback) {
+			callback(env);
+		});
+	}
+});
+
+$.hooks = new $.Hooks();
 
 var _ = $.property;
 
