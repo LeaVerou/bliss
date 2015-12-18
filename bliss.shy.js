@@ -507,30 +507,21 @@ $.setProps = {
 		}
 	},
 
-	once: function(val) {
-		if (arguments.length == 2) {
-			val = {};
-			val[arguments[0]] = arguments[1];
-		}
-
+	once: overload(function(events, callback){
+		events = events.split(/\s+/);
 		var me = this;
-
-		$.each(val, function(events, callback){
-			events = events.split(/\s+/);
-
-			var once = function() {
-				events.forEach(function(event){
-					me.removeEventListener(event, once);
-				});
-
-				return callback.apply(me, arguments);
-			};
-
-			events.forEach(function (event) {
-				me.addEventListener(event, once);
+		var once = function() {
+			events.forEach(function(event){
+				me.removeEventListener(event, once);
 			});
+
+			return callback.apply(me, arguments);
+		};
+
+		events.forEach(function (event) {
+			me.addEventListener(event, once);
 		});
-	},
+	}, 0),
 
 	// Event delegation
 	delegate: overload(function (type, selector, callback) {
