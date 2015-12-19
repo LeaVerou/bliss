@@ -133,7 +133,6 @@ extend($, {
 		delete o.abstract;
 
 		var ret = function() {
-			console.log("yo", init);
 			if (abstract && this.constructor === ret) {
 				throw new Error("Abstract classes cannot be directly instantiated.");
 			}
