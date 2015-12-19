@@ -16,7 +16,9 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'bliss.js',
+      'bliss.shy.js',
+      'bliss._.js',
+      'tests/helpers.js',
       'tests/**/*.js',
       'tests/fixtures/**/*.html'
     ],

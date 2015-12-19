@@ -24,7 +24,7 @@
 
 	<ul>
 		<li><strong>No lock-in, <a href="http://lea.verou.me/2015/04/jquery-considered-harmful/">no wrapper objects</a></strong> Designed to work with Vanilla JS, not replace it.</li>
-		<li><strong>Light as a feather</strong> Only <a href="#download">2.5-3KB minified &amp; gzipped!</a></li>
+		<li><strong>Light as a feather</strong> Only <a href="#download">3KB minified &amp; gzipped!</a></li>
 		<li><strong>Chaining without prototype pollution</strong> Only adds one <code>_</code> property (optional, customizable)</li>
 		<li><strong>Extensible</strong> <a href="docs.html#fn-add">Adding new blissful methods</a> is easy as pie!</li>
 		<li><strong>(Mostly) readable source</strong> Know what you’re running. Excellent for learning!</li>
@@ -59,7 +59,7 @@ $("#button-container button")
 		hiddenBox.style.display = "block";
 	});</code></pre>
 		</div>
-	
+
 	<p>Ok, these were easy even with plain Vanilla JS. <strong>Nobody needs a library for that!</strong> Shall we move on to more realistic examples?</p>
 
 	<p class="runnable">Remove the following pink <code>&lt;pre></code> element from the DOM with a fade out and shrink transition, then display a message:</p>
@@ -144,12 +144,12 @@ var out = document.querySelector("#uk-area");
 
 	xhr.onload = function() {
 		document.body.removeAttribute('data-loading');
-			
-		if (xhr.status === 0 
+
+		if (xhr.status === 0
 		 || xhr.status >= 200 && xhr.status < 300
 		 || xhr.status === 304) {
 			var json = xhr.response.result;
-			
+
 			out.textContent = [
 				json.parliamentary_constituency,
 				json.admin_district,
@@ -158,7 +158,7 @@ var out = document.querySelector("#uk-area");
 		else {
 			out.textContent = xhr.statusText;
 		}
-	
+
 	};
 	xhr.onerror = function() {
 		out.textContent = xhr.statusText;
@@ -169,11 +169,11 @@ var out = document.querySelector("#uk-area");
 var out = $("#uk-area");
 (txt.oninput = function() {
 	var url = "http://api.postcodes.io/postcodes/"+txt.value;
-	
+
 	$.fetch(url, {
 		responseType: "json"
 	}).then(function(xhr) {
-		
+
 
 
 
@@ -182,19 +182,19 @@ var out = $("#uk-area");
 
 
 		var json = xhr.response.result;
-		
+
 		out.textContent = [
 			json.parliamentary_constituency,
 			json.admin_district,
 			json.country].join(", ");
 	}).catch(function(error) {
-		
+
 		out.textContent = error;
 	});
 })();</code></pre>
 </div>
 
-	
+
 </section>
 
 <section id="browser-support">
@@ -236,7 +236,7 @@ var out = $("#uk-area");
 		<p class="note">Note that apart from Promises, all other polyfills can be loaded conditionally, by using Bliss’ <code>$.include()</code>.</p>
 	</details>
 
-	
+
 </section>
 
 <section id="download">

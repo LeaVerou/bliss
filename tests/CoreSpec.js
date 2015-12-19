@@ -1,13 +1,7 @@
 describe("Core Bliss", function () {
 	"use strict";
 
-	before(function() {
-		fixture.setBase('tests/fixtures');
-	});
-
-	beforeEach(function () {
-		this.fixture = fixture.load('core.html');
-	});
+	helpers.fixture("core.html");
 
 	// testing setup
 	it("has the fixture on the dom", function () {

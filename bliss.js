@@ -41,6 +41,8 @@ extend($, {
 
 	sources: {},
 
+	noop: function(){},
+
 	$: function(expr, context) {
 		if (expr instanceof Node || expr instanceof Window) {
 			return [expr];
@@ -93,19 +95,6 @@ extend($, {
 		return $.set(document.createElement(tag || "div"), o);
 	},
 
-	hooks: {
-		add: function (name, callback) {
-			this[name] = this[name] || [];
-			this[name].push(callback);
-		},
-
-		run: function (name, env) {
-			(this[name] || []).forEach(function(callback) {
-				callback(env);
-			});
-		}
-	},
-
 	each: function(obj, callback, ret) {
 		ret = ret || {};
 
@@ -133,8 +122,12 @@ extend($, {
 
 	// Helper for defining OOP-like “classes”
 	Class: function(o) {
-		var init = o.constructor || function(){};
-		delete o.constructor;
+		var init = $.noop;
+
+		if (o.hasOwnProperty("constructor")) {
+			init = o.constructor;
+			delete o.constructor;
+		}
 
 		var abstract = o.abstract;
 		delete o.abstract;
@@ -156,7 +149,7 @@ extend($, {
 		ret.super = o.extends || null;
 		delete o.extends;
 
-		ret.prototype = $.extend(Object.create(ret.super && ret.super.prototype), {
+		ret.prototype = $.extend(Object.create(ret.super? ret.super.prototype : Object), {
 			constructor: ret
 		});
 
@@ -208,6 +201,10 @@ extend($, {
 		// Properties that behave like normal properties but also execute code upon getting/setting
 		live: function(obj, property, descriptor) {
 			if (arguments.length >= 3) {
+				if ($.type(descriptor) === "function") {
+					descriptor = {set: descriptor};
+				}
+
 				Object.defineProperty(obj, property, {
 					get: function() {
 						var value = this["_" + property];
@@ -286,7 +283,7 @@ extend($, {
 
 		document.body.setAttribute('data-loading', env.url);
 
-		env.xhr.open(env.method, env.url, env.async !== false, env.user, env.password);
+		env.xhr.open(env.method, env.url.href, env.async !== false, env.user, env.password);
 
 		for (var property in o) {
 			if (property in env.xhr) {
@@ -328,8 +325,31 @@ extend($, {
 
 			env.xhr.send(env.method === 'GET'? null : env.data);
 		});
+	},
+
+	value: function(obj) {
+		var hasRoot = $.type(obj) !== "string";
+
+		return $$(arguments).slice(+hasRoot).reduce(function(obj, property) {
+	        return obj && obj[property];
+	    }, hasRoot? obj : self);
 	}
 });
+
+$.Hooks = new $.Class({
+	add: function (name, callback) {
+		this[name] = this[name] || [];
+		this[name].push(callback);
+	},
+
+	run: function (name, env) {
+		(this[name] || []).forEach(function(callback) {
+			callback(env);
+		});
+	}
+});
+
+$.hooks = new $.Hooks();
 
 var _ = $.property;
 
