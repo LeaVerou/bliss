@@ -629,8 +629,8 @@ $.add = overload(function(method, callback, on, noOverwrite) {
 
 		if (on.$) {
 			$.sources[method] = $[method] = callback;
-			if (on.array || on.element) {
 
+			if (on.array || on.element) {
 				$[method] = function () {
 					var args = [].slice.apply(arguments);
 					var subject = args.shift();
