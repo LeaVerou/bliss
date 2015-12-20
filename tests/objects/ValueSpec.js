@@ -10,7 +10,7 @@ describe("$.value", function() {
 
 	it("returns null if object is null", function() {
 		var obj = null;
-		expect($.value(obj)).and.to.be.null;
+		expect($.value(obj)).to.be.null;
 	});
 
 	it("returns undefined if property not defined", function() {
