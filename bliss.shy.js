@@ -5,29 +5,22 @@ function overload(callback, start) {
 	start = start === undefined ? 1 : start;
 
 	return function() {
-		var isSingleParam = $.type(arguments[start]) === 'object', 
-			argsArray = Array.prototype.slice.call(arguments),
-			end = start + 1,
-			obj = {}, 
-			ret,
-			paramsBefore = [],
-			paramsAfter = [];
-
+		var isSingleParam = $.type(arguments[start]) !== 'string', 
+			// args = Array.from(arguments),
+			replace = isSingleParam ? 1 : 2,
+			obj = {}, ret;
+			
 		if (isSingleParam) {
 			obj = arguments[start];
 		}
 		else {
-			end += 1;
 			obj[arguments[start]] = arguments[start + 1];
 		}
-		
-		paramsBefore = argsArray.slice(0, start);
-		paramsAfter = argsArray.slice(end);
 
 		for (var key in obj) {
-			ret = callback.apply(
-				this, paramsBefore.concat([key, obj[key]], paramsAfter)
-			);
+			var args = Array.from(arguments);
+			args.splice(start, replace, key, obj[key]);
+			ret = callback.apply(this, args);
 		}
 		return ret;
 	};
@@ -225,9 +218,9 @@ extend($, {
 
 		// Properties that behave like normal properties but also execute code upon getting/setting
 		live: overload(function(obj, property, descriptor) {
-			if ($.type(descriptor) === "function") {
-				descriptor = {set: descriptor};
-			}
+			// if ($.type(descriptor) === "function") {
+			// 	descriptor = {set: descriptor};
+			// }
 
 			Object.defineProperty(obj, property, {
 				get: function() {
