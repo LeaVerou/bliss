@@ -6,7 +6,6 @@ function overload(callback, start) {
 
 	return function() {
 		var isSingleParam = $.type(arguments[start]) !== 'string', 
-			// args = Array.from(arguments),
 			replace = isSingleParam ? 1 : 2,
 			obj = {}, ret;
 			
