@@ -7,6 +7,7 @@ function overload(callback, start) {
 	return function() {
 		var isSingleParam = $.type(arguments[start]) !== 'string', 
 			replace = isSingleParam ? 1 : 2,
+			args = Array.from(arguments),
 			obj = {}, ret;
 			
 		if (isSingleParam) {
@@ -17,8 +18,7 @@ function overload(callback, start) {
 		}
 
 		for (var key in obj) {
-			var args = Array.from(arguments);
-			args.splice(start, replace, key, obj[key]);
+			args.slice(0).splice(start, replace, key, obj[key]);
 			ret = callback.apply(this, args);
 		}
 		return ret;
