@@ -18,8 +18,9 @@ function overload(callback, start) {
 		}
 
 		for (var key in obj) {
-			args.slice(0).splice(start, replace, key, obj[key]);
-			ret = callback.apply(this, args);
+			var argsCopy = args.slice(0);
+			argsCopy.splice(start, replace, key, obj[key]);
+			ret = callback.apply(this, argsCopy);
 		}
 		return ret;
 	};
