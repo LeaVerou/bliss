@@ -1,11 +1,16 @@
 (function() {
 "use strict";
 
-function overload(callback, start) {
+function overload(callback, start, end) {
 	start = start === undefined ? 1 : start;
+	end = end || start + 1;
 
-	return function() {
-		if ($.type(arguments[start]) !== 'string') { // Single param 
+	if (end - start <= 1) {
+		return function() {
+			if ($.type(arguments[start]) === 'string') {
+				return callback.apply(this, arguments);
+			}
+
 			var obj = arguments[start], ret;
 
 			for (var key in obj) {
@@ -15,11 +20,11 @@ function overload(callback, start) {
 			}
 
 			return ret;
-		}
-		else {
-			return callback.apply(this, arguments);
-		}
-	};
+		};
+	}
+
+	callback = overload(callback, start + 1, end);
+	return overload(callback, start, end - 1);
 }
 
 // Copy properties from one object to another. Overwrites allowed.
@@ -501,25 +506,12 @@ $.setProps = {
 
 	// Event delegation
 	delegate: overload(function (type, selector, callback) {
-
-		var obj = {};
-
-		if ($.type(selector) === 'object') {
-			obj = selector;
-		}
-		else {
-			obj[selector] = callback;
-		}
-
 		this.addEventListener(type, function(evt) {
-			for (var selector in obj) {
-				if (evt.target.closest(selector)) {
-					obj[selector].call(this, evt);
-				}
+			if (evt.target.closest(selector)) {
+				callback.call(this, evt);
 			}
 		});
-
-	}, 0),
+	}, 0, 2),
 
 	// Set the contents as a string, an element, an object to create an element or an array of these
 	contents: function (val) {
