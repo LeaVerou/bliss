@@ -1,6 +1,38 @@
 (function() {
 "use strict";
 
+function overload(callback, start) {
+	start = start === undefined ? 1 : start;
+
+	return function() {
+		var isSingleParam = $.type(arguments[start]) === 'object', 
+			argsArray = Array.prototype.slice.call(arguments),
+			end = start + 1,
+			obj = {}, 
+			ret,
+			paramsBefore = [],
+			paramsAfter = [];
+
+		if (isSingleParam) {
+			obj = arguments[start];
+		}
+		else {
+			end += 1;
+			obj[arguments[start]] = arguments[start + 1];
+		}
+		
+		paramsBefore = argsArray.slice(0, start);
+		paramsAfter = argsArray.slice(end);
+
+		for (var key in obj) {
+			ret = callback.apply(
+				this, paramsBefore.concat([key, obj[key]], paramsAfter)
+			);
+		}
+		return ret;
+	};
+}
+
 // Copy properties from one object to another. Overwrites allowed.
 function extend(to, from, whitelist) {
 	for (var property in from) {
@@ -36,6 +68,8 @@ var $ = self.Bliss = extend(function(expr, context) {
 
 extend($, {
 	extend: extend,
+	
+	overload: overload,
 
 	property: $.property || "_",
 
@@ -93,6 +127,19 @@ extend($, {
 		}
 
 		return $.set(document.createElement(tag || "div"), o);
+	},
+
+	hooks: {
+		add: function (name, callback) {
+			this[name] = this[name] || [];
+			this[name].push(callback);
+		},
+
+		run: function (name, env) {
+			(this[name] || []).forEach(function(callback) {
+				callback(env);
+			});
+		}
 	},
 
 	each: function(obj, callback, ret) {
@@ -176,58 +223,43 @@ extend($, {
 	// Properties with special handling in classes
 	classProps: {
 		// Lazily evaluated properties
-		lazy: function(obj, property, getter) {
-			if (arguments.length >= 3) {
-				Object.defineProperty(obj, property, {
-					get: function() {
-						// FIXME this does not work for instances if property is defined on the prototype
-						delete this[property];
-
-						return this[property] = getter.call(this);
-					},
-					configurable: true,
-					enumerable: true
-				});
-			}
-			else if (arguments.length === 2) {
-				for (var prop in property) {
-					$.lazy(obj, prop, property[prop]);
-				}
-			}
-
+		lazy: overload(function(obj, property, getter) {
+			Object.defineProperty(obj, property, {
+				get: function() {
+					// FIXME this does not work for instances if property is defined on the prototype
+					delete this[property];
+					return this[property] = getter.call(this);
+				},
+				configurable: true,
+				enumerable: true
+			});
 			return obj;
-		},
+		}),
 
 		// Properties that behave like normal properties but also execute code upon getting/setting
-		live: function(obj, property, descriptor) {
-			if (arguments.length >= 3) {
-				if ($.type(descriptor) === "function") {
-					descriptor = {set: descriptor};
-				}
+		live: overload(function(obj, property, descriptor) {
+			if ($.type(descriptor) === "function") {
+				descriptor = {set: descriptor};
+			}
 
-				Object.defineProperty(obj, property, {
-					get: function() {
-						var value = this["_" + property];
-						var ret = descriptor.get && descriptor.get.call(this, value);
-						return ret !== undefined? ret : value;
-					},
-					set: function(v) {
-						var value = this["_" + property];
-						var ret = descriptor.set && descriptor.set.call(this, v, value);
-						this["_" + property] = ret !== undefined? ret : v;
-					},
-					configurable: descriptor.configurable,
-					enumerable: descriptor.enumerable
-				});
-			}
-			else if (arguments.length === 2) {
-				for (var prop in property) {
-					$.live(obj, prop, property[prop]);
-				}
-			}
+			Object.defineProperty(obj, property, {
+				get: function() {
+					var value = this["_" + property];
+					var ret = descriptor.get && descriptor.get.call(this, value);
+					return ret !== undefined? ret : value;
+				},
+				set: function(v) {
+					var value = this["_" + property];
+					var ret = descriptor.set && descriptor.set.call(this, v, value);
+					this["_" + property] = ret !== undefined? ret : v;
+				},
+				configurable: descriptor.configurable,
+				enumerable: descriptor.enumerable
+			});
 
 			return obj;
-		},
+		})
+
 	},
 
 	// Includes a script, returns a promise
@@ -364,28 +396,20 @@ $.Element = function (subject) {
 };
 
 $.Element.prototype = {
-	set: function (properties) {
-		if ($.type(arguments[0]) === "string") {
-			properties = {};
-			properties[arguments[0]] = arguments[1];
+	set: overload(function(property, value) {
+
+		if (property in $.setProps) {
+			$.setProps[property].call(this, value);
+		}
+		else if (property in this) {
+			this[property] = value;
+		}
+		else {
+			this.setAttribute(property, value);
 		}
 
-		for (var property in properties) {
-			if (property in $.setProps) {
-				$.setProps[property].call(this, properties[property]);
-			}
-			else if (property in this) {
-				this[property] = properties[property];
-			}
-			else {
-				if (!this.setAttribute) {
-					console.log(this);
-				}
-				this.setAttribute(property, properties[property]);
-			}
-		}
-	},
-
+	}, 0),
+	
 	// Run a CSS transition, return promise
 	transition: function(props, duration) {
 		duration = +duration || 400;
@@ -483,57 +507,43 @@ $.setProps = {
 		}
 	},
 
-	once: function(val) {
-		if (arguments.length == 2) {
-			val = {};
-			val[arguments[0]] = arguments[1];
-		}
-
+	once: overload(function(events, callback){
+		events = events.split(/\s+/);
 		var me = this;
-
-		$.each(val, function(events, callback){
-			events = events.split(/\s+/);
-
-			var once = function() {
-				events.forEach(function(event){
-					me.removeEventListener(event, once);
-				});
-
-				return callback.apply(me, arguments);
-			};
-
-			events.forEach(function (event) {
-				me.addEventListener(event, once);
+		var once = function() {
+			events.forEach(function(event){
+				me.removeEventListener(event, once);
 			});
+
+			return callback.apply(me, arguments);
+		};
+
+		events.forEach(function (event) {
+			me.addEventListener(event, once);
 		});
-	},
+	}, 0),
 
 	// Event delegation
-	delegate: function(val) {
-		if (arguments.length === 3) {
-			// Called with ("type", "selector", callback)
-			val = {};
-			val[arguments[0]] = {};
-			val[arguments[0]][arguments[1]] = arguments[2];
-		}
-		else if (arguments.length === 2) {
-			// Called with ("type", selectors & callbacks)
-			val = {};
-			val[arguments[0]] = arguments[1];
+	delegate: overload(function (type, selector, callback) {
+
+		var obj = {};
+
+		if ($.type(selector) === 'object') {
+			obj = selector;
+		} 
+		else {
+			obj[selector] = callback;
 		}
 
-		var element = this;
-
-		$.each(val, function (type, callbacks) {
-			element.addEventListener(type, function(evt) {
-				for (var selector in callbacks) {
-					if (evt.target.closest(selector)) {
-						callbacks[selector].call(this, evt);
-					}
+		this.addEventListener(type, function(evt) {
+			for (var selector in obj) {
+				if (evt.target.closest(selector)) {
+					obj[selector].call(this, evt);
 				}
-			});
+			}
 		});
-	},
+
+	}, 0),
 
 	// Set the contents as a string, an element, an object to create an element or an array of these
 	contents: function (val) {
@@ -598,47 +608,40 @@ $.Array.prototype = {
 };
 
 // Extends Bliss with more methods
-$.add = function (methods, on, noOverwrite) {
+$.add = overload(function(method, callback, on, noOverwrite) {
 	on = $.extend({$: true, element: true, array: true}, on);
 
-	if ($.type(arguments[0]) === "string") {
-		methods = {};
-		methods[arguments[0]] = arguments[1];
-	}
+	if ($.type(callback) == "function") {
+		if (on.element && (!(method in $.Element.prototype) || !noOverwrite)) {
+			$.Element.prototype[method] = function () {
+				return this.subject && $.defined(callback.apply(this.subject, arguments), this.subject);
+			};
+		}
 
-	$.each(methods, function(method, callback){
-		if ($.type(callback) == "function") {
-			if (on.element && (!(method in $.Element.prototype) || !noOverwrite)) {
-				$.Element.prototype[method] = function () {
-					return this.subject && $.defined(callback.apply(this.subject, arguments), this.subject);
+		if (on.array && (!(method in $.Array.prototype) || !noOverwrite)) {
+			$.Array.prototype[method] = function() {
+				var args = arguments;
+				return this.subject.map(function(element) {
+					return element && $.defined(callback.apply(element, args), element);
+				});
+			};
+		}
+
+		if (on.$) {
+			$.sources[method] = $[method] = callback;
+
+			if (on.array || on.element) {
+				$[method] = function () {
+					var args = [].slice.apply(arguments);
+					var subject = args.shift();
+					var Type = on.array && Array.isArray(subject)? "Array" : "Element";
+
+					return $[Type].prototype[method].apply({subject: subject}, args);
 				};
-			}
-
-			if (on.array && (!(method in $.Array.prototype) || !noOverwrite)) {
-				$.Array.prototype[method] = function() {
-					var args = arguments;
-					return this.subject.map(function(element) {
-						return element && $.defined(callback.apply(element, args), element);
-					});
-				};
-			}
-
-			if (on.$) {
-				$.sources[method] = $[method] = callback;
-
-				if (on.array || on.element) {
-					$[method] = function () {
-						var args = [].slice.apply(arguments);
-						var subject = args.shift();
-						var Type = on.array && Array.isArray(subject)? "Array" : "Element";
-
-						return $[Type].prototype[method].apply({subject: subject}, args);
-					};
-				}
 			}
 		}
-	});
-};
+	}
+}, 0);
 
 $.add($.Array.prototype, {element: false});
 $.add($.Element.prototype);
