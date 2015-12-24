@@ -23,8 +23,7 @@ function overload(callback, start, end) {
 		};
 	}
 
-	callback = overload(callback, start + 1, end);
-	return overload(callback, start, end - 1);
+	return overload(overload(callback, start + 1, end), start, end - 1);
 }
 
 // Copy properties from one object to another. Overwrites allowed.

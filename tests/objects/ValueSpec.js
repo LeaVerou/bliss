@@ -6,7 +6,7 @@ describe("$.value", function() {
 
 	it("not throw",function(){
 	    expect($.value).not.to.throw(Error);
-	})
+	});
 
 	it("returns null if object is null", function() {
 		var obj = null;
@@ -22,7 +22,7 @@ describe("$.value", function() {
 		var obj = {
 			foo:1,
 			bar:{
-				bar1:"one" 
+				bar1:"one"
 			}
 		};
 		expect($.value(obj, "foo")).to.equal(1);
