@@ -5,31 +5,20 @@ function overload(callback, start) {
 	start = start === undefined ? 1 : start;
 
 	return function() {
-		var isSingleParam = $.type(arguments[start]) === 'object', 
-			argsArray = Array.prototype.slice.call(arguments),
-			end = start + 1,
-			obj = {}, 
-			ret,
-			paramsBefore = [],
-			paramsAfter = [];
+		if ($.type(arguments[start]) !== 'string') { // Single param 
+			var obj = arguments[start], ret;
 
-		if (isSingleParam) {
-			obj = arguments[start];
+			for (var key in obj) {
+				var args = Array.from(arguments);
+				args.splice(start, 1, key, obj[key]);
+				ret = callback.apply(this, args);
+			}
+
+			return ret;
 		}
 		else {
-			end += 1;
-			obj[arguments[start]] = arguments[start + 1];
+			return callback.apply(this, arguments);
 		}
-		
-		paramsBefore = argsArray.slice(0, start);
-		paramsAfter = argsArray.slice(end);
-
-		for (var key in obj) {
-			ret = callback.apply(
-				this, paramsBefore.concat([key, obj[key]], paramsAfter)
-			);
-		}
-		return ret;
 	};
 }
 
@@ -68,7 +57,7 @@ var $ = self.Bliss = extend(function(expr, context) {
 
 extend($, {
 	extend: extend,
-	
+
 	overload: overload,
 
 	property: $.property || "_",
@@ -127,19 +116,6 @@ extend($, {
 		}
 
 		return $.set(document.createElement(tag || "div"), o);
-	},
-
-	hooks: {
-		add: function (name, callback) {
-			this[name] = this[name] || [];
-			this[name].push(callback);
-		},
-
-		run: function (name, env) {
-			(this[name] || []).forEach(function(callback) {
-				callback(env);
-			});
-		}
 	},
 
 	each: function(obj, callback, ret) {
@@ -409,7 +385,7 @@ $.Element.prototype = {
 		}
 
 	}, 0),
-	
+
 	// Run a CSS transition, return promise
 	transition: function(props, duration) {
 		duration = +duration || 400;
@@ -530,7 +506,7 @@ $.setProps = {
 
 		if ($.type(selector) === 'object') {
 			obj = selector;
-		} 
+		}
 		else {
 			obj[selector] = callback;
 		}

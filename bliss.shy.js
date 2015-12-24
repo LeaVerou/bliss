@@ -5,24 +5,20 @@ function overload(callback, start) {
 	start = start === undefined ? 1 : start;
 
 	return function() {
-		var isSingleParam = $.type(arguments[start]) !== 'string', 
-			replace = isSingleParam ? 1 : 2,
-			args = Array.from(arguments),
-			obj = {}, ret;
-			
-		if (isSingleParam) {
-			obj = arguments[start];
+		if ($.type(arguments[start]) !== 'string') { // Single param 
+			var obj = arguments[start], ret;
+
+			for (var key in obj) {
+				var args = Array.from(arguments);
+				args.splice(start, 1, key, obj[key]);
+				ret = callback.apply(this, args);
+			}
+
+			return ret;
 		}
 		else {
-			obj[arguments[start]] = arguments[start + 1];
+			return callback.apply(this, arguments);
 		}
-
-		for (var key in obj) {
-			var argsCopy = args.slice(0);
-			argsCopy.splice(start, replace, key, obj[key]);
-			ret = callback.apply(this, argsCopy);
-		}
-		return ret;
 	};
 }
 
@@ -61,7 +57,7 @@ var $ = self.Bliss = extend(function(expr, context) {
 
 extend($, {
 	extend: extend,
-	
+
 	overload: overload,
 
 	property: $.property || "_",
@@ -389,7 +385,7 @@ $.Element.prototype = {
 		}
 
 	}, 0),
-	
+
 	// Run a CSS transition, return promise
 	transition: function(props, duration) {
 		duration = +duration || 400;
@@ -510,7 +506,7 @@ $.setProps = {
 
 		if ($.type(selector) === 'object') {
 			obj = selector;
-		} 
+		}
 		else {
 			obj[selector] = callback;
 		}
