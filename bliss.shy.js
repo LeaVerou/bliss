@@ -1,3 +1,5 @@
+// For an overview of the project structure and properties, please visit:
+// http://blissfuljs.com/docs.html#basics
 (function() {
 "use strict";
 
