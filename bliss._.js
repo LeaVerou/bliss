@@ -77,7 +77,7 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	};
 
 	EventTarget.prototype.removeEventListener = function(type, callback, capture) {
-		if (this[_] && callback) {
+		if (this && this[_] && callback) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 
 			if (listeners[type]) {
