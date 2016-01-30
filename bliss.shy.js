@@ -115,7 +115,7 @@ extend($, {
 			else {
 				o = tag;
 				tag = o.tag;
-				delete o.tag;
+				o = $.extend({}, o, function(property) { return property !== "tag"; });
 			}
 		}
 

@@ -115,7 +115,7 @@ extend($, {
 			else {
 				o = tag;
 				tag = o.tag;
-				delete o.tag;
+				o = $.extend({}, o, function(property) { return property !== "tag"; });
 			}
 		}
 
@@ -689,7 +689,7 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	    notEqual = function() { return !equal.apply(this, arguments); };
 
 	EventTarget.prototype.addEventListener = function(type, callback, capture) {
-		if (this[_] && callback) {
+		if (this && this[_] && callback) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 			
 			listeners[type] = listeners[type] || [];
@@ -703,7 +703,7 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	};
 
 	EventTarget.prototype.removeEventListener = function(type, callback, capture) {
-		if (this[_] && callback) {
+		if (this && this[_] && callback) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 
 			if (listeners[type]) {
