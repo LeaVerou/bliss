@@ -107,6 +107,10 @@ extend($, {
 	},
 
 	create: function (tag, o) {
+		if (tag instanceof Node) {
+			return $.set(tag, o);
+		}
+
 		// 4 signatures: (tag, o), (tag), (o), ()
 		if (arguments.length === 1) {
 			if ($.type(tag) === "string") {
