@@ -487,6 +487,14 @@ $.setProps = {
 		}
 	},
 
+	unbind: function(val) {
+		for (var events in val) {
+			events.split(/\s+/).forEach(function (event) {
+				this.removeEventListener(event, val[events]);
+			}, this);
+		}
+	},
+
 	once: overload(function(events, callback){
 		events = events.split(/\s+/);
 		var me = this;
