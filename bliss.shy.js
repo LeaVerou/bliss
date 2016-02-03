@@ -210,13 +210,21 @@ extend($, {
 		lazy: overload(function(obj, property, getter) {
 			Object.defineProperty(obj, property, {
 				get: function() {
-					// FIXME this does not work for instances if property is defined on the prototype
-					delete this[property];
-					return this[property] = getter.call(this);
+					var value = getter.call(this);
+
+					Object.defineProperty(this, property, {
+						value: value,
+						configurable: true,
+						enumerable: true,
+						writable: true
+					});
+
+					return value;
 				},
 				configurable: true,
 				enumerable: true
 			});
+
 			return obj;
 		}),
 
