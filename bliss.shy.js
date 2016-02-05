@@ -440,7 +440,9 @@ $.Element.prototype = {
 
 		evt.initEvent(type, true, true );
 
-		this.dispatchEvent($.extend(evt, properties));
+		// Return the result of dispatching the event, so we
+		// can know if `e.preventDefault` was called inside it
+		return this.dispatchEvent($.extend(evt, properties));
 	}
 };
 
