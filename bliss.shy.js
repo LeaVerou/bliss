@@ -441,6 +441,14 @@ $.Element.prototype = {
 		evt.initEvent(type, true, true );
 
 		this.dispatchEvent($.extend(evt, properties));
+	},
+
+	unbind: function(val) {
+		for (var events in val) {
+			events.split(/\s+/).forEach(function (event) {
+				this.removeEventListener(event, val[events]);
+			}, this);
+		}
 	}
 };
 
@@ -496,14 +504,6 @@ $.setProps = {
 					this.addEventListener(event, val[events]);
 				}, this);
 			}
-		}
-	},
-
-	unbind: function(val) {
-		for (var events in val) {
-			events.split(/\s+/).forEach(function (event) {
-				this.removeEventListener(event, val[events]);
-			}, this);
 		}
 	},
 
