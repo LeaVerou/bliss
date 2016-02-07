@@ -448,7 +448,7 @@ $$(element.attributes).filter(function(attribute){
 	<article class="full">
 		<h1 class="element full">clone</h1>
 
-		<p class="description">Clone an element including its descendants, with events.</p>
+		<p class="description">Clone an element including its descendants, with events and data.</p>
 
 		<pre><code>var clone = $.clone(subject)</code></pre>
 		<pre><code>var clone = subject._.clone()</code></pre>
@@ -468,7 +468,7 @@ var button2 = button._.clone();
 // If clicked, button2 will print both messages</code></pre>
 
 		<ul class="notes">
-			<li>If you don’t care about copying events, just use the native <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode"><code>element.cloneNode()</code></a></li>
+			<li>If you don’t care about copying events and data, just use the native <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode"><code>element.cloneNode()</code></a></li>
 		</ul>
 
 		<a class="jq">jQuery.fn.clone</a>
@@ -803,6 +803,36 @@ Promise.all($$("div")._.transition({
 		</ul>
 
 		<a class="jq">jQuery.fn.bind</a>
+	</article>
+
+	<article>
+		<h1 class="element array set">unbind</h1>
+
+		<p class="description">Unbind event listeners en masse.</p>
+
+		<pre><code>subject = $.unbind(subject, handlers)</code></pre>
+		<pre><code>subject = subject._.unbind(handlers)</code></pre>
+
+		<dl class="args">
+			<dt class="element array">subject</dt>
+			<dd>The element(s) to unbind the event listeners from.</dd>
+
+			<dt class="object">handlers</dt>
+			<dd>If object: An object whose keys are the events and the values the listeners. You can include multiple event types by space-separating them.</dd>
+		</dl>
+
+		<pre><code>$$('input[type="range"]')._.unbind({
+	"input change": function(evt) { this.title = this.value}
+})</code></pre>
+
+		<ul class="notes">
+			<li>If only unbinding one event listener, just use the native <code>element.removeEventListener(type, handler, useCapture)</code> syntax. If unbinding one event listener from multiple elements, you can use <code>array._.removeEventListener</code>, like so:
+			<pre><code>$$("input")._.removeEventListener("focus", functionReference);</code></pre>
+			</li>
+			<li>In the future, this will support more kinds of mass unbinding, such as all listeners of a certain type (with no function reference needed) or all listeners regardless of type. Perhaps even by namespace. See <a href="https://github.com/LeaVerou/bliss/issues/156">#156</a> for progress on this.</li>
+		</ul>
+
+		<a class="jq">jQuery.fn.unbind</a>
 	</article>
 
 	<article>
