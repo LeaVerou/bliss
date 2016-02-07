@@ -58,6 +58,55 @@ describe("$.fire", function() {
 			done();
 		});
 
+		it("Test without preventDefault in callback", function(done) {
+
+			//Create elements
+			var subject = document.createElement("button");
+
+			// Add properties to the button and add it to the body.
+			subject.type = "button";
+			subject.textContent = "Button";
+			document.body.appendChild(subject);
+
+			//Add event listener on click event with a
+			// callback that does not `preventDefault()`
+			subject.addEventListener("click", function (e) {
+				return true;
+			});
+
+
+			allowed = $.fire(subject, "click");
+
+			expect(allowed).to.equal(true);
+
+			done();
+		});
+
+		it("Test with preventDefault in callback", function(done) {
+
+			//Create elements
+			var subject = document.createElement("button");
+
+			// Add properties to the button and add it to the body.
+			subject.type = "button";
+			subject.textContent = "Button";
+			document.body.appendChild(subject);
+
+			//Add event listener on click event with a
+			// callback that does `preventDefault()`
+			subject.addEventListener("click", function (e) {
+				e.preventDefault();
+				return true;
+			});
+
+
+			allowed = $.fire(subject, "click");
+
+			expect(allowed).to.equal(false);
+
+			done();
+		});
+
 	});
 
 });
