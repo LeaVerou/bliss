@@ -67,10 +67,16 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 		if (this && this[_] && callback) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 
+			if (type.indexOf(".") > -1) {
+				type = type.split(".");
+				var className = type[1];
+				type = type[0];
+			}
+
 			listeners[type] = listeners[type] || [];
 
 			if (listeners[type].filter(equal.bind(null, callback, capture)).length === 0) {
-				listeners[type].push({callback: callback, capture: capture});
+				listeners[type].push({callback: callback, capture: capture, className: className});
 			}
 		}
 

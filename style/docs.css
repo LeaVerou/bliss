@@ -108,3 +108,14 @@
 	padding: .6em 1em;
 	border-radius: .3em;
 }
+
+pre:not(.def) + pre.def {
+	margin-top: 1.5em;
+}
+
+/* Different color for examples */
+.def ~ pre:not(.def),
+.args ~ pre:not(.def) {
+	background: hsl(350, 80%, 97%);
+	box-shadow: -35vw 0 hsl(350, 80%, 97%), 35vw 0 hsl(350, 80%, 97%);
+}

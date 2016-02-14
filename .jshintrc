@@ -2,5 +2,7 @@
 	"expr": true,
 	"esnext": true,
 	"funcscope": true,
-	"loopfunc": true
+	"loopfunc": true,
+	"boss": true,
+	"curly": true
 }

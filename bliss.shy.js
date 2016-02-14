@@ -7,7 +7,7 @@ function overload(callback, start, end) {
 
 	if (end - start <= 1) {
 		return function() {
-			if ($.type(arguments[start]) === 'string') {
+			if (arguments.length <= start || $.type(arguments[start]) === 'string') {
 				return callback.apply(this, arguments);
 			}
 
@@ -445,13 +445,38 @@ $.Element.prototype = {
 		return this.dispatchEvent($.extend(evt, properties));
 	},
 
-	unbind: function(val) {
-		for (var events in val) {
-			events.split(/\s+/).forEach(function (event) {
-				this.removeEventListener(event, val[events]);
+	unbind: overload(function(events, callback) {
+		console.log(events, callback);
+			(events || "").split(/\s+/).forEach(function (type) {
+				if ((_ in this) && (type.indexOf(".") > -1 || !callback)) {
+					// Mass unbinding, need to go through listeners
+					type = (type || "").split(".");
+					var className = type[1];
+					type = type[0];
+					// man, can’t wait to be able to do [type, className] = type.split(".");
+
+					var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
+
+					for (var ltype in listeners) {
+						if (!type || ltype === type) {
+							// No forEach, because we’re mutating the array
+							for (var i=0, l; l=listeners[ltype][i]; i++) {
+								if ((!className || className === l.className) &&
+								    (!callback || callback === l.callback )) { // TODO what about capture?
+									this.removeEventListener.call(this, ltype, l.callback, l.capture);
+									i--;
+								}
+							}
+
+						}
+					}
+				}
+				else {
+					// Normal event unbinding, defer to native JS
+					this.removeEventListener(type, callback);
+				}
 			}, this);
-		}
-	}
+	}, 0)
 };
 
 /*
