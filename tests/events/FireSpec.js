@@ -1,5 +1,7 @@
 describe("$.fire", function() {
 
+	helpers.fixture('events.html');
+
 	it("exists", function() {
 		expect($.fire).to.exist;
 	});
@@ -7,19 +9,11 @@ describe("$.fire", function() {
 	describe("Test fire event", function() {
 
 		it("Test without params", function(done) {
-
-			//Create elements
-			var subject = document.createElement("input");
+			var subject = document.querySelector("#textInput");
 			var spy = sinon.spy();
-
-			// Add properties to the input and add it to the body.
-			subject.type = "text";
-			subject.id = "test";
-			document.body.appendChild(subject);
 
 			//Add event listener on click event without params
 			subject.addEventListener("click", spy);
-
 
 			$.fire(subject, "click");
 
@@ -29,9 +23,7 @@ describe("$.fire", function() {
 		});
 
 		it("Test with params", function(done) {
-
-			//Create elements
-			var subject = document.createElement("input");
+			var subject = document.querySelector("#textInput");
 			var spy = sinon.spy();
 			var params = {"test": true, "args": [1, 3]};
 
@@ -59,14 +51,7 @@ describe("$.fire", function() {
 		});
 
 		it("Test without preventDefault in callback", function(done) {
-
-			//Create elements
-			var subject = document.createElement("button");
-
-			// Add properties to the button and add it to the body.
-			subject.type = "button";
-			subject.textContent = "Button";
-			document.body.appendChild(subject);
+			var subject = document.querySelector("#button");
 
 			//Add event listener on click event with a
 			// callback that does not `preventDefault()`
@@ -75,22 +60,14 @@ describe("$.fire", function() {
 			});
 
 
-			allowed = $.fire(subject, "click");
-
+			var allowed = $.fire(subject, "click");
 			expect(allowed).to.equal(true);
 
 			done();
 		});
 
 		it("Test with preventDefault in callback", function(done) {
-
-			//Create elements
-			var subject = document.createElement("button");
-
-			// Add properties to the button and add it to the body.
-			subject.type = "button";
-			subject.textContent = "Button";
-			document.body.appendChild(subject);
+			var subject = document.querySelector("#button");
 
 			//Add event listener on click event with a
 			// callback that does `preventDefault()`
@@ -99,9 +76,7 @@ describe("$.fire", function() {
 				return true;
 			});
 
-
-			allowed = $.fire(subject, "click");
-
+			var allowed = $.fire(subject, "click");
 			expect(allowed).to.equal(false);
 
 			done();
