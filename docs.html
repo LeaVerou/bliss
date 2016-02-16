@@ -754,7 +754,7 @@ Promise.all($$("div")._.transition({
 	<article>
 		<h1 class="element array set">events</h1>
 
-		<p class="description">Set multiple event listeners on an element.</p>
+		<p class="description">Set multiple event listeners on one or more elements.</p>
 
 		<pre><code>subject = $.events(subject, handlers)</code></pre>
 		<pre><code>subject = subject._.events(handlers)</code></pre>
@@ -765,15 +765,39 @@ Promise.all($$("div")._.transition({
 			<dd>The element(s) to set the event listeners on.</dd>
 
 			<dt class="object element">handlers</dt>
-			<dd>If object: An object whose keys are the events and the values the listeners. You can include multiple event types by space-separating them. If it’s an element, all its event listeners are copied from it to <code>subject</code>.</dd>
+			<dd>If object: An object whose keys are the events and the values the listeners.
+				For details on the keys, see <code>types</code> below.
+				For details on the values, see <code>callback</code> below.
+				There is no way to set capturing to <code>true</code> if using this syntax.
+				If it’s an element, all its event listeners are copied from it to <code>subject</code>.</dd>
 		</dl>
 
 		<pre><code>$$('input[type="range"]')._.events({
-	"input change": function(evt) { this.title = this.value}
+	"input change": function(evt) { this.title = this.value},
+	"focus.className": function(evt) { console.log(evt.type); }
 })</code></pre>
 
+		<pre class="def"><code>subject = $.events(subject, types, callback[, capture])</code></pre>
+		<pre class="def"><code>subject = subject._.events(types, callback[, capture])</code></pre>
+
+		<dl class="args">
+			<dt class="element array">subject</dt>
+			<dd>The element(s) to set the event listeners on.</dd>
+
+			<dt class="string">types</dt>
+			<dd>The event type. You can include multiple event types by space-separating them.
+				You can add a “class” on each event type by using a period (<code>click.myclass</code>), which you can later use in <code>$.unbind()</code> for unbinding all events with a certain class at once.</dd>
+
+			<dt class="function">callback</dt>
+			<dd>The function to execute. Passed directly to <code>addEventListener</code>.</dd>
+
+			<dt class="boolean">capture</dt>
+			<dd>Whether to use capture or not. Passed directly to <code>addEventListener</code>.</dd>
+		</dl>
+
 		<ul class="notes">
-			<li>If only setting one event listener, just use the native <code>element.addEventListener(type, handler, useCapture)</code> syntax. If setting one event listener on multiple elements, you can use <code>array._.addEventListener</code>, like so:
+			<li>If only setting one event listener on one element, just use the native <code>element.addEventListener(type, handler, useCapture)</code> syntax.
+				If setting one event listener on multiple elements, you can use <code>array._.addEventListener</code>, like so:
 			<pre><code>$$("input")._.addEventListener("input", function(){ /* ... */);</code></pre>
 			</li>
 			<li>If using Bliss shy: You can use classes in your event names, like <code>click.foo</code>. The event that will be bound in that case is without the class name (<code>click</code>), but you can use the class name to unbind via <code>$.unbind()</code></li>

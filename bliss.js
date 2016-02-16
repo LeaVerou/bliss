@@ -446,36 +446,35 @@ $.Element.prototype = {
 	},
 
 	unbind: overload(function(events, callback) {
-		console.log(events, callback);
-			(events || "").split(/\s+/).forEach(function (type) {
-				if ((_ in this) && (type.indexOf(".") > -1 || !callback)) {
-					// Mass unbinding, need to go through listeners
-					type = (type || "").split(".");
-					var className = type[1];
-					type = type[0];
-					// man, can’t wait to be able to do [type, className] = type.split(".");
+		(events || "").split(/\s+/).forEach(function (type) {
+			if ((_ in this) && (type.indexOf(".") > -1 || !callback)) {
+				// Mass unbinding, need to go through listeners
+				type = (type || "").split(".");
+				var className = type[1];
+				type = type[0];
+				// man, can’t wait to be able to do [type, className] = type.split(".");
 
-					var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
+				var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 
-					for (var ltype in listeners) {
-						if (!type || ltype === type) {
-							// No forEach, because we’re mutating the array
-							for (var i=0, l; l=listeners[ltype][i]; i++) {
-								if ((!className || className === l.className) &&
-								    (!callback || callback === l.callback )) { // TODO what about capture?
-									this.removeEventListener.call(this, ltype, l.callback, l.capture);
-									i--;
-								}
+				for (var ltype in listeners) {
+					if (!type || ltype === type) {
+						// No forEach, because we’re mutating the array
+						for (var i=0, l; l=listeners[ltype][i]; i++) {
+							if ((!className || className === l.className) &&
+							    (!callback || callback === l.callback )) { // TODO what about capture?
+								this.removeEventListener.call(this, ltype, l.callback, l.capture);
+								i--;
 							}
-
 						}
+
 					}
 				}
-				else {
-					// Normal event unbinding, defer to native JS
-					this.removeEventListener(type, callback);
-				}
-			}, this);
+			}
+			else {
+				// Normal event unbinding, defer to native JS
+				this.removeEventListener(type, callback);
+			}
+		}, this);
 	}, 0)
 };
 
@@ -525,11 +524,16 @@ $.setProps = {
 				}
 			}
 		}
+		else if (arguments.length > 1 && $.type(val) === "string") {
+			var callback = arguments[1], capture = arguments[2];
+			
+			val.split(/\s+/).forEach(function (event) {
+				this.addEventListener(event, callback, capture);
+			}, this);
+		}
 		else {
 			for (var events in val) {
-				events.split(/\s+/).forEach(function (event) {
-					this.addEventListener(event, val[events]);
-				}, this);
+				$.events(this, events, val[events]);
 			}
 		}
 	},

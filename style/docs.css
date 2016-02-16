@@ -115,7 +115,8 @@ pre:not(.def) + pre.def {
 
 /* Different color for examples */
 .def ~ pre:not(.def),
-.args ~ pre:not(.def) {
+.args ~ pre:not(.def),
+.notes pre {
 	background: hsl(350, 80%, 97%);
 	box-shadow: -35vw 0 hsl(350, 80%, 97%), 35vw 0 hsl(350, 80%, 97%);
 }
