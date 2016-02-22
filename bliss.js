@@ -337,14 +337,22 @@ extend($, {
 					resolve(env.xhr);
 				}
 				else {
-					reject(Error(env.xhr.statusText));
+					reject($.extend(Error(env.xhr.statusText), {
+						get status() { return this.xhr.status; },
+						xhr: env.xhr
+					}));
 				}
 
 			};
 
 			env.xhr.onerror = function() {
 				document.body.removeAttribute('data-loading');
-				reject(Error("Network Error"));
+				reject($.extend(Error("Network Error"), {xhr: env.xhr}));
+			};
+
+			env.xhr.ontimeout = function() {
+			    document.body.removeAttribute('data-loading');
+			    reject($.extend(Error("Network Timeout"), {xhr: env.xhr}));
 			};
 
 			env.xhr.send(env.method === 'GET'? null : env.data);
@@ -526,7 +534,7 @@ $.setProps = {
 		}
 		else if (arguments.length > 1 && $.type(val) === "string") {
 			var callback = arguments[1], capture = arguments[2];
-			
+
 			val.split(/\s+/).forEach(function (event) {
 				this.addEventListener(event, callback, capture);
 			}, this);

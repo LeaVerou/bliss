@@ -1214,7 +1214,10 @@ $.value("document", "body", "nodeType"); // 1, no root, starting from self</code
 			</dd>
 
 			<dt class="promise">promise</dt>
-			<dd>A promise that is resolved when the resource is successfully fetched and rejected if there is any error.</dd>
+			<dd>A promise that is resolved when the resource is successfully fetched and rejected if there is any error.
+				When the request is successful, the promise resolves with the XHR object.
+				When the request fails, the promise rejects with an Error whose message is a description of the error.
+				The error object also contains two properties: <code>xhr</code> which points to the XHR object, and <code>status</code> which returns the status code (e.g. 404).</dd>
 		</dl>
 
 		<pre><code>$.fetch("/api/create", {
@@ -1223,7 +1226,7 @@ $.value("document", "body", "nodeType"); // 1, no root, starting from self</code
 }).then(function(){
 	alert("success!");
 }).catch(function(error){
-	console.error(error);
+	console.error(error, "code: " + error.status);
 });</code></pre>
 
 		<p><strong>Hooks:</strong> <code>fetch-args</code></p>
