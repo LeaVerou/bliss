@@ -14,11 +14,11 @@ describe("$.unbind", function () {
         expect($.unbind).to.exist;
     });
     
-    it("unbind events using namespaces", function (done) {
+    it("unbinds events using namespaces", function (done) {
         // Setup
-        subject.addEventListener('click.namespace1.foo', spy1);
-        subject.addEventListener('click.namespace1.bar', spy2);
-        subject.addEventListener('click.namespace2.bar', spy3);
+        subject.addEventListener('click.namespace1', spy1);
+        subject.addEventListener('click.namespace1', spy2);
+        subject.addEventListener('click.namespace2', spy3);
 
         // Exercise
         $.unbind(subject, '.namespace1');
