@@ -153,55 +153,43 @@ extend($, {
 
 	// Helper for defining OOP-like “classes”
 	Class: function(o) {
-		var init = $.noop;
+		var special = ["constructor", "extends", "abstract", "static"].concat(Object.keys($.classProps));
+		var init = o.hasOwnProperty("constructor")? o.constructor : $.noop;
 
-		if (o.hasOwnProperty("constructor")) {
-			init = o.constructor;
-			delete o.constructor;
-		}
-
-		var abstract = o.abstract;
-		delete o.abstract;
-
-		var ret = function() {
-			if (abstract && this.constructor === ret) {
+		var Class = function() {
+			if (o.abstract && this.constructor === Class) {
 				throw new Error("Abstract classes cannot be directly instantiated.");
 			}
 
-			if (this.constructor.super && this.constructor.super != ret) {
-				// FIXME This should never happen, but for some reason it does if ret.super is null
-				// Debugging revealed that somehow this.constructor !== ret, wtf. Must look more into this
-				this.constructor.super.apply(this, arguments);
-			}
+			Class.super && Class.super.apply(this, arguments);
 
-			return init.apply(this, arguments);
+			init.apply(this, arguments);
 		};
 
-		ret.super = o.extends || null;
-		delete o.extends;
+		Class.super = o.extends || null;
 
-		ret.prototype = $.extend(Object.create(ret.super? ret.super.prototype : Object), {
-			constructor: ret
+		Class.prototype = $.extend(Object.create(Class.super? Class.super.prototype : Object), {
+			constructor: Class
 		});
 
-		$.extend(ret, o.static);
-		delete o.static;
+		$.extend(Class, o.static);
 
-		for (var property in o) {
-			if (property in $.classProps) {
-				$.classProps[property].call(ret, ret.prototype, o[property]);
-				delete o[property];
+		for (var property in $.classProps) {
+			if (property in o) {
+				$.classProps[property].call(Class, Class.prototype, o[property]);
 			}
 		}
 
-		// Anything that remains is an instance method/property or ret.prototype.constructor
-		$.extend(ret.prototype, o);
+		// Anything that remains is an instance method/property
+		$.extend(Class.prototype, o, function(property) {
+			return o.hasOwnProperty(property) && special.indexOf(property) === -1
+		});
 
 		// For easier calling of super methods
 		// This doesn't save us from having to use .call(this) though
-		ret.prototype.super = ret.super? ret.super.prototype : null;
+		Class.prototype.super = Class.super? Class.super.prototype : null;
 
-		return ret;
+		return Class;
 	},
 
 	// Properties with special handling in classes
@@ -362,7 +350,7 @@ extend($, {
 	value: function(obj) {
 		var hasRoot = $.type(obj) !== "string";
 
-		return $$(arguments).slice(+hasRoot).reduce(function(obj, property) {
+		return $.$(arguments).slice(+hasRoot).reduce(function(obj, property) {
 	        return obj && obj[property];
 	    }, hasRoot? obj : self);
 	}
