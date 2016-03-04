@@ -174,16 +174,16 @@ extend($, {
 
 		$.extend(Class, o.static);
 
+		// Anything that remains is an instance method/property
+		$.extend(Class.prototype, o, function(property) {
+			return o.hasOwnProperty(property) && special.indexOf(property) === -1
+		});
+
 		for (var property in $.classProps) {
 			if (property in o) {
 				$.classProps[property].call(Class, Class.prototype, o[property]);
 			}
 		}
-
-		// Anything that remains is an instance method/property
-		$.extend(Class.prototype, o, function(property) {
-			return o.hasOwnProperty(property) && special.indexOf(property) === -1
-		});
 
 		// For easier calling of super methods
 		// This doesn't save us from having to use .call(this) though
