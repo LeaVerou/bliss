@@ -1302,6 +1302,53 @@ $.include(self.Dropbox, url).then(function(){
 	</article>
 
 	<article>
+		<h1>overload</h1>
+		<p class="description">
+			Utility for wrapping a Bliss function to allows key values as seperate parameters, or as one object of many key values. Used internally in a number of Bliss functions.
+		</p>
+
+		<pre><code>$.overload(callback, start, end)</code></pre>
+
+		<dl class="args">
+			<dt class="function">callback</dt>
+			<dd>
+				The function that will be called once for each key value pair.
+			</dd>
+
+			<dt class="Number">start</dt>
+			<dd>
+				the index at which to start collecting arguments to be applied to he callback. Defaults to 1
+			</dd>
+
+			<dt class="Number">end</dt>
+			<dd>
+				The index of the arguments at which to stop collecting. Defaults to start + 1
+			</dd>
+		</dl>
+
+		<pre><code>var method = Bliss.overload(function (key, val) {
+	console.log(key + " " + val);
+}, 0);
+method('name', 'Lea'); 
+// name Lea
+method({name: 'Lea', lang: 'javascript'}); 
+// name Lea
+// lang javascript
+		</code></pre>
+
+		<pre><code>var method = Bliss.overload(function (param1, param2, key, val) {
+	console.log(key + " " + val);
+}, 2);
+method(param, param, 'name', 'Lea'); 
+// name Lea
+method(param, param, {name: 'Lea', lang: 'javascript'}); 
+// name Lea
+// lang javascript
+		</code></pre>
+
+	</article>
+
+	<article>
 		<h1>hooks.add</h1>
 
 		<p class="description">Register a function to be executed at a certain hook</p>
