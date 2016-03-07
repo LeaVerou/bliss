@@ -1329,9 +1329,9 @@ $.include(self.Dropbox, url).then(function(){
 		<pre><code>var method = Bliss.overload(function (key, val) {
 	console.log(key + " " + val);
 }, 0);
-method('name', 'Lea'); 
+method('name', 'Lea');
 // name Lea
-method({name: 'Lea', lang: 'javascript'}); 
+method({name: 'Lea', lang: 'javascript'});
 // name Lea
 // lang javascript
 		</code></pre>
@@ -1339,9 +1339,9 @@ method({name: 'Lea', lang: 'javascript'});
 		<pre><code>var method = Bliss.overload(function (param1, param2, key, val) {
 	console.log(key + " " + val);
 }, 2);
-method(param, param, 'name', 'Lea'); 
+method(param, param, 'name', 'Lea');
 // name Lea
-method(param, param, {name: 'Lea', lang: 'javascript'}); 
+method(param, param, {name: 'Lea', lang: 'javascript'});
 // name Lea
 // lang javascript
 		</code></pre>
@@ -1447,7 +1447,7 @@ $.hooks.add("fetch-args", function(env) {
 	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </footer>
 
-<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=all"></script>
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=blissfuljs"></script>
 <script src="bliss.js"></script>
 <script src="transform.js"></script>
 <script src="index.js"></script>
