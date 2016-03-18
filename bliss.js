@@ -172,16 +172,27 @@ extend($, {
 			constructor: Class
 		});
 
-		$.extend(Class, o.static);
+		var specialFilter = function(property) {
+			return this.hasOwnProperty(property) && special.indexOf(property) === -1;
+		};
 
-		// Anything that remains is an instance method/property
-		$.extend(Class.prototype, o, function(property) {
-			return o.hasOwnProperty(property) && special.indexOf(property) === -1
-		});
+		// Static methods
+		if (o.static) {
+			$.extend(Class, o.static, specialFilter);
+
+			for (var property in $.classProps) {
+				if (property in o.static) {
+					$.classProps[property](Class, o.static[property]);
+				}
+			}
+		}
+
+		// Instance methods
+		$.extend(Class.prototype, o, specialFilter);
 
 		for (var property in $.classProps) {
 			if (property in o) {
-				$.classProps[property].call(Class, Class.prototype, o[property]);
+				$.classProps[property](Class.prototype, o[property]);
 			}
 		}
 
