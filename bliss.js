@@ -220,6 +220,15 @@ extend($, {
 
 					return value;
 				},
+				set: function(value) {
+					// Blind write: skip running the getter
+					Object.defineProperty(this, property, {
+						value: value,
+						configurable: true,
+						enumerable: true,
+						writable: true
+					});
+				},
 				configurable: true,
 				enumerable: true
 			});
@@ -375,7 +384,7 @@ $.Hooks = new $.Class({
 
 	run: function (name, env) {
 		(this[name] || []).forEach(function(callback) {
-			callback(env);
+			callback.call(env && env.context? env.context : env, env);
 		});
 	}
 });
