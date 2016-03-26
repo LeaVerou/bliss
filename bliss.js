@@ -377,13 +377,14 @@ extend($, {
 });
 
 $.Hooks = new $.Class({
-	add: function (name, callback) {
+	add: function (name, callback, first) {
 		this[name] = this[name] || [];
-		this[name].push(callback);
+		this[name][first? "unshift" : "push"](callback);
 	},
 
 	run: function (name, env) {
-		(this[name] || []).forEach(function(callback) {
+		this[name] = this[name] || [];
+		this[name].forEach(function(callback) {
 			callback.call(env && env.context? env.context : env, env);
 		});
 	}
