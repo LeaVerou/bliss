@@ -4,6 +4,12 @@
 
 Want to use Vanilla JS but find native APIs a bit unwieldy? Bliss is for you.
 
+## Install
+
+```bash
+npm install blissfuljs --save
+```
+
 ## Build
 
 ```bash
