@@ -758,7 +758,7 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	    notEqual = function() { return !equal.apply(this, arguments); };
 
 	EventTarget.prototype.addEventListener = function(type, callback, capture) {
-		if (this && this[_] && callback) {
+		if (this && this[_] && this[_].bliss && callback) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 
 			if (type.indexOf(".") > -1) {
@@ -778,7 +778,7 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	};
 
 	EventTarget.prototype.removeEventListener = function(type, callback, capture) {
-		if (this && this[_] && callback) {
+		if (this && this[_] && this[_].bliss  && callback) {
 			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
 
 			if (listeners[type]) {
