@@ -6,9 +6,13 @@ Want to use Vanilla JS but find native APIs a bit unwieldy? Bliss is for you.
 
 ## Install
 
+If using npm:
+
 ```bash
 npm install blissfuljs --save
 ```
+
+If not using npm, no worries! Just download your preferred Bliss bundle from http://blissfuljs.com
 
 ## Build
 
