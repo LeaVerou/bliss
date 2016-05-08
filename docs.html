@@ -1242,14 +1242,14 @@ $.value("document", "body", "nodeType"); // 1, no root, starting from self</code
 		<pre><code>var promise = $.include([condition,] url)</code></pre>
 
 		<dl class="args">
-			<dt class="string">condition</dt>
-			<dd>Optional condition. If true, it means the script is already loaded and nothing will happen.</dd>
+			<dt>condition</dt>
+			<dd>Optional condition. If truthy, it means the script is already loaded and nothing will be fetched.</dd>
 
 			<dt class="string">url</dt>
 			<dd>URL of the script to load.</dd>
 
 			<dt class="promise">promise</dt>
-			<dd>A promise that gets resolved when the script has loaded.</dd>
+			<dd>A promise that is resolved when the script has loaded or immediately, if <code>condition</code> is truthy.</dd>
 		</dl>
 
 		<pre><code>// Load ES5-shim if needed
