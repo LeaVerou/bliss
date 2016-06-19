@@ -175,12 +175,14 @@ extend($, {
 		var specialFilter = function(property) {
 			return this.hasOwnProperty(property) && special.indexOf(property) === -1;
 		};
+		
+		var property;
 
 		// Static methods
 		if (o.static) {
 			$.extend(Class, o.static, specialFilter);
 
-			for (var property in $.classProps) {
+			for (property in $.classProps) {
 				if (property in o.static) {
 					$.classProps[property](Class, o.static[property]);
 				}
@@ -190,7 +192,7 @@ extend($, {
 		// Instance methods
 		$.extend(Class.prototype, o, specialFilter);
 
-		for (var property in $.classProps) {
+		for (property in $.classProps) {
 			if (property in o) {
 				$.classProps[property](Class.prototype, o[property]);
 			}
@@ -759,11 +761,12 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 
 	EventTarget.prototype.addEventListener = function(type, callback, capture) {
 		if (this && this[_] && this[_].bliss && callback) {
-			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
+			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {},
+				className;
 
 			if (type.indexOf(".") > -1) {
 				type = type.split(".");
-				var className = type[1];
+				className = type[1];
 				type = type[0];
 			}
 

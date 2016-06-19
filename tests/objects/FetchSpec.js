@@ -41,12 +41,6 @@ describe('$.fetch', function() {
         "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
       });
     });
-
-    it("catch 404", function (done) {
-      handleJSON("/bad", "POST", "").catch(function () {
-	       done();
-       });
-    });
   });
 
   describe("GET", function () {
@@ -60,12 +54,6 @@ describe('$.fetch', function() {
 
     it("sets provided headers", function () {
       return verifyResponseHeaders("GET", headers, headers);
-    });
-
-    it("catch 404", function (done) {
-      handleJSON("/bad", "GET", "").catch(function () {
-	       done();
-       });
     });
   });
 
