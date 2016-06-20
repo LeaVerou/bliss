@@ -1,6 +1,6 @@
 describe("$.fire", function() {
 
-	helpers.fixture('events.html');
+	helpers.fixture("events.html");
 
 	it("exists", function() {
 		expect($.fire).to.exist;
@@ -12,7 +12,7 @@ describe("$.fire", function() {
 			var subject = document.querySelector("#textInput");
 			var spy = sinon.spy();
 
-			//Add event listener on click event without params
+			// Add event listener on click event without params
 			subject.addEventListener("click", spy);
 
 			$.fire(subject, "click");
@@ -31,20 +31,20 @@ describe("$.fire", function() {
 			subject.type = "text";
 			document.body.appendChild(subject);
 
-			//Add event listener on click event with params
+			// Add event listener on click event with params
 			subject.addEventListener("click", spy);
 
 
 			$.fire(subject, "click", params);
 
 			expect(spy.callCount).to.equal(1);
-			expect(spy.args[0][0]).to.be.a('Event');
+			expect(spy.args[0][0]).to.be.a("Event");
 
-			expect(spy.args[0][0]).to.have.deep.property('test');
+			expect(spy.args[0][0]).to.have.deep.property("test");
 			expect(spy.args[0][0].test).to.equal(true);
 
-			expect(spy.args[0][0]).to.have.deep.property('args');
-			expect(spy.args[0][0].args).to.be.a('array');
+			expect(spy.args[0][0]).to.have.deep.property("args");
+			expect(spy.args[0][0].args).to.be.a("array");
 			expect(spy.args[0][0].args).to.deep.equal([1, 3]);
 
 			done();
@@ -53,7 +53,7 @@ describe("$.fire", function() {
 		it("Test without preventDefault in callback", function(done) {
 			var subject = document.querySelector("#button");
 
-			//Add event listener on click event with a
+			// Add event listener on click event with a
 			// callback that does not `preventDefault()`
 			subject.addEventListener("click", function (e) {
 				return true;
@@ -69,7 +69,7 @@ describe("$.fire", function() {
 		it("Test with preventDefault in callback", function(done) {
 			var subject = document.querySelector("#button");
 
-			//Add event listener on click event with a
+			// Add event listener on click event with a
 			// callback that does `preventDefault()`
 			subject.addEventListener("click", function (e) {
 				e.preventDefault();

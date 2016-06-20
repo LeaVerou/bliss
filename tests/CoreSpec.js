@@ -5,7 +5,7 @@ describe("Core Bliss", function () {
 
 	// testing setup
 	it("has the fixture on the dom", function () {
-		expect($('#fixture-container')).to.not.be.null;
+		expect($("#fixture-container")).to.not.be.null;
 	});
 
 	it("has global methods and aliases", function() {

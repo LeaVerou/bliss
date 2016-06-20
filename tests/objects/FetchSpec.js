@@ -1,4 +1,4 @@
-describe('$.fetch', function() {
+describe("$.fetch", function() {
   var server,
       data = "foo=b%20ar&baz=yolo",
       headers = {foo: "bar", "Content-type": "yadda;charset=utf-8"};
@@ -18,7 +18,7 @@ describe('$.fetch', function() {
     server.restore();
   });
 
-  it('exists', function () {
+  it("exists", function () {
     expect($.fetch).to.exist;
     expect(Bliss.fetch).to.exist;
   });

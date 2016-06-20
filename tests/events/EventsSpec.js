@@ -1,19 +1,19 @@
 describe("$.events", function() {
 
-	helpers.fixture('events.html');
+	helpers.fixture("events.html");
 	var spy, htmlEvt;
 
 
-	it('exists', function() {
+	it("exists", function() {
 		expect($.events).to.exist;
 	});
 
 	describe("use with global -> $", function() {
 
-		beforeEach(function(){
+		beforeEach(function() {
 			spy = sinon.spy();
 			htmlEvt = document.createEvent("HTMLEvents");
-			htmlEvt.initEvent('input', true, true);
+			htmlEvt.initEvent("input", true, true);
 		});
 
 		it("Set multiple event listeners on an element based on element", function(done) {
@@ -44,8 +44,8 @@ describe("$.events", function() {
 
 			var subject = document.querySelector("#textInput");
 
-			//Add handlers to the subject
-			$.events(subject, { 'input click': spy });
+			// Add handlers to the subject
+			$.events(subject, { "input click": spy });
 
 			subject.dispatchEvent(htmlEvt);
 			expect(spy.callCount).to.equal(1);

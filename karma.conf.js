@@ -6,21 +6,21 @@ module.exports = function(config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+    basePath: "",
 
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha', 'sinon', 'fixture', 'chai'],
+    frameworks: ["mocha", "sinon", "fixture", "chai"],
 
 
     // list of files / patterns to load in the browser
     files: [
-      'bliss.shy.js',
-      'bliss._.js',
-      'tests/helpers.js',
-      'tests/**/*.js',
-      'tests/fixtures/**/*.html'
+      "bliss.shy.js",
+      "bliss._.js",
+      "tests/helpers.js",
+      "tests/**/*.js",
+      "tests/fixtures/**/*.html"
     ],
 
 
@@ -32,32 +32,24 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      '**/*.html': ['html2js'],
-      'tests/**/*.js': ['jshint'],
-      '*.js': ['jshint']
+      "**/*.html": ["html2js"],
+      "tests/**/*.js": ["eslint"],
+      "*.js": ["eslint"]
     },
 
-    jshint: {
-      options: {
-        curly: true,    // requires you to always put curly braces around blocks in loops and conditionals.
-        eqeqeq: false,  // prohibits the use of == and != in favor of === and !==.
-        loopfunc: true, // suppresses warnings about functions inside of loops. 
-        noarg: true,    // prohibits the use of arguments.caller and arguments.callee
-        expr: true,     // suppresses warnings about the use of expressions where normally you would expect to see assignments or function calls
-        undef: false,   // This option prohibits the use of explicitly undeclared variables
-        boss: true,     // suppresses warnings about the use of assignments in cases where comparisons are expected
-        devel: false,   // defines globals that are usually used for logging poor-man's debugging
-        eqnull: false,  // suppresses warnings about == null comparisons
-        browser: true,  // option defines globals exposed by modern browsers
-        globals: {}     // predefined global variables, if undef is true, this must be populated
-      },
-      summary: false
+    eslint: {
+      stopOnError: true,
+      stopOnWarning: true,
+      showWarnings: true,
+      engine: {
+        configFile: ".eslintrc.json"
+      }
     },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ["progress"],
 
 
     // web server port
@@ -80,8 +72,8 @@ module.exports = function(config) {
     customLaunchers: {
 
       Chrome_travis_ci: {
-        base: 'Chrome',
-        flags: ['--no-sandbox']
+        base: "Chrome",
+        flags: ["--no-sandbox"]
       }
 
     },
@@ -89,7 +81,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome_travis_ci'],
+    browsers: ["Chrome_travis_ci"],
 
 
     // Continuous Integration mode
@@ -101,4 +93,4 @@ module.exports = function(config) {
     concurrency: Infinity
   });
 
-}
+};

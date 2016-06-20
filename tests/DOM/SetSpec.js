@@ -1,10 +1,10 @@
 describe("$.set", function() {
 
 	var el;
-	helpers.fixture('set.html');
+	helpers.fixture("set.html");
 
 	beforeEach(function() {
-		el = document.querySelector('#fixture-container');
+		el = document.querySelector("#fixture-container");
 	});
 
 	it("exists", function() {
@@ -23,8 +23,8 @@ describe("$.set", function() {
 		expect(el.style.color).to.equal("red");
 	});
 
-	it('returns the element from set', function() {
-		var result = el._.set({color: 'red'});
+	it("returns the element from set", function() {
+		var result = el._.set({color: "red"});
 		expect(el).to.deep.equal(result);
 	});
 
@@ -44,12 +44,12 @@ describe("$.set", function() {
 	});
 
 	it("can take string as key and val", function() {
-		el._.set('className', 'foo');
-		expect(el.className).to.deep.equal('foo');
+		el._.set("className", "foo");
+		expect(el.className).to.deep.equal("foo");
 	});
 
 	it("sets other options as properties or attributes on the subject", function() {
-		var input = document.querySelector('input');
+		var input = document.querySelector("input");
 		$.set(input, {
 			id: "the-main-one",
 			type: "text",

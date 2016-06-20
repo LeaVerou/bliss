@@ -16,8 +16,8 @@ describe("$.add", function () {
 		it("adds a given function to $, Element and Array", function () {
 			$.add("foo", function () {});
 
-			expect([1,2,3]._.foo).to.exist;
-			expect($('.foo')._.foo).to.exist;
+			expect([1, 2, 3]._.foo).to.exist;
+			expect($(".foo")._.foo).to.exist;
 			expect($.foo).to.exist;
 		});
 
@@ -26,8 +26,8 @@ describe("$.add", function () {
 				array: false
 			});
 
-			expect([1,2,3]._.bar).to.not.exist;
-			expect($('.foo')._.bar).to.exist;
+			expect([1, 2, 3]._.bar).to.not.exist;
+			expect($(".foo")._.bar).to.exist;
 			expect($.bar).to.exist;
 		});
 
@@ -40,8 +40,8 @@ describe("$.add", function () {
 			$.add(methods);
 
 			["baz", "baz2"].forEach(function (method) {
-				expect([1,2,3]._[method]).to.exist;
-				expect($('.foo')._[method]).to.exist;
+				expect([1, 2, 3]._[method]).to.exist;
+				expect($(".foo")._[method]).to.exist;
 				expect($[method]).to.exist;
 			});
 		});
@@ -59,36 +59,44 @@ describe("$.add", function () {
 			});
 
 			["none", "none2"].forEach(function (method) {
-				expect([1,2,3]._[method]).to.not.exist;
+				expect([1, 2, 3]._[method]).to.not.exist;
 				expect($(".foo")._[method]).to.not.exist;
 				expect($[method]).to.not.exist;
 			});
 		});
 
 		it("overwrites functions by default", function () {
-			$.add("overwrite", function() { return 'foo'; });
-			expect(document._.overwrite()).to.equal('foo');
+			$.add("overwrite", function() { 
+				return "foo"; 
+			});
+			expect(document._.overwrite()).to.equal("foo");
 			
-			$.add("overwrite", function() { return 'bar'; });
-			expect(document._.overwrite()).to.equal('bar');
+			$.add("overwrite", function() { 
+				return "bar"; 
+			});
+			expect(document._.overwrite()).to.equal("bar");
 		});
 
 		it("refuses to overwrite functions when told", function () {
-			$.add("overwrite", function(){ return 'foo'; });
-			expect(document._.overwrite()).to.equal('foo');
+			$.add("overwrite", function() { 
+				return "foo"; 
+			});
+			expect(document._.overwrite()).to.equal("foo");
 
-			$.add({overwrite: function() { return 'bar'; }}, null, true);
-			expect(document._.overwrite()).to.equal('foo');
+			$.add({overwrite: function() { 
+				return "bar"; 
+			}}, null, true);
+			expect(document._.overwrite()).to.equal("foo");
 		});
 	});
 
 	describe("Calling functions", function () {
 		it("calls the function for each element in a Array", function () {
 			$.add("run", spy);
-			[1,2,3]._.run();
+			[1, 2, 3]._.run();
 
 			expect(spy.callCount).to.equal(3);
-			$.run([1,2,3,4]);
+			$.run([1, 2, 3, 4]);
 			expect(spy.callCount).to.equal(7);
 		});
 
@@ -102,8 +110,8 @@ describe("$.add", function () {
 			expect(spy.callCount).to.equal(2);
 		});
 
-		it('only adds to the items specified', function () {
-			$.add('run', spy, {array: false});
+		it("only adds to the items specified", function () {
+			$.add("run", spy, {array: false});
 			expect($.run).to.exist;
 			expect(document._.run).to.exist;
 			expect([]._.run).to.not.undefined;
