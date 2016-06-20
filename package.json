@@ -42,7 +42,7 @@
     "karma-mocha": "^0.2.1",
     "karma-sinon": "^1.0.4",
     "mocha": "^2.3.4",
-    "sinon": "^1.17.3"
+    "sinon": "1.17.3"
   },
   "dependencies": {}
 }
