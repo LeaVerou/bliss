@@ -1,8 +1,0 @@
-{
-	"expr": true,
-	"esnext": true,
-	"funcscope": true,
-	"loopfunc": true,
-	"boss": true,
-	"curly": true
-}
