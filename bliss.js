@@ -346,11 +346,10 @@ extend($, {
 				}
 				else {
 					reject($.extend(Error(env.xhr.statusText), {
-						get status() { return this.xhr.status; },
-						xhr: env.xhr
+						xhr: env.xhr,
+						get status() { return this.xhr.status; }
 					}));
 				}
-
 			};
 
 			env.xhr.onerror = function() {
