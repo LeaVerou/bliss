@@ -4,7 +4,7 @@ describe("$.value", function() {
 	    expect($.value).to.exist;
 	});
 
-	it("not throw",function(){
+	it("not throw", function() {
 	    expect($.value).not.to.throw(Error);
 	});
 
@@ -26,7 +26,7 @@ describe("$.value", function() {
 			}
 		};
 		expect($.value(obj, "foo")).to.equal(1);
-		expect($.value(obj, "bar","bar1")).to.equal("one");
+		expect($.value(obj, "bar", "bar1")).to.equal("one");
 	});
 
 });
