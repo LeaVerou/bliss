@@ -82,12 +82,12 @@ extend($, {
 	 * Returns the [[Class]] of an object in lowercase (eg. array, date, regexp, string etc)
 	 */
 	type: function(obj) {
-		if (obj === null) { 
-			return "null"; 
+		if (obj === null) {
+			return "null";
 		}
 
-		if (obj === undefined) { 
-			return "undefined"; 
+		if (obj === undefined) {
+			return "undefined";
 		}
 
 		var ret = (Object.prototype.toString.call(obj).match(/^\[object\s+(.*?)\]$/)[1] || "").toLowerCase();
@@ -123,8 +123,8 @@ extend($, {
 			else {
 				o = tag;
 				tag = o.tag;
-				o = $.extend({}, o, function(property) { 
-					return property !== "tag"; 
+				o = $.extend({}, o, function(property) {
+					return property !== "tag";
 				});
 			}
 		}
@@ -163,7 +163,7 @@ extend($, {
 		var init = o.hasOwnProperty("constructor")? o.constructor : $.noop;
 
 		var Class = function() {
-			if (o.abstract && this.constructor === Class) {
+			if (this.constructor.__abstract && this.constructor === Class) {
 				throw new Error("Abstract classes cannot be directly instantiated.");
 			}
 
@@ -205,6 +205,8 @@ extend($, {
 		// For easier calling of super methods
 		// This doesn't save us from having to use .call(this) though
 		Class.prototype.super = Class.super? Class.super.prototype : null;
+
+		Class.__abstract = !!o.abstract;
 
 		return Class;
 	},
@@ -353,7 +355,7 @@ extend($, {
 				else {
 					reject($.extend(Error(env.xhr.statusText), {
 						xhr: env.xhr,
-						get status() { 
+						get status() {
 							return this.xhr.status;
 						}
 					}));
