@@ -1,20 +1,18 @@
+sudo: required
+dist: trusty
 language: node_js
 
-sudo: true
-
 node_js:
-  - "0.12"
+  - "node"
 
 before_install:
-  - export CHROME_BIN=/usr/bin/google-chrome
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sudo apt-get update
-  - sudo apt-get install -y libappindicator1 fonts-liberation
   - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
   - sudo dpkg -i google-chrome*.deb
 
 before_script:
+  - export CHROME_BIN=/usr/bin/google-chrome
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
   - npm install -g gulp
   - gulp
 
@@ -24,11 +22,3 @@ script: npm test
 branches:
   only:
     - gh-pages
-
-notifications:
-  webhooks:
-    urls:
-      - https://webhooks.gitter.im/e/efc5c9aec4eb6ea73952
-    on_success: change  # options: [always|never|change] default: always
-    on_failure: always  # options: [always|never|change] default: always
-    on_start: never     # options: [always|never|change] default: always
