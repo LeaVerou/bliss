@@ -387,8 +387,10 @@ extend($, {
 
 $.Hooks = new $.Class({
 	add: function (name, callback, first) {
-		this[name] = this[name] || [];
-		this[name][first? "unshift" : "push"](callback);
+		(Array.isArray(name)? name : [name]).forEach(function(name) {
+			this[name] = this[name] || [];
+			this[name][first? "unshift" : "push"](callback);
+		}, this);
 	},
 
 	run: function (name, env) {
