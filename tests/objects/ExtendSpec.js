@@ -40,18 +40,18 @@ describe("$.extend", function() {
 
 	it("takes an array of white list properties", function() {
 		$.extend(child, parent, ["hobby", "food"]);
-		
+
 		expect(child.hobby).to.equal(parent.hobby);
 		expect(child.food).to.equal(parent.food);
 		expect(child.name).to.equal(orgChild.name);
 		expect(child.food).to.not.equal(orgChild.food);
 	});
 
-	it('takes the string "own" to reserve own properties', function() {
+	it("String whitelist only copies that property", function() {
 	        var newParent = Object.create(parent);
 	        newParent.ownProperty = "Only property that should be added to child";
-	        $.extend(child, newParent, "own");
-	
+	        $.extend(child, newParent, "ownProperty");
+
 	        expect(child.food).to.not.equal(newParent.food);
 	        expect(child.hobby).to.equal(orgChild.hobby);
 	        expect(child.ownProperty).to.equal(newParent.ownProperty);

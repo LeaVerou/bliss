@@ -27,32 +27,64 @@ function overload(callback, start, end) {
 }
 
 // Copy properties from one object to another. Overwrites allowed.
+// Subtle difference of array vs string whitelist: If property doesn't exist in from, array will not define it.
 function extend(to, from, whitelist) {
-	for (var property in from) {
-		if (whitelist) {
-			var type = $.type(whitelist);
+	var whitelistType = type(whitelist);
 
-			if (whitelist === "own" && !from.hasOwnProperty(property) ||
-				type === "array" && whitelist.indexOf(property) === -1 ||
-				type === "regexp" && !whitelist.test(property) ||
-				type === "function" && !whitelist.call(from, property)) {
-				continue;
-			}
-		}
-
+	if (whitelistType === "string") {
 		// To copy gettters/setters, preserve flags etc
-		var descriptor = Object.getOwnPropertyDescriptor(from, property);
+		var descriptor = Object.getOwnPropertyDescriptor(from, whitelist);
 
 		if (descriptor && (!descriptor.writable || !descriptor.configurable || !descriptor.enumerable || descriptor.get || descriptor.set)) {
-			delete to[property];
-			Object.defineProperty(to, property, descriptor);
+			delete to[whitelist];
+			Object.defineProperty(to, whitelist, descriptor);
 		}
 		else {
-			to[property] = from[property];
+			to[whitelist] = from[whitelist];
+		}
+	}
+	else if (whitelistType === "array") {
+		whitelist.forEach(function(property) {
+			if (property in from) {
+				extend(to, from, property);
+			}
+		});
+	}
+	else {
+		for (var property in from) {
+			if (whitelist) {
+				if (whitelistType === "regexp" && !whitelist.test(property) ||
+					whitelistType === "function" && !whitelist.call(from, property)) {
+					continue;
+				}
+			}
+
+			extend(to, from, property);
 		}
 	}
 
 	return to;
+}
+
+/**
+ * Returns the [[Class]] of an object in lowercase (eg. array, date, regexp, string etc)
+ */
+function type(obj) {
+	if (obj === null) {
+		return "null";
+	}
+
+	if (obj === undefined) {
+		return "undefined";
+	}
+
+	var ret = (Object.prototype.toString.call(obj).match(/^\[object\s+(.*?)\]$/)[1] || "").toLowerCase();
+
+	if (ret == "number" && isNaN(obj)) {
+		return "nan";
+	}
+
+	return ret;
 }
 
 var $ = self.Bliss = extend(function(expr, context) {
@@ -65,8 +97,8 @@ var $ = self.Bliss = extend(function(expr, context) {
 
 extend($, {
 	extend: extend,
-
 	overload: overload,
+	type: type,
 
 	property: $.property || "_",
 
@@ -84,27 +116,6 @@ extend($, {
 		}
 
 		return Array.from(typeof expr == "string"? (context || document).querySelectorAll(expr) : expr || []);
-	},
-
-	/**
-	 * Returns the [[Class]] of an object in lowercase (eg. array, date, regexp, string etc)
-	 */
-	type: function(obj) {
-		if (obj === null) {
-			return "null";
-		}
-
-		if (obj === undefined) {
-			return "undefined";
-		}
-
-		var ret = (Object.prototype.toString.call(obj).match(/^\[object\s+(.*?)\]$/)[1] || "").toLowerCase();
-
-		if (ret == "number" && isNaN(obj)) {
-			return "nan";
-		}
-
-		return ret;
 	},
 
 	/*
