@@ -56,6 +56,10 @@ function extend(to, from, whitelist) {
 }
 
 var $ = self.Bliss = extend(function(expr, context) {
+	if (arguments.length == 2 && !context) {
+		return null;
+	}
+
 	return $.type(expr) === "string"? (context || document).querySelector(expr) : expr || null;
 }, self.Bliss);
 
@@ -73,6 +77,10 @@ extend($, {
 	$: function(expr, context) {
 		if (expr instanceof Node || expr instanceof Window) {
 			return [expr];
+		}
+
+		if (arguments.length == 2 && !context) {
+			return [];
 		}
 
 		return Array.from(typeof expr == "string"? (context || document).querySelectorAll(expr) : expr || []);
