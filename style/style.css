@@ -21,7 +21,7 @@ body {
 	background-color: white;
 	color: hsl(227, 15%, 24%);
 }
-	
+
 	@keyframes pulse {
 		to { line-height: 3; }
 	}
@@ -143,7 +143,7 @@ body > header {
 	padding-top: .5em;
 	font-size: 200%;
 	color: hsl(190, 52%, 50%);
-	
+
 	background: radial-gradient(circle at 50% 90%, white 1em, hsla(0,0%,100%,0) 0) -2.5em 100% / 5em 5em,
 	            radial-gradient(circle at bottom, white 1.5em, hsl(145, 34%, 99%) 2em, hsla(145, 34%, 99%, 0) 0) 0em 100% / 5em 5em,
 	            radial-gradient(circle at bottom, white 2em, hsl(145, 34%, 99%) 3em, hsla(145, 34%, 99%, 0) 0) 0 100% / 10em 10em,
@@ -380,7 +380,7 @@ body > footer {
 		font-size: 75%;
 	}
 }
-	
+
 	#quick-look pre::before {
 		position: absolute;
 		bottom: 100%;
@@ -443,8 +443,9 @@ body > footer {
 	text-decoration: none;
 	color: #f5ebd6;
 	box-shadow: 0 0.1em 0 0.1em rgba(0, 0, 0, 0.15);
+	z-index: 1;
 }
-	
+
 	.github-ribbon:hover {
 		background: black;
 		color: white;
