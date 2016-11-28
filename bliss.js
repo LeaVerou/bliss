@@ -88,7 +88,7 @@ function type(obj) {
 }
 
 var $ = self.Bliss = extend(function(expr, context) {
-	if (arguments.length == 2 && !context) {
+	if (arguments.length == 2 && !context || !expr) {
 		return null;
 	}
 
