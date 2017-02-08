@@ -180,22 +180,36 @@ extend($, {
 	Class: function(o) {
 		var special = ["constructor", "extends", "abstract", "static"].concat(Object.keys($.classProps));
 		var init = o.hasOwnProperty("constructor")? o.constructor : $.noop;
+		var Class;
 
-		var Class = function() {
-			if (this.constructor.__abstract && this.constructor === Class) {
-				throw new Error("Abstract classes cannot be directly instantiated.");
-			}
+		if (arguments.length == 2) {
+			// Existing class provided
+			Class = arguments[0];
+			o = arguments[1];
+		}
+		else {
+			Class = function() {
+				if (this.constructor.__abstract && this.constructor === Class) {
+					throw new Error("Abstract classes cannot be directly instantiated.");
+				}
 
-			Class.super && Class.super.apply(this, arguments);
+				Class.super && Class.super.apply(this, arguments);
 
-			init.apply(this, arguments);
-		};
+				init.apply(this, arguments);
+			};
 
-		Class.super = o.extends || null;
+			Class.super = o.extends || null;
 
-		Class.prototype = $.extend(Object.create(Class.super? Class.super.prototype : Object), {
-			constructor: Class
-		});
+			Class.prototype = $.extend(Object.create(Class.super? Class.super.prototype : Object), {
+				constructor: Class
+			});
+
+			// For easier calling of super methods
+			// This doesn't save us from having to use .call(this) though
+			Class.prototype.super = Class.super? Class.super.prototype : null;
+
+			Class.__abstract = !!o.abstract;
+		}
 
 		var specialFilter = function(property) {
 			return this.hasOwnProperty(property) && special.indexOf(property) === -1;
@@ -220,12 +234,6 @@ extend($, {
 				$.classProps[property](Class.prototype, o[property]);
 			}
 		}
-
-		// For easier calling of super methods
-		// This doesn't save us from having to use .call(this) though
-		Class.prototype.super = Class.super? Class.super.prototype : null;
-
-		Class.__abstract = !!o.abstract;
 
 		return Class;
 	},
