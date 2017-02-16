@@ -414,9 +414,21 @@ extend($, {
 
 $.Hooks = new $.Class({
 	add: function (name, callback, first) {
+		if (typeof arguments[0] != "string") {
+			// Multiple hooks
+			for (var name in arguments[0]) {
+				this.add(name, arguments[0][name], arguments[1]);
+			}
+
+			return;
+		}
+
 		(Array.isArray(name)? name : [name]).forEach(function(name) {
 			this[name] = this[name] || [];
-			this[name][first? "unshift" : "push"](callback);
+
+			if (callback) {
+				this[name][first? "unshift" : "push"](callback);
+			}
 		}, this);
 	},
 
