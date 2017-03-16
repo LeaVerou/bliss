@@ -552,7 +552,16 @@ $.Element.prototype = {
 $.setProps = {
 	// Set a bunch of inline CSS styles
 	style: function (val) {
-		$.extend(this.style, val);
+		for (var property in val) {
+			if (property in this.style) {
+				// camelCase versions
+				this.style[property] = val[property];
+			}
+			else {
+				// This way we can set CSS Variables too and use normal property names
+				this.style.setProperty(property, val[property]);
+			}
+		}
 	},
 
 	// Set a bunch of attributes

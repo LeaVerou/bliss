@@ -629,7 +629,7 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 	<article>
 		<h1 class="element array set">style</h1>
 
-		<p class="description">Set multiple CSS properties on one or more elements.</p>
+		<p class="description">Set multiple CSS properties on one or more elements. Both camelCase and hyphen-case attributes are allowed.</p>
 
 		<pre><code>subject = $.style(subject, properties)</code></pre>
 		<pre><code>subject = subject._.style(properties)</code></pre>
@@ -646,7 +646,8 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 		<pre class="examples"><code>document.body._.style({
 	color: "white",
 	backgroundColor: "red",
-	cssFloat: "left"
+	cssFloat: "left",
+	"--my-variable": 5
 });</code></pre>
 
 		<ul class="notes">
