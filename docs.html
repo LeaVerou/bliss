@@ -1278,7 +1278,7 @@ $.include(self.Dropbox, url).then(function(){
 		<h1>add</h1>
 		<p class="description">Register new blissful methods that operate on elements and/or arrays. They will be automatically added on Bliss’ element and array property (if on Bliss Full), as well as directly on Bliss itself.</p>
 
-		<pre><code>$.add(name, callback [, on])</code></pre>
+		<pre><code>$.add(name, callback)</code></pre>
 
 		<dl class="args">
 			<dt class="string">name</dt>
@@ -1286,9 +1286,6 @@ $.include(self.Dropbox, url).then(function(){
 
 			<dt class="function">callback</dt>
 			<dd>A function which operates on a single element, as its context (the <code>this</code> keyword). <code>$.add()</code> will take care of the syntactic variations and array handling.</dd>
-
-			<dt class="object">on</dt>
-			<dd>What the function should be added on. The available keys are: <code>$</code>, <code>element</code>, <code>array</code> and their values are <code>true</code> by default so only set them if you want to set them to <code>false</code>.</dd>
 		</dl>
 
 		<pre class="def"><code>$.add(callbacks [, on])</code></pre>
