@@ -402,10 +402,6 @@ extend($, {
 			env.xhr.send(env.method === "GET"? null : env.data);
 		});
 		// Hack: Expose xhr.abort(), by attaching xhr to the promise.
-		// (The caller will need to capture the promise in a variable X (and
-		// call X.xhr.abort()), before chaining with X.then(..) because
-		// the promises returned by the chained calls, won't have the .xhr
-		// field any more.)
 		promise.xhr = env.xhr;
 		return promise;
 	},

@@ -1218,7 +1218,9 @@ $.value("document", "body", "nodeType"); // 1, no root, starting from self</code
 			<dd>A promise that is resolved when the resource is successfully fetched and rejected if there is any error.
 				When the request is successful, the promise resolves with the XHR object.
 				When the request fails, the promise rejects with an Error whose message is a description of the error.
-				The error object also contains two properties: <code>xhr</code> which points to the XHR object, and <code>status</code> which returns the status code (e.g. 404).</dd>
+				The error object also contains two properties: <code>xhr</code> which points to the XHR object, and
+				<code>status</code> which returns the status code (e.g. 404). In case you need to abort the request,
+				the xhr is returned in a field on the promise, so you can: <code>promise.xhr.abort()</code>.</dd>
 		</dl>
 
 		<pre><code>$.fetch("/api/create", {
