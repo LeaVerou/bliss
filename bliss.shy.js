@@ -371,7 +371,7 @@ extend($, {
 			env.xhr.setRequestHeader(header, env.headers[header]);
 		}
 
-		return new Promise(function(resolve, reject) {
+		var promise = new Promise(function(resolve, reject) {
 			env.xhr.onload = function() {
 				document.body.removeAttribute("data-loading");
 
@@ -401,6 +401,9 @@ extend($, {
 
 			env.xhr.send(env.method === "GET"? null : env.data);
 		});
+		// Hack: Expose xhr.abort(), by attaching xhr to the promise.
+		promise.xhr = env.xhr;
+		return promise;
 	},
 
 	value: function(obj) {
