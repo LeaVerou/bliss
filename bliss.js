@@ -14,7 +14,7 @@ function overload(callback, start, end) {
 			var obj = arguments[start], ret;
 
 			for (var key in obj) {
-				var args = Array.from(arguments);
+				var args = Array.prototype.slice.call(arguments);
 				args.splice(start, 1, key, obj[key]);
 				ret = callback.apply(this, args);
 			}
@@ -115,7 +115,7 @@ extend($, {
 			return [];
 		}
 
-		return Array.from(typeof expr == "string"? (context || document).querySelectorAll(expr) : expr || []);
+		return Array.prototype.slice.call(typeof expr == "string"? (context || document).querySelectorAll(expr) : expr || []);
 	},
 
 	/*
@@ -371,7 +371,7 @@ extend($, {
 			env.xhr.setRequestHeader(header, env.headers[header]);
 		}
 
-		return new Promise(function(resolve, reject) {
+		var promise = new Promise(function(resolve, reject) {
 			env.xhr.onload = function() {
 				document.body.removeAttribute("data-loading");
 
@@ -401,6 +401,9 @@ extend($, {
 
 			env.xhr.send(env.method === "GET"? null : env.data);
 		});
+		// Hack: Expose xhr.abort(), by attaching xhr to the promise.
+		promise.xhr = env.xhr;
+		return promise;
 	},
 
 	value: function(obj) {

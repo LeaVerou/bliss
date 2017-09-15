@@ -14,7 +14,7 @@ function overload(callback, start, end) {
 			var obj = arguments[start], ret;
 
 			for (var key in obj) {
-				var args = Array.from(arguments);
+				var args = Array.prototype.slice.call(arguments);
 				args.splice(start, 1, key, obj[key]);
 				ret = callback.apply(this, args);
 			}
@@ -115,7 +115,7 @@ extend($, {
 			return [];
 		}
 
-		return Array.from(typeof expr == "string"? (context || document).querySelectorAll(expr) : expr || []);
+		return Array.prototype.slice.call(typeof expr == "string"? (context || document).querySelectorAll(expr) : expr || []);
 	},
 
 	/*
