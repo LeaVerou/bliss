@@ -363,7 +363,7 @@ extend($, {
 			}
 		}
 
-		if (env.method !== "GET" && !env.headers["Content-type"] && !env.headers["Content-Type"]) {
+		if (env.method !== "GET" && typeof env.data === "string" && !env.headers["Content-type"] && !env.headers["Content-Type"]) {
 			env.xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		}
 
