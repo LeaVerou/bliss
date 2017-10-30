@@ -6,6 +6,7 @@ describe("$.lazy", function() {
 		TestClass = function () { 
 			return this; 
 		};
+
 		testObj = {animals: ["kittens"]};
 	});	
 	

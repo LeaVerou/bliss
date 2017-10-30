@@ -18,6 +18,7 @@ describe("$.each", function() {
   
   it("copies properties and inherited properties from one object to new object", function () {
     var parent = function() {};
+
 	parent.prototype.func = function() {};
 	
 	var obj = Object.create(parent.prototype);

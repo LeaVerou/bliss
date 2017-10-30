@@ -17,6 +17,7 @@ describe("$.all", function() {
   it("returns the original array if method returns nothing", function() {
     var Obj = function () {
         this.method = function () {};
+
         return this;
       }, arr = [new Obj(), new Obj(), new Obj()],
       result = $.all(arr, "method");
