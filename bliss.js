@@ -363,12 +363,18 @@ extend($, {
 			}
 		}
 
-		if (env.method !== "GET" && !env.headers["Content-type"] && !env.headers["Content-Type"]) {
+		var headerKeys = Object.keys(env.headers).map(function(key) {
+			return key.toLowerCase();
+		});
+
+		if (env.method !== "GET" && headerKeys.indexOf("content-type") === -1) {
 			env.xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		}
 
 		for (var header in env.headers) {
-			env.xhr.setRequestHeader(header, env.headers[header]);
+			if (env.headers[header] !== undefined) {
+				env.xhr.setRequestHeader(header, env.headers[header]);
+			}
 		}
 
 		var promise = new Promise(function(resolve, reject) {
