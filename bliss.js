@@ -353,7 +353,12 @@ extend($, {
 		env.xhr.open(env.method, env.url.href, env.async !== false, env.user, env.password);
 
 		for (var property in o) {
-			if (property in env.xhr) {
+			if (property === "upload") {
+				if (env.xhr.upload && typeof o[property] === "object") {
+					$.extend(env.xhr.upload, o[property]);
+				}
+			}
+			else if (property in env.xhr) {
 				try {
 					env.xhr[property] = o[property];
 				}
