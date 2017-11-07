@@ -16,12 +16,12 @@ describe("$.extend", function() {
 			hobby: "Fishing",
 			food: "pasta"
 		};
-	        orgChild = {
-				id: 30,
-				name: "Jim",
-				hobby: "Biking",
-				food: "pizza"
-			};
+		orgChild = {
+			id: 30,
+			name: "Jim",
+			hobby: "Biking",
+			food: "pizza"
+		};
 	});
 
 	it("copies properties from parent to child", function() {
@@ -48,13 +48,13 @@ describe("$.extend", function() {
 	});
 
 	it("String whitelist only copies that property", function() {
-	        var newParent = Object.create(parent);
-	        newParent.ownProperty = "Only property that should be added to child";
-	        $.extend(child, newParent, "ownProperty");
+		var newParent = Object.create(parent);
+		newParent.ownProperty = "Only property that should be added to child";
+		$.extend(child, newParent, "ownProperty");
 
-	        expect(child.food).to.not.equal(newParent.food);
-	        expect(child.hobby).to.equal(orgChild.hobby);
-	        expect(child.ownProperty).to.equal(newParent.ownProperty);
+		expect(child.food).to.not.equal(newParent.food);
+		expect(child.hobby).to.equal(orgChild.hobby);
+		expect(child.ownProperty).to.equal(newParent.ownProperty);
 	});
 
 	it("takes a function to filter the properties", function() {

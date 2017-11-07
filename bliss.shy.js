@@ -406,8 +406,8 @@ extend($, {
 			};
 
 			env.xhr.ontimeout = function() {
-			    document.body.removeAttribute("data-loading");
-			    reject($.extend(Error("Network Timeout"), {xhr: env.xhr}));
+				document.body.removeAttribute("data-loading");
+				reject($.extend(Error("Network Timeout"), {xhr: env.xhr}));
 			};
 
 			env.xhr.send(env.method === "GET"? null : env.data);
@@ -421,8 +421,8 @@ extend($, {
 		var hasRoot = $.type(obj) !== "string";
 
 		return $.$(arguments).slice(+hasRoot).reduce(function(obj, property) {
-	        return obj && obj[property];
-	    }, hasRoot? obj : self);
+			return obj && obj[property];
+		}, hasRoot? obj : self);
 	}
 });
 
@@ -541,8 +541,8 @@ $.Element.prototype = {
 					if (!type || ltype === type) {
 						// No forEach, because we’re mutating the array
 						for (var i=0, l; l=listeners[ltype][i]; i++) {
-							if ((!className || className === l.className) &&
-							    (!callback || callback === l.callback )) { // TODO what about capture?
+							// TODO what about capture?
+							if ((!className || className === l.className) && (!callback || callback === l.callback)) {
 								this.removeEventListener(ltype, l.callback, l.capture);
 								i--;
 							}

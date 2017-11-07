@@ -33,8 +33,8 @@ describe("$.add", function () {
 
 		it("accepts multiple functions by passing an object", function () {
 			var methods = {
-					baz: function () {},
-					baz2: function () {}
+				baz: function () {},
+				baz2: function () {}
 			};
 
 			$.add(methods);
