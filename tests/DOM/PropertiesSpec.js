@@ -21,7 +21,7 @@ describe("$.properties", function() {
         defaultChecked: true,
         className: "hotline-bling",
         value: "drake",
-        onClick: function() { 
+        onClick: function() {
           console.log("here");
         }
       });
@@ -52,8 +52,8 @@ describe("$.properties", function() {
         defaultChecked: true,
         className: "hotline-bling",
         value: "drake",
-        onClick: function() { 
-          console.log("here"); 
+        onClick: function() {
+          console.log("here");
         }
       });
 
@@ -83,8 +83,8 @@ describe("$.properties", function() {
           defaultChecked: true,
           className: "hotline-bling",
           value: "drake",
-          onClick: function() { 
-            console.log("here"); 
+          onClick: function() {
+            console.log("here");
           }
         }
       });
@@ -121,8 +121,8 @@ describe("$.properties", function() {
         defaultChecked: true,
         className: "hotline-bling",
         value: "drake",
-        onClick: function() { 
-          console.log("here"); 
+        onClick: function() {
+          console.log("here");
         }
       });
 
@@ -160,8 +160,8 @@ describe("$.properties", function() {
         defaultChecked: true,
         className: "hotline-bling",
         value: "drake",
-        onClick: function() { 
-          console.log("here"); 
+        onClick: function() {
+          console.log("here");
         }
       });
 
@@ -199,8 +199,8 @@ describe("$.properties", function() {
           defaultChecked: true,
           className: "hotline-bling",
           value: "drake",
-          onClick: function() { 
-            console.log("here"); 
+          onClick: function() {
+            console.log("here");
           }
         }
       });

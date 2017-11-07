@@ -61,8 +61,8 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	    equal = function(callback, capture, l) {
 			return l.callback === callback && l.capture == capture;
 	    },
-	    notEqual = function() { 
-			return !equal.apply(this, arguments); 
+	    notEqual = function() {
+			return !equal.apply(this, arguments);
 		};
 
 	EventTarget.prototype.addEventListener = function(type, callback, capture) {

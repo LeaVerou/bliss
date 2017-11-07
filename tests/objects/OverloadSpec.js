@@ -31,7 +31,7 @@ describe("$.overload", function() {
 			spy = sinon.spy();
 			funct = $.overload(spy, 1);
 		});
-		
+
 		it("can take a nested object", function() {
 			funct("before", {key: {}}, "after");
 			expect(spy.args[0]).to.deep.equal(["before", "key", {}, "after"]);

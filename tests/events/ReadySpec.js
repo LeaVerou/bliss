@@ -24,11 +24,11 @@ describe("$.ready", function () {
 			done();
 		}, 1);
 	});
-	
+
 	// should fire automatically because DOM is already loaded
 	it("should fire immediately", function (done) {
 		mocDoc.readyState = "complete";
-		
+
 		$.ready(mocDoc).then(spy);
 
 		setTimeout(function () {

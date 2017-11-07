@@ -1,7 +1,7 @@
 describe("$.add", function () {
 
 	helpers.fixture("core.html");
-	
+
 	var spy;
 
 	beforeEach(function() {
@@ -66,25 +66,25 @@ describe("$.add", function () {
 		});
 
 		it("overwrites functions by default", function () {
-			$.add("overwrite", function() { 
-				return "foo"; 
+			$.add("overwrite", function() {
+				return "foo";
 			});
 			expect(document._.overwrite()).to.equal("foo");
-			
-			$.add("overwrite", function() { 
-				return "bar"; 
+
+			$.add("overwrite", function() {
+				return "bar";
 			});
 			expect(document._.overwrite()).to.equal("bar");
 		});
 
 		it("refuses to overwrite functions when told", function () {
-			$.add("overwrite", function() { 
-				return "foo"; 
+			$.add("overwrite", function() {
+				return "foo";
 			});
 			expect(document._.overwrite()).to.equal("foo");
 
-			$.add({overwrite: function() { 
-				return "bar"; 
+			$.add({overwrite: function() {
+				return "bar";
 			}}, null, true);
 			expect(document._.overwrite()).to.equal("foo");
 		});

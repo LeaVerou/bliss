@@ -1,5 +1,5 @@
 describe("$.all", function() {
-  
+
   it("exists", function() {
     expect($.all).to.exist;
     expect([]._.all).to.exist;
