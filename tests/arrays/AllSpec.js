@@ -5,9 +5,9 @@ describe("$.all", function() {
     expect([]._.all).to.exist;
   });
 
-  it("returns the value of the method for each item in the array", function () {
-    var arr = ["Foo", "bar"],
-      result = $.all(arr, "toUpperCase");
+	it("returns the value of the method for each item in the array", function () {
+		var arr = ["Foo", "bar"];
+		var result = $.all(arr, "toUpperCase");
 
     expect(result[0]).to.equal("FOO");
     expect(result[1]).to.equal("BAR");
@@ -16,11 +16,12 @@ describe("$.all", function() {
 
   it("returns the original array if method returns nothing", function() {
     var Obj = function () {
-        this.method = function () {};
+      this.method = function () {};
 
-        return this;
-      }, arr = [new Obj(), new Obj(), new Obj()],
-      result = $.all(arr, "method");
+      return this;
+    };
+    var arr = [new Obj(), new Obj(), new Obj()];
+    var result = $.all(arr, "method");
 
     expect(result).to.deep.equal(arr);
   });

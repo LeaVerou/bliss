@@ -615,7 +615,8 @@ $.setProps = {
 			}
 		}
 		else if (arguments.length > 1 && $.type(val) === "string") {
-			var callback = arguments[1], capture = arguments[2];
+			var callback = arguments[1];
+			var capture = arguments[2];
 
 			val.split(/\s+/).forEach(function (event) {
 				this.addEventListener(event, callback, capture);

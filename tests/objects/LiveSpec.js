@@ -19,17 +19,17 @@ describe("$.live", function () {
 	describe("getters and setters", function () {
 
 		it("should define getter and call custom function", function () {
-			var getSpy = sinon.spy(),
-				obj = $.live({}, "pet", {
-					get: function (value) {
-						getSpy();
-						return value + "--suffix";
-					},
-					set: function (value) {
-						setSpy();
-						return value.trim();
-					}
-				});
+			var getSpy = sinon.spy();
+			var obj = $.live({}, "pet", {
+				get: function (value) {
+					getSpy();
+					return value + "--suffix";
+				},
+				set: function (value) {
+					setSpy();
+					return value.trim();
+				}
+			});
 
 			obj.pet = " cat   ";
 			expect(setSpy.callCount).to.equal(1);

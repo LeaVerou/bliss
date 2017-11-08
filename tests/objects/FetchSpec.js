@@ -1,7 +1,7 @@
 describe("$.fetch", function() {
-  var server,
-      data = "foo=b%20ar&baz=yolo",
-      headers = {foo: "bar", "Content-type": "yadda;charset=utf-8"};
+  var server;
+  var data = "foo=b%20ar&baz=yolo";
+  var headers = {foo: "bar", "Content-type": "yadda;charset=utf-8"};
 
   before(function() {
     server = sinon.fakeServer.create();
