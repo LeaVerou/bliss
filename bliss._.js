@@ -56,14 +56,14 @@ Object.defineProperty(Array.prototype, _, {
 // Hijack addEventListener and removeEventListener to store callbacks
 
 if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
-	var addEventListener = EventTarget.prototype.addEventListener,
-	    removeEventListener = EventTarget.prototype.removeEventListener,
-	    equal = function(callback, capture, l) {
-			return l.callback === callback && l.capture == capture;
-	    },
-	    notEqual = function() { 
-			return !equal.apply(this, arguments); 
-		};
+	var addEventListener = EventTarget.prototype.addEventListener;
+	var removeEventListener = EventTarget.prototype.removeEventListener;
+	var equal = function(callback, capture, l) {
+		return l.callback === callback && l.capture == capture;
+	};
+	var notEqual = function() {
+		return !equal.apply(this, arguments);
+	};
 
 	EventTarget.prototype.addEventListener = function(type, callback, capture) {
 		if (this && this[_] && this[_].bliss && callback) {

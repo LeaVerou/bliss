@@ -10,7 +10,7 @@ describe("$.start()", function () {
 
 	beforeEach(function () {
 		testContainer = document.getElementById("fixture-container");
-		
+
 		para = document.createElement("p");
 		para.setAttribute("id", "para");
 	});

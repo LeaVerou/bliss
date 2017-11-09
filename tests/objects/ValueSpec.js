@@ -1,11 +1,11 @@
 describe("$.value", function() {
 
 	it("exists", function () {
-	    expect($.value).to.exist;
+		expect($.value).to.exist;
 	});
 
 	it("not throw", function() {
-	    expect($.value).not.to.throw(Error);
+		expect($.value).not.to.throw(Error);
 	});
 
 	it("returns null if object is null", function() {
