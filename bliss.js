@@ -406,8 +406,8 @@ extend($, {
 			};
 
 			env.xhr.ontimeout = function() {
-			    document.body.removeAttribute("data-loading");
-			    reject($.extend(Error("Network Timeout"), {xhr: env.xhr}));
+				document.body.removeAttribute("data-loading");
+				reject($.extend(Error("Network Timeout"), {xhr: env.xhr}));
 			};
 
 			env.xhr.send(env.method === "GET"? null : env.data);
@@ -421,8 +421,8 @@ extend($, {
 		var hasRoot = $.type(obj) !== "string";
 
 		return $.$(arguments).slice(+hasRoot).reduce(function(obj, property) {
-	        return obj && obj[property];
-	    }, hasRoot? obj : self);
+			return obj && obj[property];
+		}, hasRoot? obj : self);
 	}
 });
 
@@ -541,8 +541,8 @@ $.Element.prototype = {
 					if (!type || ltype === type) {
 						// No forEach, because we’re mutating the array
 						for (var i=0, l; l=listeners[ltype][i]; i++) {
-							if ((!className || className === l.className) &&
-							    (!callback || callback === l.callback )) { // TODO what about capture?
+							// TODO what about capture?
+							if ((!className || className === l.className) && (!callback || callback === l.callback)) {
 								this.removeEventListener(ltype, l.callback, l.capture);
 								i--;
 							}
@@ -615,7 +615,8 @@ $.setProps = {
 			}
 		}
 		else if (arguments.length > 1 && $.type(val) === "string") {
-			var callback = arguments[1], capture = arguments[2];
+			var callback = arguments[1];
+			var capture = arguments[2];
 
 			val.split(/\s+/).forEach(function (event) {
 				this.addEventListener(event, callback, capture);
@@ -823,14 +824,14 @@ Object.defineProperty(Array.prototype, _, {
 // Hijack addEventListener and removeEventListener to store callbacks
 
 if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
-	var addEventListener = EventTarget.prototype.addEventListener,
-	    removeEventListener = EventTarget.prototype.removeEventListener,
-	    equal = function(callback, capture, l) {
-			return l.callback === callback && l.capture == capture;
-	    },
-	    notEqual = function() { 
-			return !equal.apply(this, arguments); 
-		};
+	var addEventListener = EventTarget.prototype.addEventListener;
+	var removeEventListener = EventTarget.prototype.removeEventListener;
+	var equal = function(callback, capture, l) {
+		return l.callback === callback && l.capture == capture;
+	};
+	var notEqual = function() {
+		return !equal.apply(this, arguments);
+	};
 
 	EventTarget.prototype.addEventListener = function(type, callback, capture) {
 		if (this && this[_] && this[_].bliss && callback) {
