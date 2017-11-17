@@ -675,31 +675,31 @@ $.setProps = {
 
 	// Append the element inside another element
 	inside: function (element) {
-		element.appendChild(this);
+		element && element.appendChild(this);
 	},
 
 	// Insert the element before another element
 	before: function (element) {
-		element.parentNode.insertBefore(this, element);
+		element && element.parentNode.insertBefore(this, element);
 	},
 
 	// Insert the element after another element
 	after: function (element) {
-		element.parentNode.insertBefore(this, element.nextSibling);
+		element && element.parentNode.insertBefore(this, element.nextSibling);
 	},
 
 	// Insert the element before another element's contents
 	start: function (element) {
-		element.insertBefore(this, element.firstChild);
+		element && element.insertBefore(this, element.firstChild);
 	},
 
 	// Wrap the element around another element
 	around: function (element) {
-		if (element.parentNode) {
+		if (element && element.parentNode) {
 			$.before(this, element);
 		}
 
-		(/^template$/i.test(this.nodeName)? this.content || this : this).appendChild(element);
+		this.appendChild(element);
 	}
 };
 
