@@ -30,10 +30,6 @@
         "padding-line-between-statements": [1,
             {
                 "blankLine": "always",
-                "prev": "block-like",
-                "next": "*"
-            }, {
-                "blankLine": "always",
                 "prev": "*",
                 "next": "block-like"
             }, {
