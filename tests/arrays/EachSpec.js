@@ -8,8 +8,8 @@ describe("$.each", function() {
 		var obj = {
 			prop: 1,
 			func: function() {}
-		},
-		result = $.each(obj, function( prop, value ) {
+		};
+		var result = $.each(obj, function( prop, value ) {
 			return value;
 		});
 
@@ -35,8 +35,8 @@ describe("$.each", function() {
 		var obj = {
 			prop: 1,
 			func: function() {}
-		},
-		result = $.each(obj, function(prop) {
+		};
+		var result = $.each(obj, function(prop) {
 			return this[prop];
 		});
 
@@ -47,11 +47,11 @@ describe("$.each", function() {
 		var obj = {
 			prop: 1,
 			func: function() {}
-		},
-		existing = {
+		};
+		var existing = {
 			originalProp: 2
-		},
-		result = $.each(obj, function( prop, value ) {
+		};
+		var result = $.each(obj, function( prop, value ) {
 			return value;
 		}, existing);
 
