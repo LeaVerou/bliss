@@ -33,11 +33,11 @@ describe("$.fetch", function() {
 		});
 
 		it("sets provided headers", function () {
-			return verifyResponseHeaders("POST", headers, headers);
+			return verifyResponseHeaders("POST", "", headers, headers);
 		});
 
-		it("sets Content-type header for POST if not provided", function () {
-			return verifyResponseHeaders("POST", {}, {
+		it("sets Content-type header for POST if not provided for text data", function () {
+			return verifyResponseHeaders("POST", data, {}, {
 				"Content-type": "application/x-www-form-urlencoded;charset=utf-8"
 			});
 		});
@@ -59,7 +59,7 @@ describe("$.fetch", function() {
 		});
 
 		it("sets provided headers", function () {
-			return verifyResponseHeaders("GET", headers, headers);
+			return verifyResponseHeaders("GET", "", headers, headers);
 		});
 
 		it("catch 404", function (done) {
@@ -88,8 +88,8 @@ describe("$.fetch", function() {
 		});
 	}
 
-	function verifyResponseHeaders(method, headers, expected) {
-		var promise = handleJSON("/json", method, "", headers);
+	function verifyResponseHeaders(method, data, headers, expected) {
+		var promise = handleJSON("/json", method, data, headers);
 		return promise.then(function (response) {
 			expect(response.responseHeaders).to.deep.equal(expected);
 		});

@@ -368,11 +368,12 @@ extend($, {
 			}
 		}
 
+		var dataIsParamLike = ["string", "urlsearchparams"].indexOf($.type(env.data)) !== -1;
 		var headerKeys = Object.keys(env.headers).map(function(key) {
 			return key.toLowerCase();
 		});
 
-		if (env.method !== "GET" && headerKeys.indexOf("content-type") === -1) {
+		if (env.method !== "GET" && dataIsParamLike && headerKeys.indexOf("content-type") === -1) {
 			env.xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		}
 
