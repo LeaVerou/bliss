@@ -24,6 +24,9 @@
         "no-lonely-if": 1,
         "no-mixed-spaces-and-tabs": [1, "smart-tabs"],
         "no-trailing-spaces": 1,
+        "one-var": [1, {
+            "initialized": "never"
+        }],
         "padding-line-between-statements": [1,
             {
                 "blankLine": "always",

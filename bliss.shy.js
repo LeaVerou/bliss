@@ -11,7 +11,8 @@ function overload(callback, start, end) {
 				return callback.apply(this, arguments);
 			}
 
-			var obj = arguments[start], ret;
+			var obj = arguments[start];
+			var ret;
 
 			for (var key in obj) {
 				var args = Array.prototype.slice.call(arguments);
