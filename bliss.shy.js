@@ -162,19 +162,30 @@ extend($, {
 		return ret;
 	},
 
-	ready: function(context) {
+	ready: function(context, callback, isVoid) {
+		if (typeof context === "function" && !callback) {
+			callback = context;
+			context = undefined;
+		}
+
 		context = context || document;
 
-		return new Promise(function(resolve, reject) {
+		if (callback) {
 			if (context.readyState !== "loading") {
-				resolve();
+				callback();
 			}
 			else {
 				context.addEventListener("DOMContentLoaded", function() {
-					resolve();
-				});
+					callback();
+				}, {once: true});
 			}
-		});
+		}
+
+		if (!isVoid) {
+			return new Promise(function(resolve) {
+				$.ready(context, resolve, true);
+			});
+		}
 	},
 
 	// Helper for defining OOP-like “classes”
