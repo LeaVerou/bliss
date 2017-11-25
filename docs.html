@@ -930,11 +930,14 @@ myInput._.fire("input");</code></pre>
 
 		<p class="description">Execute code after the DOM is ready.</p>
 
-		<pre><code>var promise = $.ready([context])</code></pre>
+		<pre><code>var promise = $.ready([context], [callback])</code></pre>
 
 		<dl class="args">
 			<dt class="document">context</dt>
 			<dd>The document whose …readiness we’re interested in.</dd>
+
+			<dt class="function">callback</dt>
+			<dd>A callback that gets executed synchronously if the DOM is already ready or on <code>DOMContentLoaded</code> if not.</dd>
 
 			<dt class="promise">promise</dt>
 			<dd>A promise that gets resolved immediately if the DOM is already ready, or on <code>DOMContentLoaded</code> if not.</dd>
