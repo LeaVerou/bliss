@@ -321,7 +321,7 @@ extend($, {
 				async: true,
 				onload: function() {
 					resolve();
-					$.remove(script);
+					script.parentNode && script.parentNode.removeChild(script);
 				},
 				onerror: function() {
 					reject();
