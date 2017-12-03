@@ -56,8 +56,10 @@ Object.defineProperty(Array.prototype, _, {
 // Hijack addEventListener and removeEventListener to store callbacks
 
 if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
-	var addEventListener = EventTarget.prototype.addEventListener;
-	var removeEventListener = EventTarget.prototype.removeEventListener;
+	$.addEventListener = EventTarget.prototype.addEventListener;
+	$.removeEventListener = EventTarget.prototype.removeEventListener;
+	$.listeners = self.WeakMap? new WeakMap() : new Map();
+
 	var equal = function(callback, capture, l) {
 		return l.callback === callback && l.capture == capture;
 	};
@@ -66,35 +68,35 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 	};
 
 	EventTarget.prototype.addEventListener = function(type, callback, capture) {
-		if (this && this[_] && this[_].bliss && callback) {
-			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
+		var listeners = $.listeners.get(this) || {};
 
-			if (type.indexOf(".") > -1) {
-				type = type.split(".");
-				var className = type[1];
-				type = type[0];
-			}
-
-			listeners[type] = listeners[type] || [];
-
-			if (listeners[type].filter(equal.bind(null, callback, capture)).length === 0) {
-				listeners[type].push({callback: callback, capture: capture, className: className});
-			}
+		if (type.indexOf(".") > -1) {
+			type = type.split(".");
+			var className = type[1];
+			type = type[0];
 		}
 
-		return addEventListener.call(this, type, callback, capture);
+		listeners[type] = listeners[type] || [];
+
+		if (listeners[type].filter(equal.bind(null, callback, capture)).length === 0) {
+			listeners[type].push({callback: callback, capture: capture, className: className});
+		}
+
+		$.listeners.set(this, listeners);
+
+		return $.addEventListener.call(this, type, callback, capture);
 	};
 
 	EventTarget.prototype.removeEventListener = function(type, callback, capture) {
-		if (this && this[_] && this[_].bliss  && callback) {
-			var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
+		if (callback) {
+			var listeners = $.listeners.get(this);
 
-			if (listeners[type]) {
+			if (listeners && listeners[type]) {
 				listeners[type] = listeners[type].filter(notEqual.bind(null, callback, capture));
 			}
 		}
 
-		return removeEventListener.call(this, type, callback, capture);
+		return $.removeEventListener.call(this, type, callback, capture);
 	};
 }
 

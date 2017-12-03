@@ -540,14 +540,14 @@ $.Element.prototype = {
 
 	unbind: overload(function(events, callback) {
 		(events || "").split(/\s+/).forEach(function (type) {
-			if ((_ in this) && (type.indexOf(".") > -1 || !callback)) {
+			if ($.listeners && (type.indexOf(".") > -1 || !callback)) {
 				// Mass unbinding, need to go through listeners
 				type = (type || "").split(".");
 				var className = type[1];
 				type = type[0];
 				// man, can’t wait to be able to do [type, className] = type.split(".");
 
-				var listeners = this[_].bliss.listeners = this[_].bliss.listeners || {};
+				var listeners = $.listeners.get(this) || {};
 
 				for (var ltype in listeners) {
 					if (!type || ltype === type) {
@@ -609,8 +609,8 @@ $.setProps = {
 			var me = this;
 
 			// Copy listeners
-			if (val[_] && val[_].bliss) {
-				var listeners = val[_].bliss.listeners;
+			if ($.listeners) {
+				var listeners = $.listeners.get(val);
 
 				for (var type in listeners) {
 					listeners[type].forEach(function(l) {
