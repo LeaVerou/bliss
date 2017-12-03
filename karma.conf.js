@@ -33,18 +33,18 @@ module.exports = function(config) {
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       "**/*.html": ["html2js"],
-      "tests/**/*.js": ["eslint"],
-      "*.js": ["eslint"]
+      // "tests/**/*.js": ["eslint"],
+      // "*.js": ["eslint"]
     },
 
-    eslint: {
-      stopOnError: true,
-      stopOnWarning: true,
-      showWarnings: true,
-      engine: {
-        configFile: ".eslintrc.json"
-      }
-    },
+    // eslint: {
+    //   stopOnError: true,
+    //   stopOnWarning: true,
+    //   showWarnings: true,
+    //   engine: {
+    //     configFile: ".eslintrc.json"
+    //   }
+    // },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
