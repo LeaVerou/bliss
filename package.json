@@ -1,6 +1,6 @@
 {
   "name": "blissfuljs",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "Lightweight helper library for modern browsers.",
   "main": "bliss.js",
   "scripts": {
