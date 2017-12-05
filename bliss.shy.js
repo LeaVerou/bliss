@@ -105,8 +105,8 @@ extend($, {
 	listeners: self.WeakMap? new WeakMap() : new Map(),
 
 	original: {
-		addEventListener: EventTarget.prototype.addEventListener,
-		removeEventListener: EventTarget.prototype.removeEventListener
+		addEventListener: (self.EventTarget || Node).prototype.addEventListener,
+		removeEventListener: (self.EventTarget || Node).prototype.removeEventListener
 	},
 
 	sources: {},
