@@ -682,7 +682,7 @@ $.setProps = {
 			}
 		}
 		else {
-			return $.bind.apply(this, [this].concat($$(arguments)));
+			return $.bind.apply(this, [this].concat($.$(arguments)));
 		}
 	},
 
@@ -762,7 +762,7 @@ $.Array = function (subject) {
 
 $.Array.prototype = {
 	all: function(method) {
-		var args = $$(arguments).slice(1);
+		var args = $.$(arguments).slice(1);
 
 		return this[method].apply(this, args);
 	}
