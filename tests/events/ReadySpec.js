@@ -37,6 +37,16 @@ describe("$.ready", function () {
 		}, 1);
 	});
 
+	// should fire automatically because DOM is already loaded
+	it("should fire immediately and synchronously if not using promises", function (done) {
+		mocDoc.readyState = "complete";
+
+		$.ready(mocDoc, spy);
+
+		expect(spy.calledOnce).to.be.true;
+		done();
+	});
+
 	it("should not call the promise if context is loading", function (done) {
 		mocDoc.readyState = "loading";
 		$.ready(mocDoc).then(spy);
