@@ -89,6 +89,25 @@ describe("$.unbind", function () {
 		done();
 	});
 
+	it("unbinds listeners when only type and options passed", function (done) {
+		// Setup
+		subject.addEventListener("click", spy1, true);
+		subject.addEventListener("click", spy2, {once: true});
+		subject.addEventListener("change", spy3);
+
+		// Exercise
+		$.unbind(subject, "click", {capture: true});
+		fireEvent(subject, "click");
+		fireEvent(subject, "change");
+
+		// Verify
+		expect(spy1.notCalled).to.be.ok;
+		expect(spy2.calledOnce).to.be.ok;
+		expect(spy3.calledOnce).to.be.ok;
+
+		done();
+	});
+
 	it("unbinds multiple event listeners", function (done) {
 		// Setup
 		subject.addEventListener("click", spy1);

@@ -248,8 +248,9 @@ var out = $("#uk-area");
 			<input name="type" value="" type="radio" checked  id="type-full" />
 			<label for="type-full">
 				<strong class="logo">Bliss <span>Full</span></strong>
-				Adds <code>$()</code> and <code>$$()</code> global methods and a <code>_</code> property on elements and arrays, for convenience. Also wraps <code>addEventListener</code> and <code>removeEventListener</code> to track events.
-				Perfect for when you control the environment.
+				Adds <code>$()</code> and <code>$$()</code> global methods and a <code>_</code> property on elements and arrays.
+				Wraps <code>addEventListener</code> and <code>removeEventListener</code> to call <code>$.bind()</code> and <code>$.unbind()</code>, to track events and more expanded syntax.
+				Good for when you control the environment.
 			</label>
 			<input name="type" value=".shy" type="radio" id="type-shy" />
 			<label for="type-shy">

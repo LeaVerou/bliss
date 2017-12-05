@@ -102,6 +102,12 @@ extend($, {
 	type: type,
 
 	property: $.property || "_",
+	listeners: self.WeakMap? new WeakMap() : new Map(),
+
+	original: {
+		addEventListener: EventTarget.prototype.addEventListener,
+		removeEventListener: EventTarget.prototype.removeEventListener
+	},
 
 	sources: {},
 
@@ -175,9 +181,9 @@ extend($, {
 				callback();
 			}
 			else {
-				context.addEventListener("DOMContentLoaded", function() {
+				$.once(context, "DOMContentLoaded", function() {
 					callback();
-				}, {once: true});
+				});
 			}
 		}
 
@@ -538,34 +544,83 @@ $.Element.prototype = {
 		return this.dispatchEvent($.extend(evt, properties));
 	},
 
-	unbind: overload(function(events, callback) {
-		(events || "").split(/\s+/).forEach(function (type) {
-			if ($.listeners && (type.indexOf(".") > -1 || !callback)) {
-				// Mass unbinding, need to go through listeners
-				type = (type || "").split(".");
+	bind: overload(function(types, options) {
+		if (arguments.length > 1 && ($.type(options) === "function" || options.handleEvent)) {
+			// options is actually callback
+			var callback = options;
+			options = $.type(arguments[2]) === "object"? arguments[2] : {
+				capture: !!arguments[2] // in case it's passed as a boolean 3rd arg
+			};
+			options.callback = callback;
+		}
+
+		var listeners = $.listeners.get(this) || {};
+
+		types.trim().split(/\s+/).forEach(function (type) {
+			if (type.indexOf(".") > -1) {
+				type = type.split(".");
 				var className = type[1];
 				type = type[0];
-				// man, can’t wait to be able to do [type, className] = type.split(".");
+			}
 
-				var listeners = $.listeners.get(this) || {};
+			listeners[type] = listeners[type] || [];
 
-				for (var ltype in listeners) {
-					if (!type || ltype === type) {
-						// No forEach, because we’re mutating the array
-						for (var i=0, l; l=listeners[ltype][i]; i++) {
-							// TODO what about capture?
-							if ((!className || className === l.className) && (!callback || callback === l.callback)) {
-								this.removeEventListener(ltype, l.callback, l.capture);
+			if (listeners[type].filter(function(l) {
+				return l.callback === options.callback && l.capture == options.capture;
+			}).length === 0) {
+				listeners[type].push($.extend({className: className}, options));
+			}
+
+			$.original.addEventListener.call(this, type, options.callback, options);
+		}, this);
+
+		$.listeners.set(this, listeners);
+	}, 0),
+
+	unbind: overload(function(types, options) {
+		if (options && ($.type(options) === "function" || options.handleEvent)) {
+			var callback = options;
+			options = arguments[2];
+		}
+
+		if ($.type(options) == "boolean") {
+			options = {capture: options};
+		}
+
+		options = options || {};
+		options.callback = options.callback || callback;
+
+		var listeners = $.listeners.get(this);
+
+		(types || "").trim().split(/\s+/).forEach(function (type) {
+			if (type.indexOf(".") > -1) {
+				type = type.split(".");
+				var className = type[1];
+				type = type[0];
+			}
+
+			if (type && options.callback) {
+				return $.original.removeEventListener.call(this, type, options.callback, options.capture);
+			}
+
+			if (!listeners) {
+				return;
+			}
+
+			// Mass unbinding, need to go through listeners
+			for (var ltype in listeners) {
+				if (!type || ltype === type) {
+					// No forEach, because we’re mutating the array
+					for (var i=0, l; l=listeners[ltype][i]; i++) {
+						if ((!className || className === l.className)
+							&& (!options.callback || options.callback === l.callback)
+							&& (!!options.capture == !!l.capture)) {
+								listeners[ltype].splice(i, 1);
+								$.original.removeEventListener.call(this, ltype, l.callback, l.capture);
 								i--;
-							}
 						}
-
 					}
 				}
-			}
-			else {
-				// Normal event unbinding, defer to native JS
-				this.removeEventListener(type, callback);
 			}
 		}, this);
 	}, 0)
@@ -604,7 +659,7 @@ $.setProps = {
 
 	// Bind one or more events to the element
 	events: function (val) {
-		if (val && val.addEventListener) {
+		if (arguments.length == 1 && val && val.addEventListener) {
 			// Copy events from other element (requires Bliss Full)
 			var me = this;
 
@@ -614,7 +669,7 @@ $.setProps = {
 
 				for (var type in listeners) {
 					listeners[type].forEach(function(l) {
-						me.addEventListener(type, l.callback, l.capture);
+						$.bind(me, type, l.callback, l.capture);
 					});
 				}
 			}
@@ -626,40 +681,25 @@ $.setProps = {
 				}
 			}
 		}
-		else if (arguments.length > 1 && $.type(val) === "string") {
-			var callback = arguments[1];
-			var capture = arguments[2];
-
-			val.split(/\s+/).forEach(function (event) {
-				this.addEventListener(event, callback, capture);
-			}, this);
-		}
 		else {
-			for (var events in val) {
-				$.events(this, events, val[events]);
-			}
+			return $.bind.apply(this, [this].concat($$(arguments)));
 		}
 	},
 
-	once: overload(function(events, callback) {
-		events = events.split(/\s+/);
+	once: overload(function(types, callback) {
 		var me = this;
 		var once = function() {
-			events.forEach(function(event) {
-				me.removeEventListener(event, once);
-			});
+			$.unbind(me, types, once);
 
 			return callback.apply(me, arguments);
 		};
 
-		events.forEach(function (event) {
-			me.addEventListener(event, once);
-		});
+		$.bind(this, types, once, {once: true});
 	}, 0),
 
 	// Event delegation
 	delegate: overload(function (type, selector, callback) {
-		this.addEventListener(type, function(evt) {
+		$.bind(this, type, function(evt) {
 			if (evt.target.closest(selector)) {
 				callback.call(this, evt);
 			}

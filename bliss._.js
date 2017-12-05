@@ -56,47 +56,12 @@ Object.defineProperty(Array.prototype, _, {
 // Hijack addEventListener and removeEventListener to store callbacks
 
 if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
-	$.addEventListener = EventTarget.prototype.addEventListener;
-	$.removeEventListener = EventTarget.prototype.removeEventListener;
-	$.listeners = self.WeakMap? new WeakMap() : new Map();
-
-	var equal = function(callback, capture, l) {
-		return l.callback === callback && l.capture == capture;
-	};
-	var notEqual = function() {
-		return !equal.apply(this, arguments);
+	EventTarget.prototype.addEventListener = function(type, callback, options) {
+		return $.bind(this, type, callback, options);
 	};
 
-	EventTarget.prototype.addEventListener = function(type, callback, capture) {
-		var listeners = $.listeners.get(this) || {};
-
-		if (type.indexOf(".") > -1) {
-			type = type.split(".");
-			var className = type[1];
-			type = type[0];
-		}
-
-		listeners[type] = listeners[type] || [];
-
-		if (listeners[type].filter(equal.bind(null, callback, capture)).length === 0) {
-			listeners[type].push({callback: callback, capture: capture, className: className});
-		}
-
-		$.listeners.set(this, listeners);
-
-		return $.addEventListener.call(this, type, callback, capture);
-	};
-
-	EventTarget.prototype.removeEventListener = function(type, callback, capture) {
-		if (callback) {
-			var listeners = $.listeners.get(this);
-
-			if (listeners && listeners[type]) {
-				listeners[type] = listeners[type].filter(notEqual.bind(null, callback, capture));
-			}
-		}
-
-		return $.removeEventListener.call(this, type, callback, capture);
+	EventTarget.prototype.removeEventListener = function(type, callback, options) {
+		return $.unbind(this, type, callback, options);
 	};
 }
 

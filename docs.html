@@ -753,33 +753,30 @@ Promise.all($$("div")._.transition({
 	</article>
 
 	<article>
-		<h1 class="element array set">events</h1>
+		<h1 class="element array">bind</h1>
 
 		<p class="description">Set multiple event listeners on one or more elements.</p>
 
-		<pre><code>subject = $.events(subject, handlers)</code></pre>
-		<pre><code>subject = subject._.events(handlers)</code></pre>
-		<pre><code>subject = subject = subject._.set({events: handlers})</code></pre>
+		<pre><code>subject = $.bind(subject, handlers)</code></pre>
+		<pre><code>subject = subject._.bind(handlers)</code></pre>
 
 		<dl class="args">
 			<dt class="element array">subject</dt>
 			<dd>The element(s) to set the event listeners on.</dd>
 
-			<dt class="object element">handlers</dt>
-			<dd>If object: An object whose keys are the events and the values the listeners.
+			<dt class="object">handlers</dt>
+			<dd>An object whose keys are the events and the values the listeners.
 				For details on the keys, see <code>types</code> below.
-				For details on the values, see <code>callback</code> below.
-				There is no way to set capturing to <code>true</code> if using this syntax.
-				If it’s an element, all its event listeners are copied from it to <code>subject</code>.</dd>
+				For details on the values, see <code>callback</code> and <code>options</code> below.</dd>
 		</dl>
 
-		<pre><code>$$('input[type="range"]')._.events({
+		<pre><code>$$('input[type="range"]')._.bind({
 	"input change": function(evt) { this.title = this.value},
 	"focus.className": function(evt) { console.log(evt.type); }
 })</code></pre>
 
-		<pre class="def"><code>subject = $.events(subject, types, callback[, capture])</code></pre>
-		<pre class="def"><code>subject = subject._.events(types, callback[, capture])</code></pre>
+		<pre class="def"><code>subject = $.bind(subject, types, [callback], [options])</code></pre>
+		<pre class="def"><code>subject = subject._.bind(types, [callback], [options])</code></pre>
 
 		<dl class="args">
 			<dt class="element array">subject</dt>
@@ -792,19 +789,44 @@ Promise.all($$("div")._.transition({
 			<dt class="function">callback</dt>
 			<dd>The function to execute. Passed directly to <code>addEventListener</code>.</dd>
 
-			<dt class="boolean">capture</dt>
-			<dd>Whether to use capture or not. Passed directly to <code>addEventListener</code>.</dd>
+			<dt class="boolean object">options</dt>
+			<dd>Capture or options object to pass to <code>addEventListener</code>.
+				For details on what options are available, refer to the documentation for <a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener"><code>addEventListener</code></a>
+				You can also combine the <code>options</code> and <code>callback</code> parameters, by including a <code>callback</code> property.
+				This is useful when using the syntax above for multiple handlers if you also want to pass options.
+			</dd>
 		</dl>
 
 		<ul class="notes">
-			<li>If only setting one event listener on one element, just use the native <code>element.addEventListener(type, handler, useCapture)</code> syntax.
-				If setting one event listener on multiple elements, you can use <code>array._.addEventListener</code>, like so:
-			<pre><code>$$("input")._.addEventListener("input", function(){ /* ... */);</code></pre>
+			<li>If only setting one event listener on one element and you are keeping a reference to the callback (or are using Bliss Full), just use the native <code>element.addEventListener(type, handler, useCapture)</code> syntax.
 			</li>
-			<li>If using Bliss shy: You can use classes in your event names, like <code>click.foo</code>. The event that will be bound in that case is without the class name (<code>click</code>), but you can use the class name to unbind via <code>$.unbind()</code></li>
+			<li>You can use classes in your event names, like <code>click.foo</code>. The event that will be bound in that case is without the class name (<code>click</code>), but you can use the class name to unbind via <code>$.unbind()</code></li>
 		</ul>
 
 		<a class="jq">jQuery.fn.bind</a>
+	</article>
+
+	<article>
+		<h1 class="element array set">events</h1>
+
+		<p class="description">Just like <code>$.bind()</code>, but also lets you copy events from another element.
+		The latter is the only syntax described here, for the <code>$.bind()</code> syntax look above.</p>
+
+		<pre><code>subject = $.events(subject, element)</code></pre>
+		<pre><code>subject = subject._.events(element)</code></pre>
+		<pre><code>subject = subject = subject._.set({events: element})</code></pre>
+
+		<dl class="args">
+			<dt class="element array">subject</dt>
+			<dd>The element(s) to set the event listeners on.</dd>
+
+			<dt class="object element">element</dt>
+			<dd>The element to copy listeners from. Inline events set via HTML or <code>on*</code> properties are also copied.</dd>
+		</dl>
+
+		<ul class="notes">
+			<li>If using Bliss Shy, only listeners added via Bliss methods will be copied.</li>
+		</ul>
 	</article>
 
 	<article>
@@ -860,10 +882,9 @@ document.body._.unbind(); // unbind ALL events
 </code></pre>
 
 		<ul class="notes">
-			<li>If only unbinding one event listener and you have a reference to the callback used, just use the native <code>element.removeEventListener(type, handler, useCapture)</code> syntax. If unbinding one event listener from multiple elements, you can use <code>array._.removeEventListener</code>, like so:
-			<pre><code>$$("input")._.removeEventListener("focus", functionReference);</code></pre>
+			<li>If only unbinding one event listener and you have a reference to the callback used, just use the native <code>element.removeEventListener(type, handler, useCapture)</code> syntax.
 			</li>
-			<li>Unbinding events with classes also works if those events have been bound via <code>addEventListener</code>, not just Bliss’ own <code>$.events()</code> method.</li>
+			<li>If using Bliss Shy, only listeners bound via Bliss methods can be removed without a reference to the callback.</li>
 			<li>Avoid using overly liberal unbinding queries (e.g. no arguments or just a type) in code meant to be used in environments you don’t control.
 				You don’t want to conflict with other people’s code! Use a class instead.</li>
 		</ul>
@@ -899,7 +920,7 @@ myMap._.fire("locationchange", {
 myInput._.fire("input");</code></pre>
 
 		<ul class="notes">
-			<li>If you are writing a library meant to be run on websites you don’t control, it is recommended that you namespace your events by adding the library name before them, like <code>"mylibrary.locationchange"</code> or <code>"mylibrary:locationchange"</code>, to avoid collisions.</li>
+			<li>If you are writing a library meant to be run on websites you don’t control, it is recommended that you namespace your events by adding the library name before them, like <code>"mylibrary-locationchange"</code> or <code>"mylibrary:locationchange"</code>, to avoid collisions.</li>
 		</ul>
 
 		<a class="jq">jQuery.fn.trigger</a>
