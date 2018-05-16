@@ -549,6 +549,31 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 	</article>
 
 	<article>
+		<h1 class="element array">toggleAttribute</h1>
+
+		<p class="description">Set or remove an attribute based on a test</p>
+
+		<pre><code>subject = $.toggleAttribute(subject, name, value [, test])</code></pre>
+		<pre><code>subject = subject._.toggleAttribute(attrs)</code></pre>
+
+		<dl class="args">
+			<dt class="element array">subject</dt>
+			<dd>The element(s) to set the attributes on.</dd>
+
+			<dt class="string">name</dt>
+			<dd>The attribute name</dd>
+
+			<dt class="string">value</dt>
+			<dd>The attribute value</dd>
+
+			<dt>test</dt>
+			<dd>The test. If truthy, set the attribute. If falsy, remove it. If not present, it’s false when <code>value</code> is <code>null</code> and true otherwise.</dd>
+		</dl>
+
+		<p class="needs example"></p>
+	</article>
+
+	<article>
 		<h1 class="element array set">before</h1>
 
 		<p class="description">Insert the element before another.</p>

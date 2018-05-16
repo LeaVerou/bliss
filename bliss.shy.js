@@ -488,7 +488,6 @@ $.Element = function (subject) {
 
 $.Element.prototype = {
 	set: overload(function(property, value) {
-
 		if (property in $.setProps) {
 			$.setProps[property].call(this, value);
 		}
@@ -623,7 +622,20 @@ $.Element.prototype = {
 				}
 			}
 		}, this);
-	}, 0)
+	}, 0),
+
+	toggleAttribute: function(name, value, test) {
+		if (arguments.length < 3) {
+			test = value !== null;
+		}
+
+		if (test) {
+			this.setAttribute(name, value);
+		}
+		else {
+			this.removeAttribute(name);
+		}
+	}
 };
 
 /*
