@@ -436,7 +436,7 @@ extend($, {
 	},
 
 	value: function(obj) {
-		var hasRoot = $.type(obj) !== "string";
+		var hasRoot = typeof obj !== "string";
 
 		return $.$(arguments).slice(+hasRoot).reduce(function(obj, property) {
 			return obj && obj[property];

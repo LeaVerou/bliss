@@ -29,4 +29,21 @@ describe("$.value", function() {
 		expect($.value(obj, "bar", "bar1")).to.equal("one");
 	});
 
+	it("works correctly with Symbol properties", function() {
+		var foo = Symbol("foo");
+		var bar = Symbol("bar");
+		var obj = {
+			[foo]: 1
+		};
+
+		expect($.value(obj, foo)).to.equal(1);
+		expect($.value(obj, bar)).to.be.undefined;
+	});
+
+	it("works correctly for String objects", function() {
+		var obj = new String("obj");
+		obj.foo = 1;
+
+		expect($.value(obj, "foo")).to.equal(1);
+	});
 });
