@@ -502,10 +502,8 @@ $.Element.prototype = {
 
 	// Run a CSS transition, return promise
 	transition: function(props, duration) {
-		duration = +duration || 400;
-
 		return new Promise(function(resolve, reject) {
-			if ("transition" in this.style) {
+			if ("transition" in this.style && duration !== 0) {
 				// Get existing style
 				var previous = $.extend({}, this.style, /^transition(Duration|Property)$/);
 
