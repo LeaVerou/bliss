@@ -508,7 +508,7 @@ $.Element.prototype = {
 				var previous = $.extend({}, this.style, /^transition(Duration|Property)$/);
 
 				$.style(this, {
-					transitionDuration: (+duration || 400) + "ms",
+					transitionDuration: (duration || 400) + "ms",
 					transitionProperty: Object.keys(props).join(", ")
 				});
 
