@@ -503,7 +503,7 @@ $.Element.prototype = {
 	// Run a CSS transition, return promise
 	transition: function(props, duration) {
 		return new Promise(function(resolve, reject) {
-			if ("transition" in this.style) {
+			if ("transition" in this.style && duration !== 0) {
 				// Get existing style
 				var previous = $.extend({}, this.style, /^transition(Duration|Property)$/);
 
@@ -512,16 +512,11 @@ $.Element.prototype = {
 					transitionProperty: Object.keys(props).join(", ")
 				});
 
-				if (duration === 0) {
+				$.once(this, "transitionend", function() {
+					clearTimeout(i);
+					$.style(this, previous);
 					resolve(this);
-				}
-				else {
-					$.once(this, "transitionend", function() {
-						clearTimeout(i);
-						$.style(this, previous);
-						resolve(this);
-					});
-				}
+				});
 
 				// Failsafe, in case transitionend doesn’t fire
 				var i = setTimeout(resolve, duration+50, this);
