@@ -11,7 +11,7 @@ gulp.task("concat", function() {
 	.pipe(gulp.dest("."));
 });
 
-gulp.task("minify", ["concat"], function() {
+gulp.task("minify", function() {
 	var u = uglify();
 	u.on("error", function(error) {
 		console.error(error);
@@ -28,4 +28,4 @@ gulp.task("watch", function() {
 	gulp.watch(["*.js", "!bliss.js", "!*.min.js"], ["concat", "minify"]);
 });
 
-gulp.task("default", ["concat", "minify"]);
+gulp.task("default", gulp.series("concat", "minify"));
