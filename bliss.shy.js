@@ -339,13 +339,20 @@ extend($, {
 	},
 
 	// Dynamically load a CSS or JS resource
-	load: function(url, base) {
+	load: function load(url, base) {
 		base = base? new URL(base, location.href) : location.href;
 		url = new URL(url, base);
 
+		// Prevent double loading
+		var loading = load.loading = load.loading || {};
+
+		if (loading[url + ""]) {
+			return loading[url + ""];
+		}
+
 		if (/\.css$/.test(url.pathname)) {
 			// CSS file
-			return new Promise(function(resolve, reject) {
+			return loading[url + ""] = new Promise(function(resolve, reject) {
 				var link = $.create("link", {
 					"href": url,
 					"rel": "stylesheet",
@@ -361,7 +368,7 @@ extend($, {
 		}
 
 		// JS file
-		return $.include(url);
+		return loading[url + ""] = $.include(url);
 	},
 
 	/*
