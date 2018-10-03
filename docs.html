@@ -996,6 +996,37 @@ $.ready().then(function(){
 
 		<a class="jq">jQuery.fn.ready</a>
 	</article>
+
+	<article>
+		<h1 class="element">when</h1>
+
+		<p class="description">Defer code until an event fires.</p>
+
+		<pre><code>var promise = $.when(subject, type [, test])</code></pre>
+		<pre><code>var promise = subject._.when(type [, test])</code></pre>
+
+		<dl class="args">
+			<dt class="element">subject</dt>
+			<dd>The element to listen for the event on.</dd>
+
+			<dt class="string">type</dt>
+			<dd>The event type.</dd>
+
+			<dt class="function">test</dt>
+			<dd>If provided, this test will also need to pass for the promise to resolve.</dd>
+
+			<dt class="promise">promise</dt>
+			<dd>A promise that gets resolved once BOTH the event is fired and the test (if one is present) passes.</dd>
+		</dl>
+
+		<pre class="examples"><code>// Defer code until Esc is pressed for the first time
+$.when(document, "keyup", evt => evt.key === "Escape").then(evt => console.log("Esc pressed!", evt));</code></pre>
+
+		<ul class="notes">
+			<li>If the event fires multiple times, your code will only run the first time.</li>
+			<li>If the event fires but the test doesn’t pass, the promise will resolve once it does.</li>
+		</ul>
+	</article>
 </section>
 
 <section>

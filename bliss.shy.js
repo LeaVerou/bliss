@@ -647,6 +647,19 @@ $.Element.prototype = {
 		}, this);
 	}, 0),
 
+	// Return a promise that resolves when an event fires, then unbind
+	when: function(type, test) {
+		var me = this;
+		return new Promise(function(resolve) {
+			me.addEventListener(type, function callee(evt) {
+				if (!test || test.call(this, evt)) {
+					this.removeEventListener(type, callee);
+					resolve(evt);
+				}
+			});
+		});
+	},
+
 	toggleAttribute: function(name, value, test) {
 		if (arguments.length < 3) {
 			test = value !== null;
