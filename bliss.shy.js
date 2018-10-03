@@ -326,11 +326,11 @@ extend($, {
 			$.set(script, {
 				async: true,
 				onload: function() {
-					resolve();
+					resolve(script);
 					script.parentNode && script.parentNode.removeChild(script);
 				},
 				onerror: function() {
-					reject();
+					reject(script);
 				},
 				src: url,
 				inside: document.head
