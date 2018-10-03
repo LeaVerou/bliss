@@ -339,12 +339,13 @@ extend($, {
 	},
 
 	// Dynamically load a CSS or JS resource
-	load: function(url, base = location.href) {
+	load: function(url, base) {
+		base = base? new URL(base, location.href) : location.href;
 		url = new URL(url, base);
 
 		if (/\.css$/.test(url.pathname)) {
 			// CSS file
-			return new Promise((resolve, reject) => {
+			return new Promise(function(resolve, reject) {
 				var link = $.create("link", {
 					"href": url,
 					"rel": "stylesheet",
