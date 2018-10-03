@@ -11,6 +11,7 @@ var _ = Bliss.property;
 $.add({
 	// Clone elements, with events and data
 	clone: function () {
+		console.warn("$.clone() is deprecated and will be removed in a future version of Bliss.");
 		var clone = this.cloneNode(true);
 		var descendants = $.$("*", clone).concat(clone);
 
