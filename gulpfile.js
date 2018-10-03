@@ -25,7 +25,7 @@ gulp.task("minify", function() {
 });
 
 gulp.task("watch", function() {
-	gulp.watch(["*.js", "!bliss.js", "!*.min.js"], ["concat", "minify"]);
+	gulp.watch(["*.js", "!bliss.js", "!*.min.js"], gulp.series("concat", "minify"));
 });
 
 gulp.task("default", gulp.series("concat", "minify"));
