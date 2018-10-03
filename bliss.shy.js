@@ -336,7 +336,31 @@ extend($, {
 				inside: document.head
 			});
 		});
+	},
 
+	// Dynamically load a CSS or JS resource
+	load: function(url, base = location.href) {
+		url = new URL(url, base);
+
+		if (/\.css$/.test(url.pathname)) {
+			// CSS file
+			return new Promise((resolve, reject) => {
+				var link = $.create("link", {
+					"href": url,
+					"rel": "stylesheet",
+					"inside": document.head,
+					onload: function() {
+						resolve(link);
+					},
+					onerror: function() {
+						reject(link);
+					}
+				});
+			});
+		}
+
+		// JS file
+		return $.include(url);
 	},
 
 	/*

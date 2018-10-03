@@ -1287,6 +1287,27 @@ $.value("document", "body", "nodeType"); // 1, no root, starting from self</code
 	</article>
 
 	<article>
+		<h1>load</h1>
+
+		<p class="description">Include a CSS or JS resource dynamically and run code after it has loaded.</p>
+
+		<pre><code>var promise = $.load(url [, base])</code></pre>
+
+		<dl class="args">
+			<dt>url</dt>
+			<dd class="type">Type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URL">URL</a></dd>
+			<dd>URL of the script to load.</dd>
+
+			<dt>base</dt>
+			<dd class="type">Type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a> or <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URL">URL</a></dd>
+			<dd>URL of the script to load.</dd>
+
+			<dt class="promise">promise</dt>
+			<dd>A promise that is resolved when the resource has loaded and rejected if it fails to load.</dd>
+		</dl>
+	</article>
+
+	<article>
 		<h1>include</h1>
 
 		<p class="description">Include a script file conditionally and run code after it has loaded.</p>
