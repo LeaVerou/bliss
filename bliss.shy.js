@@ -643,7 +643,9 @@ $.Element.prototype = {
 					for (var i=0, l; l=listeners[ltype][i]; i++) {
 						if ((!className || className === l.className)
 							&& (!options.callback || options.callback === l.callback)
-							&& (!!options.capture == !!l.capture) || !type && !options.callback ) {
+							&& (!!options.capture == !!l.capture) || 
+						    		!type && !options.callback && undefined === options.capture) 
+						   ) {
 								listeners[ltype].splice(i, 1);
 								$.original.removeEventListener.call(this, ltype, l.callback, l.capture);
 								i--;
