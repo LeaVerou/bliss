@@ -907,13 +907,14 @@ document.body._.unbind("click");
 document.body._.unbind(); // unbind ALL events
 // Clicking on the body now does nothing
 $.unbind(elem)
-// Removing all listeners added using $.bind method, regardless of event capture setting
+// Removing all listeners from elem, regardless of event capture setting. 
+// If using Bliss Shy, $.unbind only works for the listeners added using $.bind method
 $.unbind(elem, '', false)
 $.unbind(elem, undefined, false)
-// Removing all listeners added to elem using $.bind method, with capture option set to false (the default in most browsers)
+// Removing all listeners from elem, with capture option set to false (the default in most browsers)
 $.unbind(elem, '', true)
 $.unbind(elem, undefined, true)
-// Removing all listeners added to elem using $.bind method, with capture option set to true explicitly
+// Removing all listeners from elem, with capture option set to true explicitly
 </code></pre>
 
 		<ul class="notes">
