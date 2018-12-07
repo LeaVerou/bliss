@@ -887,7 +887,7 @@ Promise.all($$("div")._.transition({
 				<strong>If using Bliss Full</strong>:
 				You can also unbind by class (e.g. <code>click.foo</code> or even just <code>.foo</code> to unbind all events with that class).
 				You can also unbind all listeners on the element, by not providing <strong>any</strong> arguments. This will remove all listeners with capture option set to either true or false.  
-				This works for Bliss Shy and anonymous functions too, if the listeners were added using Bliss bind method. Bliss (both Full and Shy) keeps track of anonymous functions so these listeners may be removed.
+				This works for Bliss Shy and anonymous functions too, if the listeners were added using Bliss bind method. Bliss (both Full and Shy) keeps track of anonymous functions so these listeners may be removed later.
 
 			</dd>
 
@@ -906,6 +906,14 @@ document.body._.unbind("click");
 // Clicking on the body now prints only bar mousedown
 document.body._.unbind(); // unbind ALL events
 // Clicking on the body now does nothing
+$.unbind(elem)
+// Removing all listeners added using $.bind method, regardless of event capture setting
+$.unbind(elem, '', false)
+$.unbind(elem, undefined, false)
+// Removing all listeners added to elem using $.bind method, with capture option set to false (the default in most browsers)
+$.unbind(elem, '', true)
+$.unbind(elem, undefined, true)
+// Removing all listeners added to elem using $.bind method, with capture option set to true explicitly
 </code></pre>
 
 		<ul class="notes">
