@@ -628,11 +628,11 @@ $.Element.prototype = {
 				type = type[0];
 			}
 
-			if (type && options.callback) {
-				return $.original.removeEventListener.call(this, type, options.callback, options.capture);
-			}
-
+			//if listeners exist, always go through listeners to clean up
 			if (!listeners) {
+				if (type && options.callback) {
+					return $.original.removeEventListener.call(this, type, options.callback, options.capture);
+				}
 				return;
 			}
 
