@@ -628,11 +628,11 @@ $.Element.prototype = {
 				type = type[0];
 			}
 
-			if (type && options.callback) {
-				return $.original.removeEventListener.call(this, type, options.callback, options.capture);
-			}
-
+			//if listeners exist, always go through listeners to clean up
 			if (!listeners) {
+				if (type && options.callback) {
+					return $.original.removeEventListener.call(this, type, options.callback, options.capture);
+				}
 				return;
 			}
 
@@ -643,7 +643,9 @@ $.Element.prototype = {
 					for (var i=0, l; l=listeners[ltype][i]; i++) {
 						if ((!className || className === l.className)
 							&& (!options.callback || options.callback === l.callback)
-							&& (!!options.capture == !!l.capture)) {
+							&& (!!options.capture == !!l.capture || 
+						    		!type && !options.callback && undefined === options.capture)
+						   ) {
 								listeners[ltype].splice(i, 1);
 								$.original.removeEventListener.call(this, ltype, l.callback, l.capture);
 								i--;
