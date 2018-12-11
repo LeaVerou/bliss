@@ -102,7 +102,7 @@ extend($, {
 	type: type,
 
 	property: $.property || "_",
-	listeners: self.WeakMap? new WeakMap() : new Map(),
+	listeners: new Map(),
 
 	original: {
 		addEventListener: (self.EventTarget || Node).prototype.addEventListener,
@@ -620,7 +620,7 @@ $.Element.prototype = {
 		options.callback = options.callback || callback;
 
 		var listeners = $.listeners.get(this);
-
+		var eventCount = 0;
 		(types || "").trim().split(/\s+/).forEach(function (type) {
 			if (type.indexOf(".") > -1) {
 				type = type.split(".");
@@ -635,7 +635,6 @@ $.Element.prototype = {
 				}
 				return;
 			}
-
 			// Mass unbinding, need to go through listeners
 			for (var ltype in listeners) {
 				if (!type || ltype === type) {
@@ -643,7 +642,7 @@ $.Element.prototype = {
 					for (var i=0, l; l=listeners[ltype][i]; i++) {
 						if ((!className || className === l.className)
 							&& (!options.callback || options.callback === l.callback)
-							&& (!!options.capture == !!l.capture || 
+							&& (!!options.capture == !!l.capture ||
 						    		!type && !options.callback && undefined === options.capture)
 						   ) {
 								listeners[ltype].splice(i, 1);
@@ -652,8 +651,18 @@ $.Element.prototype = {
 						}
 					}
 				}
+				// array has been mutated in place
+				if (listeners[ltype].length) {
+					eventCount += listeners[ltype].length;
+				} else {
+					delete listeners[ltype];
+				}
 			}
 		}, this);
+		//release the element key for gc if there is no event left.
+		if (listeners && eventCount < 1) {
+			$.listeners.delete(this);
+		}
 	}, 0),
 
 	// Return a promise that resolves when an event fires, then unbind
