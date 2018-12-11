@@ -102,7 +102,7 @@ extend($, {
 	type: type,
 
 	property: $.property || "_",
-	listeners: self.WeakMap? new WeakMap() : new Map(),
+	listeners: (self.WeakMap && false !== $.useWeakMap)? new WeakMap() : new Map(),
 
 	original: {
 		addEventListener: (self.EventTarget || Node).prototype.addEventListener,
@@ -643,7 +643,7 @@ $.Element.prototype = {
 					for (var i=0, l; l=listeners[ltype][i]; i++) {
 						if ((!className || className === l.className)
 							&& (!options.callback || options.callback === l.callback)
-							&& (!!options.capture == !!l.capture || 
+							&& (!!options.capture == !!l.capture ||
 						    		!type && !options.callback && undefined === options.capture)
 						   ) {
 								listeners[ltype].splice(i, 1);
