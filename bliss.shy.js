@@ -126,6 +126,22 @@ extend($, {
 	},
 
 	/*
+	 * Return the first element with specified element id using 'document.getElementById()',
+	 * and it should be faster than $() which uses querySelector().
+	 */
+	$id: function(elemId, context) {
+		if (elemId instanceof Node || elemId instanceof Window) {
+			return [elemId];
+		}
+
+		if (arguments.length == 2 && !context) {
+			return [];
+		}
+
+		return $.type(elemId) === "string"? (context || document).getElementById(elemId) : elemId || null;
+	},
+
+	/*
 	 * Return first non-undefined value. Mainly used internally.
 	 */
 	defined: function () {

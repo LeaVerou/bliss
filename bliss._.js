@@ -70,4 +70,7 @@ if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
 self.$ = self.$ || $;
 self.$$ = self.$$ || $.$;
 
+// set $id conveniece method for Bliss.$id
+self.$id = self.$id || $.$id;
+
 })(Bliss);
