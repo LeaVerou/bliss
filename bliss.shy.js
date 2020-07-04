@@ -177,7 +177,7 @@ extend($, {
 		context = context || document;
 
 		if (callback) {
-			if (context.readyState !== "loading") {
+			if (context.readyState === "complete") {
 				callback();
 			}
 			else {
@@ -643,7 +643,7 @@ $.Element.prototype = {
 					for (var i=0, l; l=listeners[ltype][i]; i++) {
 						if ((!className || className === l.className)
 							&& (!options.callback || options.callback === l.callback)
-							&& (!!options.capture == !!l.capture || 
+							&& (!!options.capture == !!l.capture ||
 						    		!type && !options.callback && undefined === options.capture)
 						   ) {
 								listeners[ltype].splice(i, 1);
