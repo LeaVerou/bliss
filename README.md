@@ -39,6 +39,13 @@ npm test
 
 (Assuming use of polyfill.io alongside)
 
-![Chrome](https://raw.github.com/alrra/browser-logos/master/chrome/chrome_48x48.png) | ![Firefox](https://raw.github.com/alrra/browser-logos/master/firefox/firefox_48x48.png) | ![IE](https://raw.github.com/alrra/browser-logos/master/internet-explorer/internet-explorer_48x48.png) | ![Opera](https://raw.github.com/alrra/browser-logos/master/opera/opera_48x48.png) | ![Safari](https://raw.github.com/alrra/browser-logos/master/safari/safari_48x48.png)
---- | --- | --- | --- | --- |
- ✔ | ✔ | 9+ ✔ | ✔ | 6.1+ ✔ |
+![Chrome][chrome] | ![Firefox][firefox] | ![Edge][edge] | ![IE][ie] | ![Opera][opera] | ![Safari][safari]
+--- | --- | --- | --- | --- | --- |
+ ✔ | ✔ | ✔ | 9+ ✔ | ✔ | 6.1+ ✔ |
+
+[chrome]:  https://raw.githubusercontent.com/alrra/browser-logos/main/src/chrome/chrome_48x48.png "Chrome"
+[firefox]: https://raw.githubusercontent.com/alrra/browser-logos/main/src/firefox/firefox_48x48.png "Firefox"
+[edge]:    https://raw.githubusercontent.com/alrra/browser-logos/main/src/edge/edge_48x48.png "Edge"
+[ie]:      https://raw.githubusercontent.com/alrra/browser-logos/main/src/archive/internet-explorer_9-11/internet-explorer_9-11_48x48.png "IE"
+[opera]:   https://raw.githubusercontent.com/alrra/browser-logos/main/src/opera/opera_48x48.png "Opera"
+[safari]:  https://raw.githubusercontent.com/alrra/browser-logos/main/src/safari/safari_48x48.png "Safari"
