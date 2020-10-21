@@ -2,7 +2,7 @@
     "parser": "babel-eslint",
     "parserOptions": {
         "ecmaVersion": 6,
-        "sourceType": "script",
+        "sourceType": "module",
         "ecmaFeatures": {
             "impliedStrict": true
         }
@@ -34,8 +34,8 @@
                 "next": "block-like"
             }, {
                 "blankLine": "any",
-                "prev": ["const", "let", "var"],
-                "next": ["const", "let", "var"]
+                "prev": ["const", "let", "var", "function"],
+                "next": ["const", "let", "var", "function"]
             }
         ],
         "quotes": [1, "double", "avoid-escape"],
