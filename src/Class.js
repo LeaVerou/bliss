@@ -64,7 +64,7 @@ export default function(o) {
 	}
 
 	return Class;
-},
+};
 
 // Properties with special handling in classes
 export const classProps = {

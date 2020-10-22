@@ -1,4 +1,6 @@
 import overload from "./overload.js";
+import extend from "./extend.js";
+import type from "./type.js";
 
 const sources = {};
 
@@ -15,20 +17,20 @@ function defined() {
 
 // Extends Bliss with more methods
 export default overload(function(method, callback, on, noOverwrite) {
-	on = $.extend({$: true, element: true, array: true}, on);
+	on = Object.assign({$: true, element: true, array: true}, on);
 
-	if ($.type(callback) == "function") {
+	if (type(callback) == "function") {
 		if (on.element && (!(method in $.Element.prototype) || !noOverwrite)) {
 			$.Element.prototype[method] = function () {
-				return this.subject && $.defined(callback.apply(this.subject, arguments), this.subject);
+				return this.subject && defined(callback.apply(this.subject, arguments), this.subject);
 			};
 		}
 
 		if (on.array && (!(method in $.Array.prototype) || !noOverwrite)) {
 			$.Array.prototype[method] = function() {
 				var args = arguments;
-				return this.subject.map(function(element) {
-					return element && $.defined(callback.apply(element, args), element);
+				return this.subject.map(element => {
+					return element && defined(callback.apply(element, args), element);
 				});
 			};
 		}

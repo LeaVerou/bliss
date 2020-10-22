@@ -1,5 +1,4 @@
 import type from "./type.js";
-import extend from "./extend.js";
 import overload from "./overload.js";
 
 export const listeners = new WeakMap();
@@ -24,7 +23,7 @@ export default overload(function(types, options) {
 		local[type] = local[type] || [];
 
 		if (local[type].find(l => l.callback === options.callback && l.capture == options.capture)) {
-			local[type].push(extend({className: className}, options));
+			local[type].push(Object.assign({className: className}, options));
 		}
 
 		addEventListener.call(this, type, options.callback, options);
