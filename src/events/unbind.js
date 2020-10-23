@@ -1,6 +1,6 @@
-import type from "./type.js";
-import extend from "./extend.js";
-import overload from "./overload.js";
+import type from "../type.js";
+import extend from "../extend.js";
+import overload from "../overload.js";
 
 import {default as bind, listeners} from "./bind.js";
 

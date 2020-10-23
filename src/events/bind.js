@@ -1,5 +1,5 @@
-import type from "./type.js";
-import overload from "./overload.js";
+import type from "../type.js";
+import overload from "../overload.js";
 
 export const listeners = new WeakMap();
 

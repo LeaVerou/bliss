@@ -1,4 +1,4 @@
-export default function (doc = document, callback, _isVoid) {
+export default function ready (doc = document, callback, _isVoid) {
 	if (typeof doc === "function" && !callback) {
 		[callback, doc] = [doc];
 	}

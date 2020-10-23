@@ -1,6 +1,6 @@
-import set from "./dom/set.js";
-import type from "./type.js";
-import extend from "./extend.js";
+import set from "./set.js";
+import type from "../type.js";
+import extend from "../extend.js";
 
 export default function (tag, o) {
 	if (tag instanceof Node) {

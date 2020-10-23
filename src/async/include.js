@@ -1,4 +1,4 @@
-import set from "./dom/set.js";
+import set from "../dom/set.js";
 
 // Includes a script, returns a promise
 export default function() {

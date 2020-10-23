@@ -1,5 +1,5 @@
-import extend from "./src/extend.js";
-import $ from "./src/$.js";
+import extend from "../extend.js";
+import $ from "../$.js";
 
 /*
  * Fetch API inspired XHR wrapper. Returns promise.

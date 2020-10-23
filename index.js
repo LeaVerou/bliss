@@ -1,4 +1,6 @@
-(function(){
+import $, {$$} from "./src/_index.js";
+
+(function() {
 function titleToId(title) {
 	return title.trim().replace(/^\$\.|\(\)$/g, "");
 }
@@ -8,7 +10,7 @@ $$("#docs article > h1").forEach(function(h1) {
 	var article = h1.parentNode;
 
 	h1.firstChild.textContent = h1.firstChild.textContent.trim();
-	
+
 	var fn = titleToId(h1.firstChild.textContent);
 
 	if (article && !article.id) {
@@ -24,7 +26,7 @@ $$("#docs article > h1").forEach(function(h1) {
 		tag: "button",
 		textContent: "Show implementation",
 		className: "implementation",
-		onclick: function(){
+		onclick: function() {
 			var pre = this.nextElementSibling;
 
 			if (!pre || !pre.matches("pre")) {
@@ -37,9 +39,9 @@ $$("#docs article > h1").forEach(function(h1) {
 					var source = $.hooks[fn.replace(/^hooks./, "")] + "";
 				}
 				else {
-					var source = ($.sources[fn] || $[fn]) + "";	
+					var source = ($.sources[fn] || $[fn]) + "";
 				}
-				
+
 
 				source = source.replace(/^\t/gm, "");
 
@@ -97,7 +99,7 @@ if (/\/docs\.html$/.test(location.pathname)) {
 		tocList.appendChild(li);
 	});
 
-	$$("article[id^='fn-'] h1.set").forEach(function(h1){
+	$$("article[id^='fn-'] h1.set").forEach(function(h1) {
 		var id = h1.parentNode.id;
 
 		$.set(document.createDocumentFragment(), {
@@ -116,16 +118,16 @@ if (/\/docs\.html$/.test(location.pathname)) {
 		});
 	});
 
-	
-	$$("a.jq").forEach(function(a){
+
+	$$("a.jq").forEach(function(a) {
 		if (!a.href) {
 			var content = a.textContent;
 			var url = "http://api.jquery.com/";
-			
+
 			var fn = content.match(/jQuery(?:\.fn)?\.([a-z]+)/i)[1];
 
-			if (content.indexOf('jQuery.fn') === -1) {
-				url += "jQuery."
+			if (content.indexOf("jQuery.fn") === -1) {
+				url += "jQuery.";
 			}
 
 			a.href = url + fn;
@@ -136,7 +138,7 @@ if (/\/docs\.html$/.test(location.pathname)) {
 }
 
 // Find references to Bliss functions and make them links to the docs
-$$(":not(pre) > code").forEach(function(code){
+$$(":not(pre) > code").forEach(function(code) {
 	if (/\$.*\(\)/.test(code.textContent)) {
 		$.create("a", {
 			href: "#fn-" + titleToId(code.textContent),
@@ -145,17 +147,17 @@ $$(":not(pre) > code").forEach(function(code){
 	}
 });
 
-$$("#download input[type=radio]")._.events({click: function(){
+$$("#download input[type=radio]")._.events({click: function() {
 	var elements = this.form.elements;
 	$("#download a[download]").href = "bliss" + elements.type.value + elements.compression.value + ".js";
 }});
 
-$$(".runnable").forEach(function(p){
+$$(".runnable").forEach(function(p) {
 	$.create("button", {
 		textContent: "Run",
 		className: "run",
 		once: {
-			click: function(){
+			click: function() {
 				$.create("script", {
 					textContent: $("pre.bliss code", p.nextElementSibling).textContent,
 					after: p
@@ -164,29 +166,29 @@ $$(".runnable").forEach(function(p){
 			}
 		},
 		inside: p
-	})
+	});
 });
 
 // Linkify types to MDN
 var urls = {};
 
 // Add global objects
-["Object", "String", "Array", "Number", "Function", "RegExp", "Boolean"].forEach(function(type){
+["Object", "String", "Array", "Number", "Function", "RegExp", "Boolean"].forEach(function(type) {
 	urls[type] = "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/" + type;
 });
 
 // Add APIs
-["Node", "Element", "Text", "Document", "Promise"].forEach(function(type){
+["Node", "Element", "Text", "Document", "Promise"].forEach(function(type) {
 	urls[type] = "https://developer.mozilla.org/en-US/docs/Web/API/" + type;
 });
 
 self.typeRegex = RegExp("\\b(?:" + Object.keys(urls).join("|") + ")\\b", "g");
 
-$$(".args dt[class]").forEach(function(dt){
+$$(".args dt[class]").forEach(function(dt) {
 	var types = ["Type: "];
 
-	$$(dt.classList).forEach(function(clas, i, arr){
-		var type = (clas + "").replace(/^./, function($0) { return $0.toUpperCase() });
+	$$(dt.classList).forEach(function(clas, i, arr) {
+		var type = (clas + "").replace(/^./, $0 => $0.toUpperCase());
 
 		if (urls[type]) {
 			if (i > 0) {

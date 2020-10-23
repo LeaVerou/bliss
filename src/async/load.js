@@ -1,5 +1,5 @@
 import include from "./include.js";
-import create from "./create.js";
+import create from "../dom/create.js";
 
 // Dynamically load a CSS or JS resource
 export default function load(url, base) {

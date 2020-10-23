@@ -886,7 +886,7 @@ Promise.all($$("div")._.transition({
 			<dd>The event type. You can include multiple event types by space-separating them.
 				<strong>If using Bliss Full</strong>:
 				You can also unbind by class (e.g. <code>click.foo</code> or even just <code>.foo</code> to unbind all events with that class).
-				You can also unbind all listeners on the element, by not providing <strong>any</strong> arguments. This will remove all listeners with capture option set to either true or false.  
+				You can also unbind all listeners on the element, by not providing <strong>any</strong> arguments. This will remove all listeners with capture option set to either true or false.
 				This works for Bliss Shy and anonymous functions too, if the listeners were added using Bliss bind method. Bliss (both Full and Shy) keeps track of anonymous functions so these listeners may be removed later.
 
 			</dd>
@@ -907,7 +907,7 @@ document.body._.unbind("click");
 document.body._.unbind(); // unbind ALL events
 // Clicking on the body now does nothing
 $.unbind(elem)
-// Removing all listeners from elem, regardless of event capture setting. 
+// Removing all listeners from elem, regardless of event capture setting.
 // If using Bliss Shy, $.unbind only works for the listeners added using $.bind method
 $.unbind(elem, '', false)
 // Removing all listeners from elem, with capture option set to false (the default in most browsers)
@@ -1561,9 +1561,8 @@ $.hooks.add("fetch-args", function(env) {
 </footer>
 
 <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=blissfuljs"></script>
-<script src="bliss.js"></script>
-<script src="transform.js"></script>
-<script src="index.js"></script>
+<script src="transform.js" type="module"></script>
+<script src="index.js" type="module"></script>
 <script src="style/prism.js"></script>
 
 <script>

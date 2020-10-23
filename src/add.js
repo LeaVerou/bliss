@@ -1,3 +1,4 @@
+import $ from "./$.js";
 import overload from "./overload.js";
 import extend from "./extend.js";
 import type from "./type.js";

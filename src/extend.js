@@ -1,3 +1,5 @@
+import type from "./type.js";
+
 // Copy properties from one object to another. Overwrites allowed.
 // Subtle difference of array vs string whitelist: If property doesn't exist in from, array will not define it.
 

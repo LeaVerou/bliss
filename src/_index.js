@@ -4,16 +4,24 @@ import $$ from "./$$.js";
 import overload from "./overload.js";
 import extend from "./extend.js";
 import type from "./type.js";
+import each  from "./each.js";
 
-import create from "./create.js";
+// DOM
+import create from "./dom/create.js";
 import set, {setProps} from "./dom/set.js";
 import toggleAttribute from "./dom/toggleAttribute.js";
-import each  from "./each.js";
+import transition from "./dom/transition.js";
+// rest of DOM is attached on $ via setProps
+
 import ready from "./ready.js";
 import value from "./value.js";
 import Class from "./Class.js";
-import Hooks from "./Hooks.js";
-import fetch from "./fetch.js";
+import live from "./live.js";
+import lazy from "./lazy.js";
+
+import fetch from "./async/fetch.js";
+import load from "./async/load.js";
+import include from "./async/include.js";
 
 import bind   from "./events/bind.js";
 import unbind from "./events/unbind.js";
@@ -21,12 +29,12 @@ import events from "./events/events.js";
 import fire   from "./events/fire.js";
 import when   from "./events/when.js";
 
+import Hooks from "./Hooks.js";
 import add from "./add.js";
 
 (function() {
-"use strict";
 
-let Bliss = extend($, self.Bliss);
+extend($, self.Bliss);
 
 extend($, {
 	extend,
@@ -100,3 +108,6 @@ add($.extend({}, HTMLElement.prototype, function(method) {
 
 
 })();
+
+export default $;
+export {$ as Bliss, $$};

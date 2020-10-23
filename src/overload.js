@@ -1,10 +1,12 @@
+import type from "./type.js";
+
 export default function overload(callback, start, end) {
 	start = start === undefined ? 1 : start;
 	end = end || start + 1;
 
 	if (end - start <= 1) {
 		return function() {
-			if (arguments.length <= start || $.type(arguments[start]) === "string") {
+			if (arguments.length <= start || type(arguments[start]) === "string") {
 				return callback.apply(this, arguments);
 			}
 
@@ -12,7 +14,7 @@ export default function overload(callback, start, end) {
 			var ret;
 
 			for (var key in obj) {
-				var args = Array.prototype.slice.call(arguments);
+				var args = Array.from(arguments);
 				args.splice(start, 1, key, obj[key]);
 				ret = callback.apply(this, args);
 			}
