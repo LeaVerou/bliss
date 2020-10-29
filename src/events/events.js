@@ -1,7 +1,8 @@
+import overload from "../overload.js";
 import {default as bind, listeners} from "./bind.js";
 
 // Bind one or more events to the element
-export default function events (val) {
+function events (subject, val) {
 	if (arguments.length == 1 && val && val.addEventListener) {
 		// Copy events from other element
 
@@ -10,18 +11,20 @@ export default function events (val) {
 			let local = listeners.get(val);
 
 			for (let type in local) {
-				local[type].forEach(l => bind(this, type, l.callback, l.capture));
+				local[type].forEach(l => bind(subject, type, l.callback, l.capture));
 			}
 		}
 
 		// Copy inline events
 		for (let onevent in val) {
 			if (onevent.startsWith("on")) {
-				this[onevent] = val[onevent];
+				subject[onevent] = val[onevent];
 			}
 		}
 	}
 	else {
-		return bind.call(this, this, ...arguments);
+		return bind.call(subject, subject, ...arguments);
 	}
 }
+
+export default overload(events);

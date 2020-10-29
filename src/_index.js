@@ -81,7 +81,8 @@ $.Element.prototype = {
 	transition,
 	fire,
 	when,
-	toggleAttribute
+	toggleAttribute,
+	...setProps
 };
 
 $.Array = function (subject) {
@@ -98,16 +99,18 @@ $.Array.prototype = {
 
 add($.Array.prototype, {element: false});
 add($.Element.prototype);
-add(setProps);
 
-// Add native methods on $ and _
-var dummy = document.createElement("_");
-add($.extend({}, HTMLElement.prototype, function(method) {
-	return $.type(dummy[method]) === "function";
-}), null, true);
+// // Add native methods on $ and _
+// var dummy = document.createElement("_");
+// add($.extend({}, HTMLElement.prototype, function(method) {
+// 	return $.type(dummy[method]) === "function";
+// }), null, true);
 
 
 })();
+
+self.$ = $;
+self.$$ = $$;
 
 export default $;
 export {$ as Bliss, $$};

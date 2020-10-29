@@ -5,62 +5,76 @@ import attributes from "./attributes.js";
 import events from "../events/events.js";
 import contents from "./contents.js";
 
-export default function set(subject, property, value) {
+function set (subject, property, value) {
 	if (property in setProps) {
-		setProps[property].call(this, value);
+		setProps[property](subject, value);
 	}
-	else if (property in this) {
-		this[property] = value;
+	else if (property in subject) {
+		subject[property] = value;
 	}
 	else {
-		this.setAttribute(property, value);
+		subject.setAttribute(property, value);
 	}
 };
+
+// Set a bunch of properties on the element
+export function properties (subject, val) {
+	Object.assign(subject, val);
+}
+
+// Append the element inside another element
+export function inside (subject, element) {
+	element.append(subject);
+}
+
+// Insert element before subject
+export function before (subject, element) {
+	if (subject.before) {
+		element.before(subject);
+	}
+}
+
+// Insert the element after another element
+export function after (subject, element) {
+	if (element.after) {
+		element.after(subject);
+	}
+}
+
+// Insert the element before another element's contents
+export function start (subject, element) {
+	if (element) {
+		element.insertBefore(subject, element.firstChild);
+	}
+}
+
+// Wrap the subject around another element
+export function around (subject, element) {
+	element.replaceWith(subject);
+	subject.append(element);
+}
 
 /*
  * Properties with custom handling in $.set()
- * Also available as functions directly on element._ and on $
+ * Also available as individual functions
  */
-export const setProps = {
+const setProps = {
 	style,
-	attributes,
+	attributes, properties,
 	events,
 	contents,
 
-	// Set a bunch of properties on the element
-	properties: function (val) {
-		Object.assign(this, val);
-	},
 
-	// Append the element inside another element
-	inside: function (element) {
-		element.append(this);
-	},
-
-	// Insert element before this
-	before: function (element) {
-		if (this.before) {
-			element.before(this);
-		}
-	},
-
-	// Insert the element after another element
-	after: function (element) {
-		if (element.after) {
-			element.after(this);
-		}
-	},
-
-	// Insert the element before another element's contents
-	start: function (element) {
-		if (element) {
-			element.insertBefore(this, element.firstChild);
-		}
-	},
-
-	// Wrap the this around another element
-	around: function (element) {
-		element.replaceWith(this);
-		this.append(child);
-	}
+	inside, before, after, start, end: inside, around
 };
+
+for (let prop in setProps) {
+	if (!setProps[prop].originalFunction) {
+		setProps[prop] = overload(setProps[prop]);
+	}
+}
+
+export default overload(set, {
+	collapsible: [1]
+});
+export {setProps};

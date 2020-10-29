@@ -35,10 +35,10 @@ actions.forEach(function(action) {
 					});
 
 					if (method == "around") {
-						$.before(clone, element);
+						element?.before(clone);
 						// TODO handle multiple <content> and <content select>
-						$.before(element, content[0]);
-						$.remove(content[0]);
+						content[0]?.before(element);
+						content[0]?.remove();
 					}
 
 					return;

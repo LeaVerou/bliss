@@ -2,7 +2,7 @@ import type from "./type.js";
 import overload from "./overload.js";
 
 // Properties that behave like normal properties but also execute code upon getting/setting
-export default overload(function(obj, property, descriptor) {
+function live (obj, property, descriptor) {
 	if (type(descriptor) === "function") {
 		descriptor = {set: descriptor};
 	}
@@ -23,4 +23,6 @@ export default overload(function(obj, property, descriptor) {
 	});
 
 	return obj;
-});
+}
+
+export default overload(live, {collapsible: [1]});

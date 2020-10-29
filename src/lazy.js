@@ -1,7 +1,7 @@
 import overload from "./overload.js";
 
 // Lazily evaluated properties
-export default overload(function(obj, property, getter) {
+function lazy (obj, property, getter) {
 	Object.defineProperty(obj, property, {
 		get: function() {
 			var value = getter.call(this);
@@ -29,4 +29,6 @@ export default overload(function(obj, property, getter) {
 	});
 
 	return obj;
-});
+}
+
+export default overload(lazy, {collapsible: [1]});

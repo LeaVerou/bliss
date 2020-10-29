@@ -1,32 +1,35 @@
+import overload from "../overload.js";
 import extend from "../extend.js";
 import style from "./style.js";
 
 // Run a CSS transition, return promise
-export default function(props, duration) {
+function transition (subject, props, duration) {
 	return new Promise(function(resolve, reject) {
-		if ("transition" in this.style && duration !== 0) {
+		if ("transition" in subject.style && duration !== 0) {
 			// Get existing style
-			var previous = extend({}, this.style, /^transition(Duration|Property)$/);
+			var previous = extend({}, subject.style, /^transition(Duration|Property)$/);
 
-			style(this, {
+			style(subject, {
 				transitionDuration: (duration || 400) + "ms",
 				transitionProperty: Object.keys(props).join(", ")
 			});
 
-			this.addEventListener("transitionend", function() {
+			subject.addEventListener("transitionend", function() {
 				clearTimeout(i);
-				style(this, previous);
-				resolve(this);
+				style(subject, previous);
+				resolve(subject);
 			}, {once: true});
 
 			// Failsafe, in case transitionend doesn’t fire
-			var i = setTimeout(resolve, duration + 50, this);
+			var i = setTimeout(resolve, duration + 50, subject);
 
-			style(this, props);
+			style(subject, props);
 		}
 		else {
-			style(this, props);
-			resolve(this);
+			style(subject, props);
+			resolve(subject);
 		}
-	}.bind(this));
+	});
 }
+
+export default overload(transition);

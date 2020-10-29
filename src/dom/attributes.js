@@ -1,6 +1,10 @@
+import overload from "../overload.js";
+
 // Mass set attributes
-export default function (o) {
+function attributes (subject, o) {
 	for (let attribute in o) {
-		this.setAttribute(attribute, o[attribute]);
+		subject.setAttribute(attribute, o[attribute]);
 	}
 }
+
+export default overload(attributes);

@@ -1,13 +1,17 @@
-export default function(name, value, test) {
-	if (arguments.length < 3) {
+import overload from "../overload.js";
+
+function toggleAttribute (subject, name, value, test) {
+	if (arguments.length < 4) {
 		// No condition was provided, use value
 		test = value !== null;
 	}
 
 	if (test) {
-		this.setAttribute(name, value);
+		subject.setAttribute(name, value);
 	}
 	else {
-		this.removeAttribute(name);
+		subject.removeAttribute(name);
 	}
 }
+
+export default overload(toggleAttribute);

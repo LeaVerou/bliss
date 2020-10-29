@@ -1,11 +1,15 @@
+import overload from "../overload.js";
+
 // Return a promise that resolves when an event fires, then unbind
-export default function (type, test) {
+function when (subject, type, test) {
 	return new Promise(resolve => {
-		this.addEventListener(type, function callee(evt) {
-			if (!test || test.call(this, evt)) {
-				this.removeEventListener(type, callee);
+		subject.addEventListener(type, function callee(evt) {
+			if (!test || test.call(subject, evt)) {
+				subject.removeEventListener(type, callee);
 				resolve(evt);
 			}
 		});
 	});
 }
+
+export default overload(when);

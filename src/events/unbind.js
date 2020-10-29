@@ -6,7 +6,7 @@ import {default as bind, listeners} from "./bind.js";
 
 let removeEventListener = (self.EventTarget || Node).prototype.removeEventListener;
 
-export default overload(function(types, options) {
+function unbind (subject, types, options) {
 	if (options && (type(options) === "function" || options.handleEvent)) {
 		var callback = options;
 		options = arguments[2];
@@ -19,7 +19,7 @@ export default overload(function(types, options) {
 	options = options || {};
 	options.callback = options.callback || callback;
 
-	var local = listeners.get(this);
+	var local = listeners.get(subject);
 
 	(types || "").trim().split(/\s+/).forEach(t => {
 		let [type, className] = t.split(".");
@@ -27,7 +27,7 @@ export default overload(function(types, options) {
 		// if listeners exist, always go through listeners to clean up
 		if (!local) {
 			if (type && options.callback) {
-				return removeEventListener.call(this, type, options.callback, options.capture);
+				return removeEventListener.call(subject, type, options.callback, options.capture);
 			}
 			return;
 		}
@@ -43,13 +43,14 @@ export default overload(function(types, options) {
 								!type && !options.callback && undefined === options.capture)
 					   ) {
 							local[ltype].splice(i, 1);
-							removeEventListener.call(this, ltype, l.callback, l.capture);
+							removeEventListener.call(subject, ltype, l.callback, l.capture);
 							i--;
 					}
 				}
 			}
 		}
 	});
-}, 0);
+}
 
 export {listeners};
+export default overload(unbind, {collapsible: [1]});

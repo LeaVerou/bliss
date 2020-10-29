@@ -17,7 +17,7 @@ function defined() {
 }
 
 // Extends Bliss with more methods
-export default overload(function(method, callback, on, noOverwrite) {
+function add (method, callback, on, noOverwrite) {
 	on = Object.assign({$: true, element: true, array: true}, on);
 
 	if (type(callback) == "function") {
@@ -38,16 +38,8 @@ export default overload(function(method, callback, on, noOverwrite) {
 
 		if (on.$) {
 			sources[method] = $[method] = callback;
-
-			if (on.array || on.element) {
-				$[method] = function () {
-					var args = [].slice.apply(arguments);
-					var subject = args.shift();
-					var Type = on.array && Array.isArray(subject)? "Array" : "Element";
-
-					return $[Type].prototype[method].apply({subject: subject}, args);
-				};
-			}
 		}
 	}
-}, 0);
+};
+
+export default overload(add, {subject: false, collapsible: [0]});
