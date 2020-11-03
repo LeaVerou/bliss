@@ -1,6 +1,46 @@
-import * as $ from "./_index.js";
+import $ from "./_index.js";
+import add from "./add.js";
+import * as dom from "./dom/index.js";
+import * as async from "./async/index.js";
+import * as events from "./events/index.js";
 
-var _ = $.property;
+let _ = $.property;
+
+$.Element = function (subject) {
+	this.subject = subject;
+
+	// Author-defined element-related data
+	this.data = {};
+
+	// Internal Bliss element-related data
+	this.bliss = {};
+};
+
+$.Element.prototype = {
+	...dom,
+	...events
+};
+
+$.Array = function (subject) {
+	this.subject = subject;
+};
+
+$.Array.prototype = {
+	all: function(method) {
+		var args = Array.from(arguments).slice(1);
+
+		return this[method].apply(this, args);
+	}
+};
+
+add($.Array.prototype, {element: false});
+add($.Element.prototype);
+
+// // Add native methods on $ and _
+// var dummy = document.createElement("_");
+// add($.extend({}, HTMLElement.prototype, function(method) {
+// 	return $.type(dummy[method]) === "function";
+// }), null, true);
 
 // Define the _ property on arrays and elements
 
@@ -31,21 +71,3 @@ Object.defineProperty(Array.prototype, _, {
 	},
 	configurable: true
 });
-
-// Hijack addEventListener and removeEventListener to store callbacks
-
-if (self.EventTarget && "addEventListener" in EventTarget.prototype) {
-	EventTarget.prototype.addEventListener = function(type, callback, options) {
-		return $.bind(this, type, callback, options);
-	};
-
-	EventTarget.prototype.removeEventListener = function(type, callback, options) {
-		return $.unbind(this, type, callback, options);
-	};
-}
-
-// Set $ and $$ convenience methods, if not taken
-self.$ = self.$ || $;
-self.$$ = self.$$ || $.$;
-
-})(Bliss);

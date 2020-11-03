@@ -23,7 +23,7 @@ function add (method, callback, on, noOverwrite) {
 	if (type(callback) == "function") {
 		if (on.element && (!(method in $.Element.prototype) || !noOverwrite)) {
 			$.Element.prototype[method] = function () {
-				return this.subject && defined(callback.apply(this.subject, arguments), this.subject);
+				return this.subject && defined(callback(this.subject, ...arguments), this.subject);
 			};
 		}
 
@@ -31,12 +31,12 @@ function add (method, callback, on, noOverwrite) {
 			$.Array.prototype[method] = function() {
 				var args = arguments;
 				return this.subject.map(element => {
-					return element && defined(callback.apply(element, args), element);
+					return element && defined(callback(element, ...args), element);
 				});
 			};
 		}
 
-		if (on.$) {
+		if (on.$ && !$[method]) {
 			sources[method] = $[method] = callback;
 		}
 	}

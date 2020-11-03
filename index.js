@@ -1,4 +1,9 @@
 import $, {$$} from "./src/_index.js";
+import "./src/_.js";
+
+// Expose $ and $$ as globals so that people can experiment in the console
+self.$ = self.$ || $;
+self.$$ = self.$$ || $.$;
 
 (function() {
 function titleToId(title) {
@@ -147,7 +152,7 @@ $$(":not(pre) > code").forEach(function(code) {
 	}
 });
 
-$$("#download input[type=radio]")._.events({click: function() {
+$$("#download input[type=radio]")._.bind({click: function() {
 	var elements = this.form.elements;
 	$("#download a[download]").href = "bliss" + elements.type.value + elements.compression.value + ".js";
 }});

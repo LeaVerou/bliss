@@ -32,4 +32,4 @@ function bind (subject, types, options) {
 	listeners.set(subject, local);
 }
 
-export default overload(bind, {collapsible: [0]});
+export default overload(bind, {collapsible: [1]});

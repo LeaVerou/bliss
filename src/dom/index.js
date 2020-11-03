@@ -5,3 +5,14 @@ import set, {setProps} from "./set.js";
 import style from "./style.js";
 import toggleAttribute from "./toggleAttribute.js";
 import transition from "./transition.js";
+
+export {
+	attributes,
+	contents,
+	create,
+	set,
+	setProps,
+	style,
+	toggleAttribute,
+	transition
+};
