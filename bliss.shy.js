@@ -574,36 +574,39 @@ $.Element.prototype = {
 	},
 
 	bind: overload(function(types, options) {
-		if (arguments.length > 1 && ($.type(options) === "function" || options.handleEvent)) {
-			// options is actually callback
-			var callback = options;
-			options = $.type(arguments[2]) === "object"? arguments[2] : {
-				capture: !!arguments[2] // in case it's passed as a boolean 3rd arg
-			};
-			options.callback = callback;
+		// an if statement checking whether the options parameter is null
+		if(options != null){
+			if (arguments.length > 1 && ($.type(options) === "function" || options.handleEvent)) {
+				// options is actually callback
+				var callback = options;
+				options = $.type(arguments[2]) === "object"? arguments[2] : {
+					capture: !!arguments[2] // in case it's passed as a boolean 3rd arg
+				};
+				options.callback = callback;
+			}
+
+			var listeners = $.listeners.get(this) || {};
+
+			types.trim().split(/\s+/).forEach(function (type) {
+				if (type.indexOf(".") > -1) {
+					type = type.split(".");
+					var className = type[1];
+					type = type[0];
+				}
+
+				listeners[type] = listeners[type] || [];
+
+				if (listeners[type].filter(function(l) {
+					return l.callback === options.callback && l.capture == options.capture;
+				}).length === 0) {
+					listeners[type].push($.extend({className: className}, options));
+				}
+
+				$.original.addEventListener.call(this, type, options.callback, options);
+			}, this);
+
+			$.listeners.set(this, listeners);
 		}
-
-		var listeners = $.listeners.get(this) || {};
-
-		types.trim().split(/\s+/).forEach(function (type) {
-			if (type.indexOf(".") > -1) {
-				type = type.split(".");
-				var className = type[1];
-				type = type[0];
-			}
-
-			listeners[type] = listeners[type] || [];
-
-			if (listeners[type].filter(function(l) {
-				return l.callback === options.callback && l.capture == options.capture;
-			}).length === 0) {
-				listeners[type].push($.extend({className: className}, options));
-			}
-
-			$.original.addEventListener.call(this, type, options.callback, options);
-		}, this);
-
-		$.listeners.set(this, listeners);
 	}, 0),
 
 	unbind: overload(function(types, options) {
@@ -643,7 +646,7 @@ $.Element.prototype = {
 					for (var i=0, l; l=listeners[ltype][i]; i++) {
 						if ((!className || className === l.className)
 							&& (!options.callback || options.callback === l.callback)
-							&& (!!options.capture == !!l.capture || 
+							&& (!!options.capture == !!l.capture ||
 						    		!type && !options.callback && undefined === options.capture)
 						   ) {
 								listeners[ltype].splice(i, 1);
