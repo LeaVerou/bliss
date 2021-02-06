@@ -5,11 +5,12 @@ var uglify = require("gulp-uglify");
 var rename = require("gulp-rename");
 var concat = require("gulp-concat");
 
-// gulp.task("concat", function() {
-//   return gulp.src(["bliss.shy.js", "bliss._.js"])
-// 	.pipe(concat("bliss.js"))
-// 	.pipe(gulp.dest("."));
-// });
+gulp.task("concat", function() {
+    return gulp.src('.'); // no-op
+  // return gulp.src(["bliss.shy.js", "bliss._.js"])
+	// .pipe(concat("bliss.js"))
+	// .pipe(gulp.dest("."));
+});
 //
 // gulp.task("minify", function() {
 // 	var u = uglify();
@@ -28,4 +29,4 @@ var concat = require("gulp-concat");
 // 	gulp.watch(["*.js", "!bliss.js", "!*.min.js"], gulp.series("concat", "minify"));
 // });
 //
-// gulp.task("default", gulp.series("concat", "minify"));
+gulp.task("default", gulp.series("concat"));
