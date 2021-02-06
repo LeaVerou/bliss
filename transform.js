@@ -2,7 +2,7 @@
  * Simple HTML transformations, in HTML!
  * Author: Lea Verou
  */
-import $, {$$} from "./src/_index.js";
+import $, {$$} from "./src/_.js";
 
 $.ready().then(() => {
 

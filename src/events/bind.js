@@ -8,7 +8,7 @@ let addEventListener = (self.EventTarget || Node).prototype.addEventListener;
 function bind (subject, types, options) {
 	if (arguments.length > 1 && (type(options) === "function" || options.handleEvent)) {
 		// options is actually a callback
-		var callback = options;
+		let callback = options;
 		options = type(arguments[2]) === "object"? arguments[2] : {
 			capture: !!arguments[2] // in case it's passed as a boolean 3rd arg
 		};

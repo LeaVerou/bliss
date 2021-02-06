@@ -18,9 +18,10 @@ import * as events from "./events/index.js";
 import Hooks from "./Hooks.js";
 import add from "./add.js";
 
-extend($, self.Bliss);
+// Import params
+Object.assign($, self.Bliss);
 
-extend($, {
+Object.assign($, {
 	extend,
 	overload,
 	type,
@@ -42,8 +43,10 @@ extend($, {
 	value,
 
 	Hooks,
-	hooks: new Hooks()
+	hooks: new Hooks(),
+
+	add
 });
 
 export default $;
-export {$ as Bliss, $$};
+export {$, $ as Bliss, $$};

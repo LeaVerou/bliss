@@ -1,5 +1,4 @@
-import $, {$$} from "./src/_index.js";
-import "./src/_.js";
+import $, {$$} from "./src/_.js";
 
 // Expose $ and $$ as globals so that people can experiment in the console
 self.$ = self.$ || $;
@@ -167,7 +166,8 @@ $$(".runnable").forEach(function(p) {
 					textContent: $("pre.bliss code", p.nextElementSibling).textContent,
 					after: p
 				});
-				$.remove(this);
+
+				this.remove();
 			}
 		},
 		inside: p

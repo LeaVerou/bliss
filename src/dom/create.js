@@ -3,10 +3,6 @@ import type from "../type.js";
 import extend from "../extend.js";
 
 export default function (tag, o) {
-	if (tag instanceof Node) {
-		return set(tag, o);
-	}
-
 	// 4 signatures: (tag, o), (tag), (o), ()
 	if (arguments.length === 1) {
 		if (type(tag) === "string") {
@@ -21,5 +17,7 @@ export default function (tag, o) {
 		}
 	}
 
-	return set(document.createElement(tag || "div"), o);
+	let element = tag instanceof Node? tag : document.createElement(tag || "div");
+
+	return set(element, o);
 }

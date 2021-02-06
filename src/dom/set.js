@@ -24,36 +24,40 @@ const setProps = {
 	style,
 	attributes,
 	events: bind,
+
+	once: function (subject, val) {
+		return bind(subject, val, {once: true});
+	},
 	//contents,
 
 	// Set a bunch of properties on the element
-	properties: function (val) {
-		Object.assign(this, val);
+	properties: function (subject, val) {
+		Object.assign(subject, val);
 	},
 
 	// Append the element inside another element
-	inside: function (element) {
-		element.append(this);
+	inside: function (subject, element) {
+		element.append(subject);
 	},
 
 	// Insert element before this
-	before: function (element) {
+	before: function (subject, element) {
 		if (this.before) {
-			element.before(this);
+			element.before(subject);
 		}
 	},
 
 	// Insert the element after another element
-	after: function (element) {
+	after: function (subject, element) {
 		if (element.after) {
-			element.after(this);
+			element.after(subject);
 		}
 	},
 
 	// Insert the element before another element's contents
-	start: function (element) {
+	start: function (subject, element) {
 		if (element) {
-			element.insertBefore(this, element.firstChild);
+			element.insertBefore(subject, element.firstChild);
 		}
 	},
 

@@ -1,9 +1,11 @@
-import $ from "./_index.js";
+import $ from "./index.js";
 import add from "./add.js";
 import * as dom from "./dom/index.js";
 import * as async from "./async/index.js";
 import * as events from "./events/index.js";
 
+import "./builtins.js";
+console.log("hi");
 let _ = $.property;
 
 $.Element = function (subject) {
@@ -36,14 +38,8 @@ $.Array.prototype = {
 add($.Array.prototype, {element: false});
 add($.Element.prototype);
 
-// // Add native methods on $ and _
-// var dummy = document.createElement("_");
-// add($.extend({}, HTMLElement.prototype, function(method) {
-// 	return $.type(dummy[method]) === "function";
-// }), null, true);
-
 // Define the _ property on arrays and elements
-
+console.log("hi");
 Object.defineProperty(Node.prototype, _, {
 	// Written for IE compatability (see #49)
 	get: function getter () {
@@ -71,3 +67,8 @@ Object.defineProperty(Array.prototype, _, {
 	},
 	configurable: true
 });
+
+let $$ = $.$;
+
+export default $;
+export {$ as Bliss, $$};
