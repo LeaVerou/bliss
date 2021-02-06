@@ -28,7 +28,8 @@ const setProps = {
 	once: function (subject, val) {
 		return bind(subject, val, {once: true});
 	},
-	//contents,
+
+	// contents,
 
 	// Set a bunch of properties on the element
 	properties: function (subject, val) {
