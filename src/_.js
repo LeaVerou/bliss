@@ -1,11 +1,11 @@
-import $ from "./index.js";
+import {$, $$} from "./index.js";
 import add from "./add.js";
 import * as dom from "./dom/index.js";
 import * as async from "./async/index.js";
 import * as events from "./events/index.js";
 
 import "./builtins.js";
-console.log("hi");
+
 let _ = $.property;
 
 $.Element = function (subject) {
@@ -29,17 +29,17 @@ $.Array = function (subject) {
 
 $.Array.prototype = {
 	all: function(method) {
-		var args = Array.from(arguments).slice(1);
+		let args = Array.from(arguments).slice(1);
 
 		return this[method].apply(this, args);
 	}
 };
 
-add($.Array.prototype, {element: false});
-add($.Element.prototype);
+add($.Array.prototype, {element: false, force: true});
+add($.Element.prototype, {force: true});
 
 // Define the _ property on arrays and elements
-console.log("hi");
+
 Object.defineProperty(Node.prototype, _, {
 	// Written for IE compatability (see #49)
 	get: function getter () {
@@ -67,8 +67,6 @@ Object.defineProperty(Array.prototype, _, {
 	},
 	configurable: true
 });
-
-let $$ = $.$;
 
 export default $;
 export {$ as Bliss, $$};

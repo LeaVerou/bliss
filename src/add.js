@@ -3,41 +3,32 @@ import overload from "./overload.js";
 import extend from "./extend.js";
 import type from "./type.js";
 
-const sources = {};
-
 /*
  * Return first non-undefined value.
  */
-function defined() {
-	for (var i=0; i<arguments.length; i++) {
-		if (arguments[i] !== undefined) {
-			return arguments[i];
-		}
-	}
+function defined(...args) {
+	return args.find(x => x !== undefined);
 }
 
 // Extends Bliss with more methods
-function add (method, callback, on, noOverwrite) {
-	on = Object.assign({$: true, element: true, array: true}, on);
-
+function add (method, callback, {element = true, array = true, force} = {}) {
 	if (type(callback) == "function") {
-		if (on.element && (!(method in $.Element.prototype) || !noOverwrite)) {
-			$.Element.prototype[method] = function () {
-				return this.subject && defined(callback(this.subject, ...arguments), this.subject);
+		if (element && $.Element && (!(method in $.Element.prototype) || force)) {
+			$.Element.prototype[method] = function (...args) {
+				return this.subject && defined(callback(this.subject, ...args), this.subject);
 			};
 		}
 
-		if (on.array && (!(method in $.Array.prototype) || !noOverwrite)) {
-			$.Array.prototype[method] = function() {
-				var args = arguments;
+		if (array && $.Array && (!(method in $.Array.prototype) || force)) {
+			$.Array.prototype[method] = function(...args) {
 				return this.subject.map(element => {
 					return element && defined(callback(element, ...args), element);
 				});
 			};
 		}
 
-		if (on.$ && !$[method]) {
-			sources[method] = $[method] = callback;
+		if (!$[method]) {
+			$[method] = callback;
 		}
 	}
 };

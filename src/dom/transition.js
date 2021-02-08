@@ -3,11 +3,11 @@ import extend from "../extend.js";
 import style from "./style.js";
 
 // Run a CSS transition, return promise
-function transition (subject, props, duration) {
+function transition (subject, props, duration = 400) {
 	return new Promise(function(resolve, reject) {
-		if ("transition" in subject.style && duration !== 0) {
+		if ("transition" in subject.style && duration > 0) {
 			// Get existing style
-			var previous = extend({}, subject.style, /^transition(Duration|Property)$/);
+			let previous = extend({}, subject.style, /^transition(Duration|Property)$/);
 
 			style(subject, {
 				transitionDuration: (duration || 400) + "ms",
@@ -21,7 +21,7 @@ function transition (subject, props, duration) {
 			}, {once: true});
 
 			// Failsafe, in case transitionend doesn’t fire
-			var i = setTimeout(resolve, duration + 50, subject);
+			let i = setTimeout(resolve, duration + 50, subject);
 
 			style(subject, props);
 		}
