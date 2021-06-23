@@ -6,13 +6,13 @@ import overload from "../overload.js";
 function contents (subject, val) {
 	if (val || val === 0) {
 		(Array.isArray(val)? val : [val]).forEach(child => {
-			var type = type(child);
+			let childType = type(child);
 
-			if (type === "object") {
+			if (childType === "object") {
 				child = create(child);
 			}
 
-			if (/^(string|number)$/.test(type) || child instanceof Node) {
+			if (/^(string|number)$/.test(childType) || child instanceof Node) {
 				subject.append(child);
 			}
 		});
