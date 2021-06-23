@@ -29,7 +29,10 @@ const setProps = {
 		return bind(subject, val, {once: true});
 	},
 
-	// contents,
+	// Why not simply contents? To avoid Uncaught ReferenceError: Cannot access "contents" before initialization.
+	contents: function (...args) {
+		contents(...args);
+	},
 
 	// Set a bunch of properties on the element
 	properties: function (subject, val) {
