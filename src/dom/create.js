@@ -4,6 +4,10 @@ import extend from "../extend.js";
 
 export default function (tag, o) {
 	// 4 signatures: (tag, o), (tag), (o), ()
+	if (arguments.length === 0) {
+		o = {};
+	}
+
 	if (arguments.length === 1) {
 		if (type(tag) === "string") {
 			o = {};

@@ -41,7 +41,7 @@ export default function overload(callback, o = {}) {
 					callback.apply(this, a);
 				}
 
-				return;
+				return subject;
 			}
 
 			return callback.apply(this, args);
