@@ -49,12 +49,12 @@
 	</div>
 
 	<p>Show the #banner-message element that is hidden with  display:none in its CSS when any button in #button-container is clicked <a href="http://jquery.com">[example credit]</a></p>
-	<div class="comparison"><pre class="vanilla"><code>var hiddenBox = document.querySelector("#banner-message");
+	<div class="comparison"><pre class="vanilla"><code>let hiddenBox = document.querySelector("#banner-message");
 document.querySelector("#button-container button")
 	.addEventListener("click", function(event) {
 		hiddenBox.style.display = "block";
 	});</code></pre>
-	<pre class="bliss"><code>var hiddenBox = $("#banner-message");
+	<pre class="bliss"><code>let hiddenBox = $("#banner-message");
 $("#button-container button")
 	.addEventListener("click", function(event) {
 		hiddenBox.style.display = "block";
@@ -66,10 +66,10 @@ $("#button-container button")
 	<p class="runnable">Remove the following pink <code>&lt;pre></code> element from the DOM with a fade out and shrink transition, then display a message:</p>
 
 	<div class="comparison">
-		<pre class="vanilla" id="transition-demo"><code>var demo = document.querySelector("#transition-demo");
+		<pre class="vanilla" id="transition-demo"><code>let demo = document.querySelector("#transition-demo");
 demo.style.transitionProperty = "opacity, transform";
 demo.style.transitionDuration = "400ms";
-var callback = function() {
+let callback = function() {
 	demo.removeEventListener("transitionend", callback);
 	clearTimeout(t);
 	this.parentNode.removeChild(this);
@@ -77,7 +77,7 @@ var callback = function() {
 };
 demo.addEventListener("transitionend", callback);
 // Failsafe
-var t = setTimeout(callback, 450);
+let t = setTimeout(callback, 450);
 demo.style.opacity = "0";
 demo.style.transform = "scale(0)";</code></pre>
 		<pre class="bliss"><code>$("#transition-demo")._.transition({
@@ -91,10 +91,10 @@ demo.style.transform = "scale(0)";</code></pre>
 	</div>
 
 	<p class="runnable">Wrap all headings with links to their section (check this section’s heading after running):</p>
-	<div class="comparison"><pre class="vanilla"><code>var h1s = document.querySelectorAll("section[id] > h1");
-for (var i=0; i&lt;h1s.length; i++) {
-	var h1 = h1s[i];
-	var a = document.createElement("a");
+	<div class="comparison"><pre class="vanilla"><code>let h1s = document.querySelectorAll("section[id] > h1");
+for (let i=0; i&lt;h1s.length; i++) {
+	let h1 = h1s[i];
+	let a = document.createElement("a");
 	a.href = "#" + h1.parentNode.id;
 	a.title = "Permalink";
 	a.className = "permalink";
@@ -133,11 +133,11 @@ $$("section[id] > h1").forEach(function(h1) {
 
 <p class="runnable">Look up the UK postcode <input value="OX49 5NU" id="postcode" /> with <a href="http://postcodes.io">postcodes.io</a> and print the results here: <span id="uk-area"></span></p>
 <div class="comparison">
-	<pre class="vanilla"><code>var txt = document.querySelector("#postcode");
-var out = document.querySelector("#uk-area");
+	<pre class="vanilla"><code>let txt = document.querySelector("#postcode");
+let out = document.querySelector("#uk-area");
 (txt.oninput = function() {
-	var url = "http://api.postcodes.io/postcodes/"+txt.value;
-	var xhr = new XMLHttpRequest();
+	let url = "http://api.postcodes.io/postcodes/"+txt.value;
+	let xhr = new XMLHttpRequest();
 	xhr.open("GET", url);
 	xhr.responseType = "json";
 
@@ -149,7 +149,7 @@ var out = document.querySelector("#uk-area");
 		if (xhr.status === 0
 		 || xhr.status >= 200 && xhr.status < 300
 		 || xhr.status === 304) {
-			var json = xhr.response.result;
+			let json = xhr.response.result;
 
 			out.textContent = [
 				json.parliamentary_constituency,
@@ -166,10 +166,10 @@ var out = document.querySelector("#uk-area");
 	};
 	xhr.send(null);
 })();</code></pre>
-	<pre class="bliss"><code>var txt = $("#postcode");
-var out = $("#uk-area");
+	<pre class="bliss"><code>let txt = $("#postcode");
+let out = $("#uk-area");
 (txt.oninput = function() {
-	var url = "http://api.postcodes.io/postcodes/"+txt.value;
+	let url = "http://api.postcodes.io/postcodes/"+txt.value;
 
 	$.fetch(url, {
 		responseType: "json"
@@ -182,7 +182,7 @@ var out = $("#uk-area");
 
 
 
-		var json = xhr.response.result;
+		let json = xhr.response.result;
 
 		out.textContent = [
 			json.parliamentary_constituency,
