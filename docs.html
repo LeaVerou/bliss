@@ -277,19 +277,15 @@ $(".foo")?.setAttribute("title", "yolo");</code></pre>
 		</dl>
 
 		<pre class="examples"><code>// Add an id to all &lt;h1> headings that don’t already have one
-$$("h1:not([id])").forEach(function(h1){
-	h1.id = h1.textContent.replace(/\W/g, "");
-});</code></pre>
+$$("h1:not([id])").forEach(h1 =>
+	h1.id = h1.textContent.replace(/\W/g, "")
+);</code></pre>
 		<pre><code>// Get an array with all ids on the page
-let ids = $$("[id]").map(function(element){
-	return element.id;
-});</code></pre>
+let ids = $$("[id]").map(element => element.id);</code></pre>
 		<pre><code>// Get all of an element’s attributes starting with data-bliss-
-$$(element.attributes).filter(function(attribute){
-	return attribute.name.indexOf("data-bliss-") === 0;
-}).map(function(attribute){
-	return attribute.name;
-});</code></pre>
+$$(element.attributes)
+	.filter(attribute => attribute.name.startsWith("data-bliss-"))
+	.map(attribute => attribute.name);</code></pre>
 	</article>
 
 	<article>
