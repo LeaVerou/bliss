@@ -219,7 +219,7 @@
 			<dd>The matched element or <code>null</code> if none found.</dd>
 		</dl>
 
-		<pre class="examples"><code>// return the first element with a class of .foo
+		<pre class="examples"><code>// Return the first element with a class of .foo
 // that is inside the first element with a class of .bar
 let ret = $(".foo", $(".bar"));</code></pre>
 
@@ -228,23 +228,21 @@ let ret = $(".foo", $(".bar"));</code></pre>
 let ret = $(".bar .foo");</code></pre>
 
 <pre><code>// Get the first element with a class of .foo
-// and set its title attribute to "yolo"
+// and set its title attribute to "yolo".
 // If there is no such element, this will throw an exception!
 $(".foo").setAttribute("title", "yolo");</code></pre>
 
 		<ul class="notes">
 			<li>If the element is not found, it will return <code>null</code>. This could cause an exception if methods are called on the result.
 			You might previously check if the element exists by caching the node in a variable
-			into an <code>if</code> statement:</li>
+			into an <code>if</code> statement or use the optional chaining operator <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining"><code>?.</code></a>
+			(for supporting browsers):</li>
 		</ul>
 
-<pre><code>// Check if the .foo element exists
-// and set an attribute by using a variable "foo"
-// as a reference of the element
-let foo = $(".foo");
-if (foo) {
-    foo.setAttribute("title", "yolo");
-}</code></pre>
+<pre><code>// Get the first element with a class of .foo
+// and, if it exists, set its title attribute to "yolo".
+// If there is no such element, this will return "undefined"
+$(".foo")?.setAttribute("title", "yolo");</code></pre>
 
 		<a href="http://api.jquery.com/jQuery/#jQuery1" class="jq">$</a>
 	</article>
