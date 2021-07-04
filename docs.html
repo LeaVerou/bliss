@@ -29,7 +29,7 @@
 
 	<p>Bliss includes several static methods (on the <code>Bliss</code> or <code>$</code> object). For example, to copy all properties of an object onto another object, you would call <a href="$.extend"><code>$.extend()</code></a>:</p>
 
-	<pre><code>var yolo = $.extend({foo: 1}, {bar: 2}); // or Bliss.extend(…)
+	<pre><code>let yolo = $.extend({foo: 1}, {bar: 2}); // or Bliss.extend(…)
 // yolo is {foo: 1, bar: 2}</code></pre>
 
 	<p>Many of Bliss’ methods take an element or an array of elements as their first argument. For example, to set both the <code>width</code> and <code>padding</code> of an element to 0, you could use the <a href="#$.style"><code>$.style()</code></a> method:</p>
@@ -206,7 +206,7 @@
 
 		<p class="description">Select an element by selector. Mainly a shortcut for <code>element.querySelector()</code>.</p>
 
-		<pre><code>var element = $(selector [, context])</code></pre>
+		<pre><code>let element = $(selector [, context])</code></pre>
 
 		<dl class="args">
 			<dt class="string">selector</dt>
@@ -219,32 +219,30 @@
 			<dd>The matched element or <code>null</code> if none found.</dd>
 		</dl>
 
-		<pre class="examples"><code>// return the first element with a class of .foo
+		<pre class="examples"><code>// Return the first element with a class of .foo
 // that is inside the first element with a class of .bar
-var ret = $(".foo", $(".bar"));</code></pre>
+let ret = $(".foo", $(".bar"));</code></pre>
 
 <pre><code>// Return the first element with a class of .foo
 // that is inside any element with a class of .bar
-var ret = $(".bar .foo");</code></pre>
+let ret = $(".bar .foo");</code></pre>
 
 <pre><code>// Get the first element with a class of .foo
-// and set its title attribute to "yolo"
+// and set its title attribute to "yolo".
 // If there is no such element, this will throw an exception!
 $(".foo").setAttribute("title", "yolo");</code></pre>
 
 		<ul class="notes">
 			<li>If the element is not found, it will return <code>null</code>. This could cause an exception if methods are called on the result.
 			You might previously check if the element exists by caching the node in a variable
-			into an <code>if</code> statement:</li>
+			into an <code>if</code> statement or use the optional chaining operator <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining"><code>?.</code></a>
+			(for supporting browsers):</li>
 		</ul>
 
-<pre><code>// Check if the .foo element exists
-// and set an attribute by using a variable "foo"
-// as a reference of the element
-var foo = $(".foo");
-if (foo) {
-    foo.setAttribute("title", "yolo");
-}</code></pre>
+<pre><code>// Get the first element with a class of .foo
+// and, if it exists, set its title attribute to "yolo".
+// If there is no such element, this will return "undefined"
+$(".foo")?.setAttribute("title", "yolo");</code></pre>
 
 		<a href="http://api.jquery.com/jQuery/#jQuery1" class="jq">$</a>
 	</article>
@@ -254,7 +252,7 @@ if (foo) {
 
 		<p class="description">Get all elements that match a given selector as an array. Similar to <code>element.querySelectorAll()</code> but returns an Array instead of a NodeList, so it has all of the convenience methods we’ve come to love on arrays.</p>
 
-		<pre><code>var array = $$(selector [, context])</code></pre>
+		<pre><code>let array = $$(selector [, context])</code></pre>
 
 		<dl class="args">
 			<dt class="string">selector</dt>
@@ -267,7 +265,7 @@ if (foo) {
 			<dd>The matched elements as an array.</dd>
 		</dl>
 
-		<pre class="def"><code>var array = $$(collection)</code></pre>
+		<pre class="def"><code>let array = $$(collection)</code></pre>
 
 		<dl class="args">
 			<dt>collection</dt>
@@ -279,19 +277,15 @@ if (foo) {
 		</dl>
 
 		<pre class="examples"><code>// Add an id to all &lt;h1> headings that don’t already have one
-$$("h1:not([id])").forEach(function(h1){
-	h1.id = h1.textContent.replace(/\W/g, "");
-});</code></pre>
+$$("h1:not([id])").forEach(h1 =>
+	h1.id = h1.textContent.replace(/\W/g, "")
+);</code></pre>
 		<pre><code>// Get an array with all ids on the page
-var ids = $$("[id]").map(function(element){
-	return element.id;
-});</code></pre>
+let ids = $$("[id]").map(element => element.id);</code></pre>
 		<pre><code>// Get all of an element’s attributes starting with data-bliss-
-$$(element.attributes).filter(function(attribute){
-	return attribute.name.indexOf("data-bliss-") === 0;
-}).map(function(attribute){
-	return attribute.name;
-});</code></pre>
+$$(element.attributes)
+	.filter(attribute => attribute.name.startsWith("data-bliss-"))
+	.map(attribute => attribute.name);</code></pre>
 	</article>
 
 	<article>
@@ -299,7 +293,7 @@ $$(element.attributes).filter(function(attribute){
 
 		<p class="description">Create an element.</p>
 
-		<pre><code>var element = $.create([tag,] [options]);</code></pre>
+		<pre><code>let element = $.create([tag,] [options]);</code></pre>
 
 		<dl class="args">
 			<dt class="string">tag</dt>
@@ -331,9 +325,9 @@ $$(element.attributes).filter(function(attribute){
 	]
 });</code></pre>
 
-		<pre><code>var paragraph = $.create("p");</code></pre>
+		<pre><code>let paragraph = $.create("p");</code></pre>
 
-		<pre><code>var div = $.create();</code></pre>
+		<pre><code>let div = $.create();</code></pre>
 
 		<ul class="notes">
 			<li>If you’re only creating an element without setting any options on it, just use the native <code>document.createElement(tag)</code></li>
@@ -443,35 +437,6 @@ $$(element.attributes).filter(function(attribute){
 }])</code></pre>
 
 		<a class="jq">jQuery.fn.html</a>
-	</article>
-
-	<article class="full">
-		<h1 class="element full">clone</h1>
-
-		<p class="description">Clone an element including its descendants, with events and data. <strong>This function is deprecated and will be removed in the next version of Bliss</strong></p>
-
-		<pre><code>var clone = $.clone(subject)</code></pre>
-		<pre><code>var clone = subject._.clone()</code></pre>
-
-		<dl class="args">
-			<dt class="element">subject</dt>
-			<dd>The element to be cloned.</dd>
-
-			<dt class="element">clone</dt>
-			<dd>The cloned element.</dd>
-		</dl>
-
-		<pre><code>var button = $("button");
-button.addEventListener("click", function() { console.log("Click from listener!"); });
-button.onclick = function() { console.log("Click from inline event!"); };
-var button2 = button._.clone();
-// If clicked, button2 will print both messages</code></pre>
-
-		<ul class="notes">
-			<li>If you don’t care about copying events and data, just use the native <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode"><code>element.cloneNode()</code></a></li>
-		</ul>
-
-		<a class="jq">jQuery.fn.clone</a>
 	</article>
 
 	<article>
@@ -687,8 +652,8 @@ $$("section[id] > h1, article[id] > h1").forEach(function(h1){
 
 		<p class="description">Set multiple CSS properties with a transition and execute code after the transition is finished.</p>
 
-		<pre><code>var promise = $.transition(subject, properties [, duration])</code></pre>
-		<pre><code>var promise = subject._.transition(properties [, duration])</code></pre>
+		<pre><code>let promise = $.transition(subject, properties [, duration])</code></pre>
+		<pre><code>let promise = subject._.transition(properties [, duration])</code></pre>
 
 		<dl class="args">
 			<dt class="element array">subject</dt>
@@ -985,7 +950,7 @@ myInput._.fire("input");</code></pre>
 
 		<p class="description">Execute code after the DOM is ready.</p>
 
-		<pre><code>var promise = $.ready([context], [callback])</code></pre>
+		<pre><code>let promise = $.ready([context], [callback])</code></pre>
 
 		<dl class="args">
 			<dt class="document">context</dt>
@@ -1011,8 +976,8 @@ $.ready().then(function(){
 
 		<p class="description">Defer code until an event fires.</p>
 
-		<pre><code>var promise = $.when(subject, type [, test])</code></pre>
-		<pre><code>var promise = subject._.when(type [, test])</code></pre>
+		<pre><code>let promise = $.when(subject, type [, test])</code></pre>
+		<pre><code>let promise = subject._.when(type [, test])</code></pre>
 
 		<dl class="args">
 			<dt class="element">subject</dt>
@@ -1046,8 +1011,8 @@ $.when(document, "keyup", evt => evt.key === "Escape").then(evt => console.log("
 
 		<p class="description">Run a method on all elements of an array, get the results as an array.</p>
 
-		<pre><code>var ret = $.all(array, method [, args...])</code></pre>
-		<pre><code>var ret = array._.all(method [, args...])</code></pre>
+		<pre><code>let ret = $.all(array, method [, args...])</code></pre>
+		<pre><code>let ret = array._.all(method [, args...])</code></pre>
 
 		<dl class="args">
 			<dt class="array">array</dt>
@@ -1078,7 +1043,7 @@ $.when(document, "keyup", evt => evt.key === "Escape").then(evt => console.log("
 
 		<p class="description">Helper for defining OOP-like “classes”, for those who have been irreparably damaged by Java-like languages.</p>
 
-		<pre><code>var myClass = $.Class(options);</code></pre>
+		<pre><code>let myClass = $.Class(options);</code></pre>
 
 		<dl class="args">
 			<dt class="object">options</dt>
@@ -1118,7 +1083,7 @@ $.when(document, "keyup", evt => evt.key === "Escape").then(evt => console.log("
 
 		<p class="description">Loop over properties of an object and map them onto another object.</p>
 
-		<pre><code>var ret = $.each(obj, callback [, ret]);</code></pre>
+		<pre><code>let ret = $.each(obj, callback [, ret]);</code></pre>
 
 		<dl class="args">
 			<dt class="object">obj</dt>
@@ -1154,11 +1119,11 @@ $.when(document, "keyup", evt => evt.key === "Escape").then(evt => console.log("
 			<dd>If array or string, a whitelist of property names. If function, it is called on each property and only the properties it returns a truthy value on will be copied. If it’s a regular expression, only matching property names will be copied.</dd>
 		</dl>
 
-		<pre><code>var o1 = {foo: 1, bar:2}
+		<pre><code>let o1 = {foo: 1, bar:2}
 o2 = $.extend(o1, {foo: 3, baz: 4});
 // o2 is {foo: 3, bar: 2, baz: 4}</code></pre>
 		<pre><code>// Get typography-related computed style on &lt;body>
-var type = $.extend({},
+let type = $.extend({},
                     getComputedStyle(document.body),
                     /^font|^lineHeight$/);</code></pre>
 
@@ -1235,7 +1200,7 @@ var type = $.extend({},
 
 		<p class="description">Determine the internal JavaScript [[Class]] of an object.</p>
 
-		<pre><code>var type = $.type(object)</code></pre>
+		<pre><code>let type = $.type(object)</code></pre>
 
 		<dl class="args">
 			<dt class="object">object</dt>
@@ -1256,7 +1221,7 @@ if ($.type(arguments[1]) == "regexp") {
 	<article>
 		<h1>value</h1>
 		<p class="description">Get the value of a nested property reference if it exists, and <code>undefined</code> without any errors if not.</p>
-		<pre><code>var val = $.value([obj, ] property1, [property2 [,...[, propertyN]]])</code></pre>
+		<pre><code>let val = $.value([obj, ] property1, [property2 [,...[, propertyN]]])</code></pre>
 
 		<dl class="args">
 			<dt class="object">obj</dt>
@@ -1280,7 +1245,7 @@ $.value("document", "body", "nodeType"); // 1, no root, starting from self</code
 
 		<p class="description">Helper for AJAX calls, inspired by the new <a href="https://fetch.spec.whatwg.org" target="_blank">Fetch API</a>.</p>
 
-		<pre><code>var promise = $.fetch(url, options)</code></pre>
+		<pre><code>let promise = $.fetch(url, options)</code></pre>
 
 		<dl class="args">
 			<dt class="string">url</dt>
@@ -1331,7 +1296,7 @@ $.value("document", "body", "nodeType"); // 1, no root, starting from self</code
 
 		<p class="description">Include a CSS or JS resource dynamically, only once, and run code after it has loaded.</p>
 
-		<pre><code>var promise = $.load(url [, base])</code></pre>
+		<pre><code>let promise = $.load(url [, base])</code></pre>
 
 		<dl class="args">
 			<dt>url</dt>
@@ -1352,7 +1317,7 @@ $.value("document", "body", "nodeType"); // 1, no root, starting from self</code
 
 		<p class="description">Include a script file conditionally and run code after it has loaded.</p>
 
-		<pre><code>var promise = $.include([condition,] url)</code></pre>
+		<pre><code>let promise = $.include([condition,] url)</code></pre>
 
 		<dl class="args">
 			<dt>condition</dt>
@@ -1366,16 +1331,16 @@ $.value("document", "body", "nodeType"); // 1, no root, starting from self</code
 		</dl>
 
 		<pre><code>// Load ES5-shim if needed
-var url = "https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.3.1/es5-sham.min.js";
+let url = "https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.3.1/es5-sham.min.js";
 $.include(Array.prototype.forEach, url).then(function(){
 	$$("div").forEach(function(){
 		// some code here
 	});
 });</code></pre>
 		<pre><code>// Load dropbox.js from a CDN if it’s not already loaded and run some code that uses it
-var url = "https://cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js";
+let url = "https://cdnjs.cloudflare.com/ajax/libs/dropbox.js/0.10.2/dropbox.min.js";
 $.include(self.Dropbox, url).then(function(){
-	var client = new Dropbox.Client({ key: key });
+	let client = new Dropbox.Client({ key: key });
 	// ...
 });</code></pre>
 
@@ -1439,7 +1404,7 @@ $.include(self.Dropbox, url).then(function(){
 			</dd>
 		</dl>
 
-		<pre><code>var method = Bliss.overload(function (key, val) {
+		<pre><code>let method = Bliss.overload(function (key, val) {
 	console.log(key + " " + val);
 }, 0);
 method('name', 'Lea');
@@ -1449,7 +1414,7 @@ method({name: 'Lea', lang: 'javascript'});
 // lang javascript
 		</code></pre>
 
-		<pre><code>var method = Bliss.overload(function (param1, param2, key, val) {
+		<pre><code>let method = Bliss.overload(function (param1, param2, key, val) {
 	console.log(key + " " + val);
 }, 2);
 method(param, param, 'name', 'Lea');
