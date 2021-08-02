@@ -27,7 +27,7 @@ $.add({
 // Define the _ property on arrays and elements
 
 Object.defineProperty(Node.prototype, _, {
-	// Written for IE compatability (see #49)
+	// Written for IE compatibility (see #49)
 	get: function getter () {
 		Object.defineProperty(Node.prototype, _, {
 			get: undefined
