@@ -211,12 +211,24 @@ extend($, {
 					throw new Error("Abstract classes cannot be directly instantiated.");
 				}
 
-				Class.super && Class.super.apply(this, arguments);
+				if (Class.super && !isSuperClass) {
+					Class.super.apply(this, arguments);
+				}
 
 				init.apply(this, arguments);
 			};
 
 			Class.super = o.extends || null;
+
+			if (Class.super) {
+				// We cannot extend a native class, it will error
+				var isSuperClass = (Class.super + "").indexOf("class ") === 0;
+
+				if (isSuperClass) {
+					console.error(`You are using $.Class() to create a fake function-based class that extends a native JS class. This will not work.
+You should convert your code to use native JS classes too. You can still pass a class into $.Class() to use its conveniences.`);
+				}
+			}
 
 			Class.prototype = $.extend(Object.create(Class.super? Class.super.prototype : Object), {
 				constructor: Class
@@ -643,7 +655,7 @@ $.Element.prototype = {
 					for (var i=0, l; l=listeners[ltype][i]; i++) {
 						if ((!className || className === l.className)
 							&& (!options.callback || options.callback === l.callback)
-							&& (!!options.capture == !!l.capture || 
+							&& (!!options.capture == !!l.capture ||
 						    		!type && !options.callback && undefined === options.capture)
 						   ) {
 								listeners[ltype].splice(i, 1);
