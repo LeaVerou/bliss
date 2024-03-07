@@ -66,7 +66,7 @@ $$("section h1").forEach(function(h1) {
 	}
 });
 
-if (/\/docs\.html$/.test(location.pathname)) {
+if (/\/docs(?:\.html)?$/.test(location.pathname)) {
 	// Table of Contents
 	var tocList = $("#toc ol");
 
