@@ -1,8 +1,8 @@
 {
-  "name": "blissfuljs",
-  "version": "2.0.0-alpha.0",
-  "description": "Lightweight helper library for modern browsers.",
-  "main": "src/index.js",
+	"name": "blissfuljs",
+	"version": "2.0.0-alpha.0",
+	"description": "Lightweight helper library for modern browsers.",
+	"main": "src/index.js",
 	"type": "module",
 	"exports": {
 		".": "./src/index.js",
@@ -10,45 +10,45 @@
 		"./async": "./src/async/index.js",
 		"./dom": "./src/dom/index.js"
 	},
-  "scripts": {
-    "test": "karma start --single-run"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/LeaVerou/bliss.git"
-  },
-  "keywords": [
-    "DOM",
-    "Events",
-    "Ajax",
-    "Promises",
-    "OOP",
-    "ES5"
-  ],
-  "author": "Lea Verou",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/LeaVerou/bliss/issues"
-  },
-  "homepage": "http://blissfuljs.com",
-  "devDependencies": {
-    "babel-eslint": "^8.2.6",
-    "chai": "^3.4.1",
-    "eslint": "^4.19.1",
-    "gulp": "^4.0.2",
-    "gulp-concat": "^2.6.0",
-    "gulp-rename": "^1.4.0",
-    "gulp-uglify": "^1.5.1",
-    "gulp-util": "^3.0.7",
-    "karma": "^3.1.4",
-    "karma-chai": "^0.1.0",
-    "karma-chrome-launcher": "^1.0.1",
-    "karma-fixture": "^0.2.5",
-    "karma-html2js-preprocessor": "^0.1.0",
-    "karma-mocha": "^0.2.1",
-    "karma-sinon": "^1.0.4",
-    "mocha": "^5.2.0",
-    "sinon": "1.17.3"
-  },
-  "dependencies": {}
+	"scripts": {
+		"test": "karma start --single-run"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/LeaVerou/bliss.git"
+	},
+	"keywords": [
+		"DOM",
+		"Events",
+		"Ajax",
+		"Promises",
+		"OOP",
+		"ES5"
+	],
+	"author": "Lea Verou",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/LeaVerou/bliss/issues"
+	},
+	"homepage": "http://blissfuljs.com",
+	"devDependencies": {
+		"babel-eslint": "^8.2.6",
+		"chai": "^3.4.1",
+		"eslint": "^4.19.1",
+		"gulp": "^4.0.2",
+		"gulp-concat": "^2.6.0",
+		"gulp-rename": "^1.4.0",
+		"gulp-uglify": "^1.5.1",
+		"gulp-util": "^3.0.7",
+		"htest.dev": "^0.0.20",
+		"karma": "^3.1.4",
+		"karma-chai": "^0.1.0",
+		"karma-chrome-launcher": "^1.0.1",
+		"karma-fixture": "^0.2.5",
+		"karma-html2js-preprocessor": "^0.1.0",
+		"karma-mocha": "^0.2.1",
+		"karma-sinon": "^1.0.4",
+		"mocha": "^5.2.0",
+		"sinon": "1.17.3"
+	}
 }
