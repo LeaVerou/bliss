@@ -1,8 +1,15 @@
 {
   "name": "blissfuljs",
-  "version": "1.0.6",
+  "version": "2.0.0-alpha.0",
   "description": "Lightweight helper library for modern browsers.",
-  "main": "bliss.js",
+  "main": "src/index.js",
+	"type": "module",
+	"exports": {
+		".": "./src/index.js",
+		"./events": "./src/events/index.js",
+		"./async": "./src/async/index.js",
+		"./dom": "./src/dom/index.js"
+	},
   "scripts": {
     "test": "karma start --single-run"
   },
