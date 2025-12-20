@@ -2,3 +2,6 @@ node_modules/
 bliss.js
 bliss.min.js
 bliss.shy.min.js
+
+# macOS
+.DS_Store
