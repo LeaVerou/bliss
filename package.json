@@ -33,7 +33,7 @@
     "gulp-rename": "^1.4.0",
     "gulp-uglify": "^3.0.2",
     "gulp-util": "^3.0.7",
-    "karma": "^3.1.4",
+    "karma": "^6.4.1",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^1.0.1",
     "karma-fixture": "^0.2.5",
