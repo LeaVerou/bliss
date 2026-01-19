@@ -1,7 +1,8 @@
-export default function ready (doc = document, callback, _isVoid) {
+export default function ready (doc, callback, _isVoid) {
 	if (typeof doc === "function" && !callback) {
 		[callback, doc] = [doc];
 	}
+	doc = doc || document;
 
 	if (callback) {
 		if (doc.readyState !== "loading") {

@@ -8,6 +8,11 @@ function set (subject, property, value) {
 	if (property in setProps) {
 		setProps[property](subject, value);
 	}
+        else if (property === "dataset") {
+		for (const key of Object.keys(value)) {
+			subject.dataset[key]=value[key]
+		}
+        }
 	else if (property in subject) {
 		subject[property] = value;
 	}
